@@ -57,9 +57,9 @@
 	document.getElementById("mapCanvas").width = sw;
 	document.getElementById("mapCanvas").height = sh;
 	document.getElementById("actionButton").style.left=(sw-70)+'px';
-	document.getElementById("actionButton").style.top=(sh-70)+'px';
+	document.getElementById("actionButton").style.top=(sh-120)+'px';
 	document.getElementById("stopButton").style.left=(20)+'px';
-	document.getElementById("stopButton").style.top=(sh-70)+'px';
+	document.getElementById("stopButton").style.top=(sh-120)+'px';
 	console.log("buttons moved!");
 	document.getElementById("actionButton").style.display='block';
 	for (x = 0; x < 3; x++) { // build map by positioning 10x10 grid of tiles
@@ -371,22 +371,22 @@
 			mapCanvas.fillText(Math.round((metric)?climb:climb*3.281),sw-5,57);
 		}
 		if(tracking && speed>0) { // if tracking show current altitude with coordinates
-			gradient = mapCanvas.createLinearGradient(0,sh-150,0,sh);
+			gradient = mapCanvas.createLinearGradient(0,sh-200,0,sh);
 			gradient.addColorStop(0,'#00000000');
 			gradient.addColorStop(1,'black');
 			mapCanvas.fillStyle = gradient;
-			mapCanvas.fillRect(0,sh-150,sw,sh);
+			mapCanvas.fillRect(0,sh-200,sw,sh);
 			mapCanvas.fillStyle = 'white';
 			mapCanvas.textBaseline = 'alphabetic';
 			mapCanvas.textAlign = 'left';
 			mapCanvas.font = 'Bold 60px Sans-Serif';
-			mapCanvas.fillText(Math.round(((metric)?3.6:2.237)*speed), 5,sh-20);
+			mapCanvas.fillText(Math.round(((metric)?3.6:2.237)*speed), 5,sh-70);
 			mapCanvas.font = 'Bold 16px Sans-Serif';
-			mapCanvas.fillText((metric)?"kph":"mph", 5,sh-5);
+			mapCanvas.fillText((metric)?"kph":"mph", 5,sh-55);
 			mapCanvas.font = 'Bold 36px Sans-Serif';
 			d=Math.round((heading+11.25)/22.5); // 16 compass directions: N, NNE, NE,...
 			d=compass.substr(d*3,3); // compass point eg. NNE
-			mapCanvas.fillText(d,100,sh-20);
+			mapCanvas.fillText(d,100,sh-70);
 		}
 		mapCanvas.beginPath(); // draw current track as blue line
 	    if (track.length > 1) {
