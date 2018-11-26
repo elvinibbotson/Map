@@ -91,7 +91,7 @@ input, label, select {
       -ms-flex: 1;
           flex: 1;
 }
-
+ /*
 .headerButton {
     width: 24px;
     height: 24px;
@@ -105,7 +105,7 @@ input, label, select {
     outline: none;
     cursor: pointer;
  }
- 
+
  .headerButton {
     width: 24px;
     height: 24px;
@@ -119,7 +119,7 @@ input, label, select {
     outline: none;
     cursor: pointer;
  }
- 
+ */
  .menuButton {
     width: 24px;
     height: 24px;
