@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 	<meta charset="utf-8">
   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,18 +11,19 @@
   	<meta name="msapplication-square150x150logo" content="icons/icon150px.png">
   	<meta name="msapplication-square70x70logo" content="icons/icon75px.png">
 </head>
-
 <body>
-
 <header class="header">
 	<button id="menuButton" type="menu" menu="menu" class="headerButton" aria-label="Menu"></button>
-    <h1 id="heading" class="header__title">White Peak</h1>
+    <h1 id="heading" class="header__title">Peak</h1>
 </header>
-<div id='actionButton' class='round-button'><img src='goButton24px.svg'/></div>
+<div id='actionButton' class='round-button'><img src='fixButton24px.svg'/></div>
 <div id='stopButton' class='round-button'><img src='stopButton24px.svg'/></div>
 <menu type="context" id="menu">
 	<p><menuitem id = "tracks" label = "tracks">tracks</menuitem></p>
+	<p><menuitem id="routes" label="routes">routes</menuitem></p>
+	<p><menuitem id='measure' label='measure'>measure route</menuitem></p>
 	<p><input type='checkbox' id='metric'>metric units</p>
+	<p><menuitem id='diagnostics'>diagnostics</p>
 </menu>
 <main class="main">
 	<div id="main" class="content">
@@ -31,15 +31,15 @@
 			<p>1</p>
 			<p>loading...</p>
 			<div id="map">
-                <div id="tile00" class="tile"><img id="img00" src="tiles/00.jpg" /></div>
-                <div id="tile01" class="tile"><img id="img01" src="tiles/01.jpg" /></div>
-                <div id="tile02" class="tile"><img id="img02" src="tiles/02.jpg" /></div>
-                <div id="tile10" class="tile"><img id="img10" src="tiles/10.jpg" /></div>
-                <div id="tile11" class="tile"><img id="img11" src="tiles/11.jpg" /></div>
-                <div id="tile12" class="tile"><img id="img12" src="tiles/12.jpg" /></div>
-                <div id="tile20" class="tile"><img id="img20" src="tiles/20.jpg" /></div>
-                <div id="tile21" class="tile"><img id="img21" src="tiles/21.jpg" /></div>
-                <div id="tile22" class="tile"><img id="img22" src="tiles/22.jpg" /></div>
+                <div id="tile00" class="tile"><img id="img00" src="tiles/24.jpg" /></div>
+                <div id="tile01" class="tile"><img id="img01" src="tiles/25.jpg" /></div>
+                <div id="tile02" class="tile"><img id="img02" src="tiles/26.jpg" /></div>
+                <div id="tile10" class="tile"><img id="img10" src="tiles/34.jpg" /></div>
+                <div id="tile11" class="tile"><img id="img11" src="tiles/35.jpg" /></div>
+                <div id="tile12" class="tile"><img id="img12" src="tiles/36.jpg" /></div>
+                <div id="tile20" class="tile"><img id="img20" src="tiles/44.jpg" /></div>
+                <div id="tile21" class="tile"><img id="img21" src="tiles/45.jpg" /></div>
+                <div id="tile22" class="tile"><img id="img22" src="tiles/46.jpg" /></div>
 			</div>
 			<div id="mapOverlay">
 				<canvas id="mapCanvas" width="100" height="100"></canvas>
@@ -47,10 +47,11 @@
 		</div>
 	</div>
 </main>
+<div id="list"></div>
 <div id="saveDialog" class="dialog-container">
     <div class="dialog">
-      <div class="dialog-title">Save Track</div>
-      <div class="dialog-body"><input type="text" id="trackName" size="30"/></div>
+      <div class="dialog-title">Save as</div>
+      <div class="dialog-body"><input type="text" id="saveName" size="30"/></div>
       <div class="dialog-buttons">
 	      <button id="cancelButton" class="button">Cancel</button>
         <button id="saveButton" class="button">Save</button>
@@ -61,9 +62,6 @@
 	<div
 </div>
 <div id="list"></div>
-
  <script src="peakScript.js" async></script>
-
 </body>
-
 </html>

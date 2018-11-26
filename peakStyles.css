@@ -46,7 +46,7 @@ input, label, select {
   width: 100%;
   height: 32px;
   color: white;
-  background: #333333;
+  background: black;
   position: fixed;
   font-size: 20px;
   box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 2px 9px 1px rgba(0, 0, 0, 0.12), 0 4px 2px -2px rgba(0, 0, 0, 0.2);
@@ -105,17 +105,31 @@ input, label, select {
     outline: none;
     cursor: pointer;
  }
-
-.header #menuButton {
+ 
+ .headerButton {
+    width: 24px;
+    height: 24px;
+	  margin-left: 10px;
+    margin-right: 10px;
+    overflow: hidden;
+    opacity: 1;
+    -webkit-transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
+    transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
+    border: none;
+    outline: none;
+    cursor: pointer;
+ }
+ 
+ .menuButton {
+    width: 24px;
+    height: 24px;
+	  margin-left: 10px;
+    margin-right: 10px;
+    border: none;
+    outline: none;
+    overflow: hidden;
+    opacity: 1;
     background: url(menuButton24px.svg) center center no-repeat;
-}
-
-.deleteButton {
-  width: 24px;
-  height: 24px;
-  border: none;
-  outline: none;
-  background: url(deleteButton24px.svg) center center no-repeat;
 }
 
 .round-button {
@@ -157,7 +171,7 @@ input, label, select {
 	padding-left: 20px;
 	padding-right: 20px;
 	color: white;
-	background-color: #333333;
+	background-color: black;
 	font-size: 1.5em;
 	z-index: 100;
 	display: none;
@@ -213,6 +227,25 @@ input, label, select {
 	font-size: 1.2em;
 	z-index: 101;
 	display: none;
+}
+
+ul {
+  list-style-type: none;
+  color: black;
+  background-color: white;
+}
+
+.listItem {
+  height: 50px;
+}
+
+.deleteButton {
+  width: 24px;
+  height: 24px;
+  float: right;
+  border: none;
+  outline: none;
+  background: url(deleteButton24px.svg) center center no-repeat;
 }
 
 .dialog-container {
