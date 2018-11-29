@@ -190,13 +190,14 @@
 		var touches=event.changedTouches;
 		x0=touches[0].clientX;
 		y0=touches[0].clientY;
-		
+		notify("start drag");
 	}
 	
 	function move(event) {
 		var touches=event.changedTouches;
 		x=touches[0].clientX;
 		y=touches[0].clientY;
+		notify("drag by "+x+"x"+y+"px");
 		loc.lon-=(x-x0)/14400;
 		loc.lat+=(y-y0)/24000;
 		x0=x;
