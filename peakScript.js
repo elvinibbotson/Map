@@ -69,7 +69,9 @@
 	document.getElementById("mapOverlay").addEventListener("click", moveTo);
 	// testing
 	document.getElementById("mapOverlay").addEventListener("touchstart", startMove);
+	document.getElementById("mapOverlay").addEventListener("mousedown", startMove);
 	document.getElementById("mapOverlay").addEventListener("touchmove", move);
+	document.getElementById("mapOverlay").addEventListener("mousemove", move);
 
 	document.getElementById("saveButton").addEventListener("click", saver);
 	document.getElementById("cancelButton").addEventListener("click", function() {
@@ -188,6 +190,7 @@
 		var touches=event.changedTouches;
 		x0=touches[0].clientX;
 		y0=touches[0].clientY;
+		
 	}
 	
 	function move(event) {
