@@ -67,6 +67,10 @@
 	document.getElementById("actionButton").addEventListener("click", getFix);
 	document.getElementById("stopButton").addEventListener("click", cease);
 	document.getElementById("mapOverlay").addEventListener("click", moveTo);
+	// testing
+	document.getElementById("mapOverlay").addEventListener("touchstart", startMove);
+	document.getElementById("mapOverlay").addEventListener("touchmove", move);
+
 	document.getElementById("saveButton").addEventListener("click", saver);
 	document.getElementById("cancelButton").addEventListener("click", function() {
 	  document.getElementById("saveDialog").style.display="none";
@@ -106,6 +110,10 @@
 		json = JSON.parse(status);
 		if((json.lat>=53)&&(json.lat<=53.3333)) loc.lat = json.lat;
 		if((json.lon>=-2)&&(json.lon<=-1.5)) loc.lon = json.lon;
+		if(loc.lon<-2) loc.lon=-2; // ensure within bounds of map
+		if(loc.lon>-1.5) loc.lon=-1.5;
+		if(loc.lat>53.3) loc.lat=53.3;
+		if(loc.lat<53) loc.lat=53;
 	}
 	centreMap(); // go to saved location
 	metric = window.localStorage.getItem("metric");
@@ -174,26 +182,25 @@
   		document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
 		document.getElementById("list").style.display = "block";
 	}
-	/*
-	status = window.localStorage.getItem('peakTrip'); // recover previous trip stats
-	// notify("trip status: "+status);
-	if(status) {
-		json=JSON.parse(status);
-		var text="last trip distance: ";
-		if(metric) text += decimal(json.distance/1000)+"km";
-		else text += decimal(json.distance/1093.6)+"miles";
-		text += " in ";
-		if(json.time>60) text+=Math.floor(json.time/60)+" hr ";
-		text+=json.time%60+" min (";
-		if(json.moving>60) text+=Math.floor(json.moving/60)+"hr ";
-		text+=json.moving%60+" min); speed: ";
-		if(metric) text += Math.round(json.distance*60/1000/json.time)+"kph; ";
-		else text += Math.round(json.distance*60/1093.6/json.time)+"mph; ";
-		if(metric ) text += json.climb+" m climbed";
-		else text += Math.round(json.climb*3.281)+"ft climbed";
-		alert(text);
+	
+	// test
+	function startMove(event) {
+		var touches=event.changedTouches;
+		x0=touches[0].clientX;
+		y0=touches[0].clientY;
 	}
-	*/
+	
+	function move(event) {
+		var touches=event.changedTouches;
+		x=touches[0].clientX;
+		y=touches[0].clientY;
+		loc.lon-=(x-x0)/14400;
+		loc.lat+=(y-y0)/24000;
+		x0=x;
+		y0=y;
+		centreMap();
+	}
+
 	function moveTo(event) {
 		document.getElementById("menu").style.display = "none";
 		x=sw/2-event.clientX;
@@ -224,16 +231,6 @@
 		trackpoints.push(tp);
 		redraw();
 		if(trackpoints.length<2) return;
-		/*
-		var trip={};
-		trip.distance=decimal(distance+dist); // metres
-		trip.time=Math.round((loc.time-track[0].time)/60); // minutes
-		trip.moving=Math.round(moving/60); // minutes not stopped
-		trip.climb=climb; // metres
-		var json=JSON.stringify(trip);
-		// console.log("save trip "+json);
-		window.localStorage.setItem('peakTrip', json);
-		*/
 	}
 	
 	function getFix() { // get fix on current location
