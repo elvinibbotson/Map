@@ -573,14 +573,14 @@
 	}
 	
 	function centreMap() { // move map to current location
-		notify("centre map at N"+loc.lat+" E"+loc.lon);
+		// notify("centre map at N"+loc.lat+" E"+loc.lon);
 		var i, x, y;
 		// new code for 3x3 tiles
 		var row=Math.floor((mapN-loc.lat)*30); // centre tile
 		var col=Math.floor((loc.lon-mapW)*20);
 		row--; // top/left tile of 3x3 grid
 		col--;
-		notify("row "+row+"; col "+col);
+		// notify("row "+row+"; col "+col);
 		for(x=0;x<3;x++) { // populate 3x3 tile grid
 			for(y=0;y<3;y++) {
 				if(((row+y)<0)||((row+y>9))||((col+x)<0)||((col+x)>9))
@@ -590,7 +590,7 @@
 		}
 		var N=mapN-row/30;
 		var W=mapW+col/20;
-		notify("N: "+N+"; W:"+W);
+		// notify("N: "+N+"; W:"+W);
 		mapLeft=(W-loc.lon)*14400+sw/2;
 		mapTop=(loc.lat-N)*24000+sh/2;
 		console.log("map position: "+mapLeft+", "+mapTop);
@@ -712,27 +712,7 @@
 		notify(name+" deleted");
 		document.getElementById('list').style.display='none';
 	}
-	/*
-	function saveTrack() {
-	  var name = document.getElementById("trackName").value;
-	  var names=[];
-	  notify("save track "+name);
-		var tracks = window.localStorage.getItem("peakTracks");
-		if(tracks) {
-		  names = JSON.parse(tracks).names;
-		  notify(names.length+" tracks already saved");
-		  if((name.length<1)||(names.indexOf(name)>=0)) return;
-		}
-		json = JSON.stringify(track);
-		window.localStorage.setItem(name, json);
-		names.push(name);
-		tracks={};
-		tracks.names=names
-		var json=JSON.stringify(tracks);
-		window.localStorage.setItem("peakTracks",json);
-		document.getElementById("saveDialog").style.display="none";
-	}
-	*/
+
 	function dm(degrees, lat) {
 	    var ddmm;
 	    var negative = false;
