@@ -77,7 +77,6 @@
 		document.getElementById("stopButton").style.top=(sh-120)+'px';
 		document.getElementById("menu").style.display = "none";
 		centreMap();
-		// redraw();
 	});
 	document.getElementById('diagnostics').addEventListener('click', showNotifications);
 	// document.getElementById("tracks").addEventListener("click", listTracks);
@@ -424,12 +423,8 @@
 			document.getElementById("actionButton").removeEventListener("click", stopStart);
 			document.getElementById("actionButton").addEventListener("click", getFix);
 		}
-		// navigator.geolocation.clearWatch(geolocator);
 		document.getElementById("stopButton").style.display="none";
 		document.getElementById("measure").style.display="block";
-		// document.getElementById("actionButton").innerHTML='<img src="goButton24px.svg"/>';
-		// document.getElementById("actionButton").removeEventListener("click", stopStart);
-		// document.getElementById("actionButton").addEventListener("click", go);
 		document.getElementById("heading").innerHTML = "Peak";
 		redraw();
 		if(nodes.length>5) { // offer to save route
