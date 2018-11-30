@@ -79,7 +79,7 @@ input, label, select {
   transition: -webkit-transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s;
   transition: transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s;
   transition: transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s, -webkit-transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s;
-  z-index: 1000;
+  z-index: 100;
   }
 
 .header__title {
@@ -91,35 +91,7 @@ input, label, select {
       -ms-flex: 1;
           flex: 1;
 }
- /*
-.headerButton {
-    width: 24px;
-    height: 24px;
-	margin-left: 10px;
-    margin-right: 10px;
-    overflow: hidden;
-    opacity: 1;
-    -webkit-transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
-    transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
-    border: none;
-    outline: none;
-    cursor: pointer;
- }
-
- .headerButton {
-    width: 24px;
-    height: 24px;
-	  margin-left: 10px;
-    margin-right: 10px;
-    overflow: hidden;
-    opacity: 1;
-    -webkit-transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
-    transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
-    border: none;
-    outline: none;
-    cursor: pointer;
- }
- */
+ 
  .menuButton {
     width: 24px;
     height: 24px;
@@ -173,11 +145,11 @@ input, label, select {
 	color: white;
 	background-color: black;
 	font-size: 1.5em;
-	z-index: 100;
+	z-index: 101;
 	display: none;
 }
 
-#metric {
+.check {
 	width: 32px;
 	height: 32px;
 }

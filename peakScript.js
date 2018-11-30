@@ -62,6 +62,23 @@
 		console.log("metric is "+metric);
 		document.getElementById("menu").style.display = "none";
 	});
+	document.getElementById("compact").addEventListener("change", function() {
+		if(this.checked) {
+			notify("switch compact view ON");
+			sh/=2; // restrict to top half of screen
+		}
+		else {
+			notify("switch compact view OFF");
+			sh*=2; // use full screen
+		}
+		document.getElementById("mapScreen").style.height = sh+'px';
+		document.getElementById("mapCanvas").height = sh;
+		document.getElementById("actionButton").style.top=(sh-120)+'px';
+		document.getElementById("stopButton").style.top=(sh-120)+'px';
+		document.getElementById("menu").style.display = "none";
+		centreMap();
+		// redraw();
+	});
 	document.getElementById('diagnostics').addEventListener('click', showNotifications);
 	// document.getElementById("tracks").addEventListener("click", listTracks);
 	document.getElementById("actionButton").addEventListener("click", getFix);
@@ -85,7 +102,8 @@
 	// sh = window.innerHeight;
 	sw=screen.width;
 	sh=screen.height;
-	console.log("window: "+sw+"x"+sh);
+	console.log("screen size: "+sw+"x"+sh);
+	// sh/=2; // NEW: LIMIT TO HALF SCREEN
 	document.getElementById("mapScreen").style.width = sw+'px';
 	document.getElementById("mapScreen").style.height = sh+'px';
 	mapCanvas = document.getElementById("mapCanvas").getContext("2d"); // set up drawing canvas
@@ -335,9 +353,6 @@
 		loc.alt=Math.round((fixes[0].alt+fixes[1].alt+fixes[2].alt)/3);
 		// notify(loc.lon+","+loc.lat+", "+loc.alt+"m accuracy:"+accuracy);
 		if(trackpoints.length<1) { // at start, initialise lastLoc and...
-			// lastLoc.time = loc.time
-			// lastLoc.lon = loc.lon;
-			// lastLoc.lat = loc.lat;
 			addTP(); // ...add first trackpoint
 		}
 		else {
@@ -359,15 +374,6 @@
 		lastLoc.time = loc.time
 		lastLoc.lon = loc.lon;
 		lastLoc.lat = loc.lat;
-		/*
-		var t=track.length-1; // most recent trackpoint
-		dist=measure("distance",loc.lon,loc.lat,track[t].lon,track[t].lat); // distance since last trackpoint
-		var interval=loc.time-track[t].time;
-		if(dist>0) speed = dist / interval; // current speed m/s
-		var direction=measure("heading",track[t].lon,track[t].lat,loc.lon,loc.lat); // heading since last trackpoint
-		var turn=Math.abs(direction-heading);
-		if(turn>180) turn=360-turn;
-		*/
 		if((hi==0) || ((lo-loc.alt)>2)) {
 			hi=lo=loc.alt; // reset lo and hi at first trackpoint or new lo-point
 			notify("new lo (and hi)");
