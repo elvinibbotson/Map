@@ -138,13 +138,13 @@
 	metric = window.localStorage.getItem("metric");
 	document.getElementById('metric').checked = metric;
 	// get list of saved tracks
-	var json=JSON.parse(window.localStorage.getItem("wpTracks"));
+	var json=JSON.parse(window.localStorage.getItem("peakTracks"));
 	console.log("routes: "+json);
 	if(json!=null) {
 		trackNames = json.names;
 		notify(trackNames.length+' tracks');
 	}
-	json=JSON.parse(window.localStorage.getItem("wpRoutes"));
+	json=JSON.parse(window.localStorage.getItem("peakRoutes"));
 	if(json!=null) {
 		routeNames=json.names;
 		notify(routeNames.length+' routes');
@@ -433,7 +433,7 @@
 			document.getElementById("saveDialog").style.display = "block";
 		}
 		// IF MORE THAN 5 TRACKPOINTS, OFFER TO SAVE TO DATABASE USING DIALOG TO GIVE DEFAULT (EDITABLE) NAME 'YYMMDD-HH:MM'
-		if(trackpoints.length>5) { // ************  CHANGE TO 5 **************
+		if(trackpoints.length>5) {
 			name='';
 			var now = new Date();
 			var name = now.getYear()%100 + months.substr(now.getMonth()*3,3) + now.getDate() + '.'; // YYmonDD
@@ -444,7 +444,7 @@
 			if(t<10) name+="0";
 			name+=t; // YYmonDD.HH:MM
 			notify("track name: "+name);
-			document.getElementById("trackName").value = name;
+			document.getElementById("saveName").value = name;
 			document.getElementById("saveDialog").style.display = "block";
 		}
 	}
@@ -625,7 +625,7 @@
 			routes.names=routeNames;
 			notify("save routenames: "+routes.names);
 			var json=JSON.stringify(routes);
-			window.localStorage.setItem("wpRoutes",json);
+			window.localStorage.setItem("peakRoutes",json);
 			measuring=false;
 			distance=0;
 		}
@@ -648,7 +648,7 @@
 			tracks.names=trackNames;
 			notify("save tracknames: "+tracks.names);
 			var json=JSON.stringify(tracks);
-			window.localStorage.setItem("wpTracks",json);
+			window.localStorage.setItem("peakTracks",json);
 		}
 		document.getElementById("saveDialog").style.display="none";
 	}
@@ -679,7 +679,7 @@
 		var tracks={};
 		tracks.names=trackNames;
 		var json=JSON.stringify(tracks);
-		window.localStorage.setItem("wpTracks",json);
+		window.localStorage.setItem("peakTracks",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
 		document.getElementById('list').style.display='none';
@@ -708,7 +708,7 @@
 		var routes={};
 		routes.names=routeNames;
 		var json=JSON.stringify(routes);
-		window.localStorage.setItem("wpRoutes",json);
+		window.localStorage.setItem("peakRoutes",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
 		document.getElementById('list').style.display='none';
