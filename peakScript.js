@@ -65,11 +65,11 @@
 	document.getElementById("compact").addEventListener("change", function() {
 		if(this.checked) {
 			notify("switch compact view ON");
-			sh/=2; // restrict to top half of screen
+			sh=sh/2+50; // restrict to top half of screen
 		}
 		else {
 			notify("switch compact view OFF");
-			sh*=2; // use full screen
+			sh=(sh-50)*2; // use full screen
 		}
 		document.getElementById("mapScreen").style.height = sh+'px';
 		document.getElementById("mapCanvas").height = sh;
@@ -102,7 +102,6 @@
 	sw=screen.width;
 	sh=screen.height;
 	console.log("screen size: "+sw+"x"+sh);
-	// sh/=2; // NEW: LIMIT TO HALF SCREEN
 	document.getElementById("mapScreen").style.width = sw+'px';
 	document.getElementById("mapScreen").style.height = sh+'px';
 	mapCanvas = document.getElementById("mapCanvas").getContext("2d"); // set up drawing canvas
@@ -202,7 +201,6 @@
 		document.getElementById("list").style.display = "block";
 	}
 	
-	// test
 	function startMove(event) {
 		var touches=event.changedTouches;
 		x0=touches[0].clientX;
