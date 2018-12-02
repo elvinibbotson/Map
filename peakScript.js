@@ -450,9 +450,9 @@
 	function redraw() {
 		var i, p, x, y, r, d, t;
 		notify("redraw - tracking is "+tracking);
-		mapCanvas.clearRect(0, 0, sw, sh);
-		mapCanvas.lineWidth = 5;
-		var gradient = mapCanvas.createLinearGradient(0,0,0,100);
+		mapCanvas.clearRect(0,0,sw,sh);
+		mapCanvas.lineWidth=5;
+		var gradient=mapCanvas.createLinearGradient(0,0,0,100);
 		gradient.addColorStop(0,'black');
 		gradient.addColorStop(1,'#00000000');
 		mapCanvas.fillStyle = gradient;
@@ -463,28 +463,28 @@
 		mapCanvas.fillStyle = 'white';
 		mapCanvas.font = '16px Sans-Serif';
 		var string=dm(loc.lat, true);
-		if(tracking) string += (metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
+		if(tracking) string+=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
 		mapCanvas.fillText(string,50,5);
 		string=dm(loc.lon, false);
 		if(tracking) string+=" climb";
 		mapCanvas.fillText(string,50,24);
 		if(distance>0) { // display distance travelled and height climbed so far
-			mapCanvas.font = 'Bold 16px Sans-Serif';
+			mapCanvas.font='Bold 16px Sans-Serif';
 			mapCanvas.textAlign = 'left';
 			d=distance+dist;
 			if(metric) { // metric units
 				d=Math.round(d);
-				if(d<1000) mapCanvas.fillText('m',sw/2,40);
+				if(d<1000) mapCanvas.fillText('m',sw/2,35);
 				else {
-					mapCanvas.fillText('km',sw/2,40);
+					mapCanvas.fillText('km',sw/2,35);
 					d=decimal(d/1000);
 				}
 			}
 			else { // miles & yards
 				d=Math.round(d*1.093613); // nearest yard to latest trackpoint
-				if(d<1760) mapCanvas.fillText('yds',sw/2,40);
+				if(d<1760) mapCanvas.fillText('yds',sw/2,35);
 				else {
-					mapCanvas.fillText('miles',sw/2,40);
+					mapCanvas.fillText('miles',sw/2,35);
 					d=decimal(d/1760);
 				}
 			}
@@ -509,7 +509,7 @@
 			mapCanvas.font = 'Bold 16px Sans-Serif';
 			mapCanvas.textAlign = 'right';
 			// mapCanvas.fillText(((metric)?"m":"ft")+" climbed",sw-5,45);
-			mapCanvas.font = 'Bold 36px Sans-Serif';
+			// mapCanvas.font = 'Bold 36px Sans-Serif';
 			if(climb!=null) mapCanvas.fillText(Math.round((metric)?climb:climb*3.281),sw/2-5,20);
 		}
 		if(tracking && speed>0) { // if tracking show current altitude with coordinates
@@ -740,7 +740,7 @@
 	    n=Math.floor(degrees); // whole degs
 	    ddmm+=" "+n+":"; 
 	    n=(degrees-n)*60; // minutes
-	    if(n<10) ddmm+="0";
+	    // if(n<10) ddmm+="0";
 	    ddmm+=decimal(n);
 	    return ddmm;
 	}
