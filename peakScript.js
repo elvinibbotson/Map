@@ -34,6 +34,7 @@
 	document.getElementById("menuButton").addEventListener("click", function() {
 		console.log("toggle menu");
 		var display = document.getElementById("menu").style.display;
+		document.getElementById("list").style.display="none";
 		document.getElementById("menu").style.display = (display=="block")?"none":"block";
 		document.getElementById('metric').checked = metric;
 	});
@@ -79,16 +80,13 @@
 		centreMap();
 	});
 	document.getElementById('diagnostics').addEventListener('click', showNotifications);
-	// document.getElementById("tracks").addEventListener("click", listTracks);
 	document.getElementById("actionButton").addEventListener("click", getFix);
 	document.getElementById("stopButton").addEventListener("click", cease);
 	document.getElementById("mapOverlay").addEventListener("click", moveTo);
-	// testing
 	document.getElementById("mapOverlay").addEventListener("touchstart", startMove);
 	document.getElementById("mapOverlay").addEventListener("mousedown", startMove);
 	document.getElementById("mapOverlay").addEventListener("touchmove", move);
 	document.getElementById("mapOverlay").addEventListener("mousemove", move);
-
 	document.getElementById("saveButton").addEventListener("click", saver);
 	document.getElementById("cancelButton").addEventListener("click", function() {
 	  document.getElementById("saveDialog").style.display="none";
@@ -96,9 +94,7 @@
 	  nodes=[];
 	});
 	loc.lat = 53.2;
-	loc.lon = -1.75;
-	// sw = window.innerWidth;
-	// sh = window.innerHeight;
+	loc.lon = -1.75;	// sw = window.innerWidth;	// sh = window.innerHeight;
 	sw=screen.width;
 	sh=screen.height;
 	console.log("screen size: "+sw+"x"+sh);
@@ -152,7 +148,7 @@
 		document.getElementById("menu").style.display = "none";
 		console.log('list '+trackNames.length+' tracks');
 		if(trackNames.length<1) return;
-		document.getElementById("list").innerHTML="<button id='closeListButton' class='menuButton'></button> TRACKS";
+		document.getElementById("list").innerHTML="<b>Tracks</b>";
 		var trackList=document.createElement('ul');
 		for(var i=0; i<trackNames.length; i++) {
   			var listItem = document.createElement('li');
@@ -171,14 +167,14 @@
 			trackList.appendChild(listItem);
   		}
   		document.getElementById('list').appendChild(trackList);
-  		document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
+  		// document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
 		document.getElementById("list").style.display = "block";
 	}
 	function listRoutes() {
 		document.getElementById("menu").style.display = "none";
 		console.log('list '+routeNames.length+' routes');
 		if(routeNames.length<1) return;
-		document.getElementById("list").innerHTML="<button id='closeListButton' class='menuButton'></button> ROUTES";
+		document.getElementById("list").innerHTML="<b>Routes</b>";
 		var routeList=document.createElement('ul');
 		for(var i=0; i<routeNames.length; i++) {
   			var listItem = document.createElement('li');
@@ -197,7 +193,7 @@
 			routeList.appendChild(listItem);
   		}
   		document.getElementById('list').appendChild(routeList);
-  		document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
+  		// document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
 		document.getElementById("list").style.display = "block";
 	}
 	
@@ -206,9 +202,12 @@
 		x0=touches[0].clientX;
 		y0=touches[0].clientY;
 		notify("start drag");
+		document.getElementById('list').style.display='none';
+		document.getElementById('menu').style.display='none';
 	}
 	
 	function move(event) {
+		document.getElementById('menu').style.display='none';
 		var touches=event.changedTouches;
 		x=touches[0].clientX;
 		y=touches[0].clientY;
@@ -221,7 +220,8 @@
 	}
 
 	function moveTo(event) {
-		document.getElementById("menu").style.display = "none";
+		document.getElementById("list").style.display = "none";
+		document.getElementById('menu').style.display='none';
 		x=sw/2-event.clientX;
 		y=sh/2-event.clientY;
 		console.log("move to "+x+", "+y+" from current position");
@@ -423,7 +423,7 @@
 		}
 		document.getElementById("stopButton").style.display="none";
 		document.getElementById("measure").style.display="block";
-		document.getElementById("heading").innerHTML = "Peak";
+		// document.getElementById("heading").innerHTML = "Peak";
 		redraw();
 		if(nodes.length>5) { // offer to save route
 			notify("save route?");
@@ -442,75 +442,82 @@
 			if(t<10) name+="0";
 			name+=t; // YYmonDD.HH:MM
 			notify("track name: "+name);
-			document.getElementById("saveName").value = name;
+			document.getElementById("saveName").value=name;
 			document.getElementById("saveDialog").style.display = "block";
 		}
 	}
 
 	function redraw() {
-	  var i, p, x, y, r, d, t;
-	  notify("redraw - tracking is "+tracking);
-	  mapCanvas.clearRect(0, 0, sw, sh);
+		var i, p, x, y, r, d, t;
+		notify("redraw - tracking is "+tracking);
+		mapCanvas.clearRect(0, 0, sw, sh);
 		mapCanvas.lineWidth = 5;
-		// mapCanvas.strokeStyle = 'rgba(0,0,255,0.5)';
-		mapCanvas.fillStyle = 'rgba(0,0,0,0.7)';
-		mapCanvas.textBaseline = 'top';
+		var gradient = mapCanvas.createLinearGradient(0,0,0,100);
+		gradient.addColorStop(0,'black');
+		gradient.addColorStop(1,'#00000000');
+		mapCanvas.fillStyle = gradient;
+		mapCanvas.fillRect(0,0,sw,100);
+		mapCanvas.fill();
+		mapCanvas.textBaseline='top';
+		mapCanvas.textAlign='left';
+		mapCanvas.fillStyle = 'white';
+		mapCanvas.font = '16px Sans-Serif';
+		var string=dm(loc.lat, true);
+		if(tracking) string += (metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
+		mapCanvas.fillText(string,50,5);
+		string=dm(loc.lon, false);
+		if(tracking) string+=" climb";
+		mapCanvas.fillText(string,50,24);
 		if(distance>0) { // display distance travelled and height climbed so far
-			var gradient = mapCanvas.createLinearGradient(0,32,0,182);
-			gradient.addColorStop(0,'black');
-			gradient.addColorStop(1,'#00000000');
-			mapCanvas.fillStyle = gradient;
-			mapCanvas.fillRect(0,32,sw,182);
-			mapCanvas.fill();
-			mapCanvas.fillStyle = 'white';
 			mapCanvas.font = 'Bold 16px Sans-Serif';
 			mapCanvas.textAlign = 'left';
 			d=distance+dist;
 			if(metric) { // metric units
 				d=Math.round(d);
-				if(d<1000) mapCanvas.fillText('m',5,45);
+				if(d<1000) mapCanvas.fillText('m',sw/2,40);
 				else {
-					mapCanvas.fillText('km',5,45);
+					mapCanvas.fillText('km',sw/2,40);
 					d=decimal(d/1000);
 				}
 			}
 			else { // miles & yards
 				d=Math.round(d*1.093613); // nearest yard to latest trackpoint
-				if(d<1760) mapCanvas.fillText('yds',5,45);
+				if(d<1760) mapCanvas.fillText('yds',sw/2,40);
 				else {
-					mapCanvas.fillText('miles',5,45);
+					mapCanvas.fillText('miles',sw/2,40);
 					d=decimal(d/1760);
 				}
 			}
 			if(tracking && trackpoints.length>0) {
-				mapCanvas.fillText('time (moving)', 100, 45);
+				// mapCanvas.fillText('time (moving)', 100, 45);
 				t=Math.floor(duration/60);
 				mapCanvas.font = 'Bold 24px Sans-Serif';
 				var text = Math.floor(t/60)+":";
 				t%=60;
 				if(t<10) text+="0";
-				text+=t+" ("
-				t=Math.floor(moving/60); // minutes not stopped
+				mapCanvas.fillText(text, sw-100, 2);
+				text="+";
+				t-=Math.floor((duration-moving)/60);
 				text+=(Math.floor(t/60)+":");
 				t%=60;
 				if(t<10) text+= "0";
-				text+=(t+")");
-				mapCanvas.fillText(text, 100, 60);
+				text+=t;
+				mapCanvas.fillText(text, sw-100, 28);
 			}
 			mapCanvas.font = 'Bold 36px Sans-Serif';
-			mapCanvas.fillText(d,5,57);
+			mapCanvas.fillText(d,sw/2,2);
 			mapCanvas.font = 'Bold 16px Sans-Serif';
 			mapCanvas.textAlign = 'right';
-			mapCanvas.fillText(((metric)?"m":"ft")+" climbed",sw-5,45);
+			// mapCanvas.fillText(((metric)?"m":"ft")+" climbed",sw-5,45);
 			mapCanvas.font = 'Bold 36px Sans-Serif';
-			if(climb!=null) mapCanvas.fillText(Math.round((metric)?climb:climb*3.281),sw-5,57);
+			if(climb!=null) mapCanvas.fillText(Math.round((metric)?climb:climb*3.281),sw/2-5,20);
 		}
 		if(tracking && speed>0) { // if tracking show current altitude with coordinates
-			gradient=mapCanvas.createLinearGradient(0,sh-200,0,sh);
+			gradient=mapCanvas.createLinearGradient(0,sh-100,0,sh);
 			gradient.addColorStop(0,'#00000000');
 			gradient.addColorStop(1,'black');
 			mapCanvas.fillStyle = gradient;
-			mapCanvas.fillRect(0,sh-200,sw,sh);
+			mapCanvas.fillRect(0,sh-100,sw,sh);
 			mapCanvas.fillStyle='white';
 			mapCanvas.textBaseline='alphabetic';
 			mapCanvas.textAlign='left';
@@ -596,9 +603,11 @@
 		var map = document.getElementById("map");
 		map.style.left = mapLeft+"px";
 		map.style.top = mapTop+"px";
+		/*
 		var string = dm(loc.lat, true) + " " + dm(loc.lon, false) + " ";
 		if(tracking) string += (metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
 		document.getElementById('heading').innerHTML = string;
+		*/
 		redraw();
 		json=JSON.stringify(loc);
 		window.localStorage.setItem('peakLocation', json);
@@ -716,23 +725,23 @@
 	    var ddmm;
 	    var negative = false;
 	    var n;
-	    if (degrees < 0) {
-	        negative = true;
-	        degrees = degrees * -1;
+	    if (degrees<0) {
+	        negative=true;
+	        degrees=degrees*-1;
 	    }
-	    ddmm = Math.floor(degrees); // whole degs
-	    n = (degrees - ddmm) * 60; // minutes
-	    ddmm += deg;
-	    if (n < 10) ddmm += "0";
-	    ddmm += decimal(n) + "'";
-	    if (negative) {
-	        if (lat) ddmm += "S";
-	        else ddmm += "W";
+	    if(negative) {
+	    	if(lat) ddmm="S";
+	        else ddmm="W";
 	    }
 	    else {
-	        if (lat) ddmm += "N";
-	        else ddmm += "E";
+	    	if(lat) ddmm="N";
+	    	else ddmm="E";
 	    }
+	    n=Math.floor(degrees); // whole degs
+	    ddmm+=" "+n+":"; 
+	    n=(degrees-n)*60; // minutes
+	    if(n<10) ddmm+="0";
+	    ddmm+=decimal(n);
 	    return ddmm;
 	}
 	

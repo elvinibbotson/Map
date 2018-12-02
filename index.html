@@ -12,25 +12,13 @@
   	<meta name="msapplication-square70x70logo" content="icons/icon75px.png">
 </head>
 <body>
-<header class="header">
+<!--header class="header">
     <button id="menuButton" type="menu" menu="menu" class="menuButton" aria-label="Menu"></button>
     <h1 id="heading" class="header__title">Peak</h1>
-</header>
-<div id='actionButton' class='round-button'><img src='fixButton24px.svg'/></div>
-<div id='stopButton' class='round-button'><img src='stopButton24px.svg'/></div>
-<menu type="context" id="menu">
-	<p><menuitem id = "tracks" label = "tracks">tracks</menuitem></p>
-	<p><menuitem id="routes" label="routes">routes</menuitem></p>
-	<p><menuitem id='measure' label='measure'>measure route</menuitem></p>
-	<p><input type='checkbox' class='check' id='metric'>metric units</p>
-	<p><input type='checkbox' class='check' id='compact'>compact view</p>
-	<p><menuitem id='diagnostics'>diagnostics</p>
-</menu>
+</header-->
 <main class="main">
 	<div id="main" class="content">
 		<div id="mapScreen">
-			<p>1</p>
-			<p>loading...</p>
 			<div id="map">
                 <div id="tile00" class="tile"><img id="img00" src="tiles/24.jpg" /></div>
                 <div id="tile01" class="tile"><img id="img01" src="tiles/25.jpg" /></div>
@@ -48,21 +36,29 @@
 		</div>
 	</div>
 </main>
+<button id="menuButton" type="menu" menu="menu" class="menuButton" aria-label="Menu"></button>
+<div id='actionButton' class='round-button'><img src='fixButton24px.svg'/></div>
+<div id='stopButton' class='round-button'><img src='stopButton24px.svg'/></div>
+<menu type="context" id="menu">
+	<p><menuitem id = "tracks" label = "tracks">tracks</menuitem></p>
+	<p><menuitem id="routes" label="routes">routes</menuitem></p>
+	<p><menuitem id='measure' label='measure'>measure route</menuitem></p>
+	<p><input type='checkbox' class='check' id='metric'>metric units</p>
+	<p><input type='checkbox' class='check' id='compact'>compact view</p>
+	<p><menuitem id='diagnostics'>diagnostics</p>
+</menu>
 <div id="list"></div>
 <div id="saveDialog" class="dialog-container">
     <div class="dialog">
-      <div class="dialog-title">Save as</div>
-      <div class="dialog-body"><input type="text" id="saveName" size="30"/></div>
-      <div class="dialog-buttons">
-	      <button id="cancelButton" class="button">Cancel</button>
-        <button id="saveButton" class="button">Save</button>
-      </div>
+        <div class="dialog-title">Save as</div>
+        <div class="dialog-body"><input type="text" id="saveName" size="30"/></div>
+        <div class="dialog-buttons">
+	        <button id="cancelButton" class="button">Cancel</button>
+            <button id="saveButton" class="button">Save</button>
+        </div>
     </div>
-  </div>
-<div id="dialog">
-	<div
 </div>
-<div id="list"></div>
- <script src="peakScript.js" async></script>
+<div id="dialog"></div>
+<script src="peakScript.js" async></script>
 </body>
 </html>
