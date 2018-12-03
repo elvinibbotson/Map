@@ -466,8 +466,8 @@
 		if(tracking) string+=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
 		mapCanvas.fillText(string,50,5);
 		string=dm(loc.lon, false);
-		if(tracking) string+=" climb";
-		mapCanvas.fillText(string,50,24);
+		// if(tracking) string+=" climb";
+		mapCanvas.fillText(string,50,25);
 		if(distance>0) { // display distance travelled and height climbed so far
 			mapCanvas.font='Bold 16px Sans-Serif';
 			mapCanvas.textAlign = 'left';
@@ -490,24 +490,26 @@
 			}
 			if(tracking && trackpoints.length>0) {
 				// mapCanvas.fillText('time (moving)', 100, 45);
-				t=Math.floor(duration/60);
+				mapCanvas.textAlign='right';
+				t=Math.floor(moving/60);
 				mapCanvas.font = 'Bold 24px Sans-Serif';
 				var text = Math.floor(t/60)+":";
 				t%=60;
 				if(t<10) text+="0";
-				mapCanvas.fillText(text, sw-100, 2);
+				mapCanvas.fillText(text, sw-10, 5);
 				text="+";
 				t-=Math.floor((duration-moving)/60);
 				text+=(Math.floor(t/60)+":");
 				t%=60;
 				if(t<10) text+= "0";
 				text+=t;
-				mapCanvas.fillText(text, sw-100, 28);
+				mapCanvas.fillText(text, sw-10, 30);
 			}
+			mapCanvas.textAlign='left';
 			mapCanvas.font = 'Bold 36px Sans-Serif';
 			mapCanvas.fillText(d,sw/2,2);
 			mapCanvas.font = 'Bold 16px Sans-Serif';
-			mapCanvas.textAlign = 'right';
+			mapCanvas.textAlign='right';
 			// mapCanvas.fillText(((metric)?"m":"ft")+" climbed",sw-5,45);
 			// mapCanvas.font = 'Bold 36px Sans-Serif';
 			if(climb!=null) mapCanvas.fillText(Math.round((metric)?climb:climb*3.281),sw/2-5,20);
@@ -521,14 +523,11 @@
 			mapCanvas.fillStyle='white';
 			mapCanvas.textBaseline='alphabetic';
 			mapCanvas.textAlign='left';
-			mapCanvas.font='Bold 60px Sans-Serif';
-			mapCanvas.fillText(Math.round(((metric)?3.6:2.237)*speed), 5,sh-75);
-			mapCanvas.font='Bold 16px Sans-Serif';
-			mapCanvas.fillText((metric)?"kph":"mph", 5,sh-60);
-			mapCanvas.font='Bold 36px Sans-Serif';
+			mapCanvas.font='Bold 48px Sans-Serif';
 			d=Math.round((heading+11.25)/22.5); // 16 compass directions: N, NNE, NE,...
-			d=compass.substr(d*3,3); // compass point eg. NNE
-			mapCanvas.fillText(d,100,sh-75);
+			d=compass.substr(d*3,3)+" "; // compass point eg. NNE
+			d+=Math.round(((metric)?3.6:2.237)*speed);
+			d+=(metric)?"kph":"mph";
 		}
 		mapCanvas.beginPath(); // draw current track as blue line
 	    mapCanvas.strokeStyle = 'rgba(0,255,0,0.5)';
