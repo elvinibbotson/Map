@@ -66,11 +66,11 @@
 	document.getElementById("compact").addEventListener("change", function() {
 		if(this.checked) {
 			notify("switch compact view ON");
-			sh=sh/2+50; // restrict to top half of screen
+			sh=sh/2+20; // restrict to top half of screen
 		}
 		else {
 			notify("switch compact view OFF");
-			sh=(sh-50)*2; // use full screen
+			sh=(sh-20)*2; // use full screen
 		}
 		document.getElementById("mapScreen").style.height = sh+'px';
 		document.getElementById("mapCanvas").height = sh;
@@ -289,7 +289,7 @@
 		loc = {};
 		lastLoc = {};
 		distance = 0;
-		duration = moving = 0;
+		duration=moving=0;
 		heading = 0;
 		speed = 0;
 		hi = lo = climb = 0;
@@ -356,7 +356,7 @@
 			dist = measure("distance",loc.lon,loc.lat,lastLoc.lon,lastLoc.lat); // distance since last averaged fix
 			notify('moved '+Math.round(dist)+"m");
 			if(dist > 3) { // if moving adjust distance, duration, speed, heading
-				moving += (loc.time - lastLoc.time);
+				moving+=(loc.time-lastLoc.time);
 				var t=trackpoints.length-1; // most recent trackpoint
 				dist=measure("distance",loc.lon,loc.lat,trackpoints[t].lon,trackpoints[t].lat); // distance since last trackpoint
 				var interval=loc.time-trackpoints[t].time;
@@ -368,7 +368,7 @@
 			}
 			else speed=0;
 		}
-		lastLoc.time = loc.time
+		lastLoc.time = loc.time;
 		lastLoc.lon = loc.lon;
 		lastLoc.lat = loc.lat;
 		if((hi==0) || ((lo-loc.alt)>2)) {
@@ -463,28 +463,31 @@
 		mapCanvas.fillStyle = 'white';
 		mapCanvas.font = '16px Sans-Serif';
 		var string=dm(loc.lat, true);
-		if(tracking) string+=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
-		mapCanvas.fillText(string,50,5);
+		mapCanvas.fillText(string,45,5);
 		string=dm(loc.lon, false);
-		// if(tracking) string+=" climb";
-		mapCanvas.fillText(string,50,25);
-		if(distance>0) { // display distance travelled and height climbed so far
+		mapCanvas.fillText(string,45,25);
+		mapCanvas.textAlign='right';
+		if(tracking) {
+			string=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
+			mapCanvas.fillText(string,sw/2);
+		}
+		if(distance>0) { // display distance and time travelled and height climbed so far
 			mapCanvas.font='Bold 16px Sans-Serif';
-			mapCanvas.textAlign = 'left';
+			// mapCanvas.textAlign = 'left';
 			d=distance+dist;
 			if(metric) { // metric units
 				d=Math.round(d);
-				if(d<1000) mapCanvas.fillText('m',sw/2,35);
+				if(d<1000) mapCanvas.fillText('m',0.75*sw,35);
 				else {
-					mapCanvas.fillText('km',sw/2,35);
+					mapCanvas.fillText('km',0.75*sw,35);
 					d=decimal(d/1000);
 				}
 			}
 			else { // miles & yards
 				d=Math.round(d*1.093613); // nearest yard to latest trackpoint
-				if(d<1760) mapCanvas.fillText('yds',sw/2,35);
+				if(d<1760) mapCanvas.fillText('yds',0.75*sw,35);
 				else {
-					mapCanvas.fillText('miles',sw/2,35);
+					mapCanvas.fillText('miles',0.75*sw,35);
 					d=decimal(d/1760);
 				}
 			}
@@ -492,27 +495,26 @@
 				// mapCanvas.fillText('time (moving)', 100, 45);
 				mapCanvas.textAlign='right';
 				t=Math.floor(moving/60);
-				mapCanvas.font = 'Bold 24px Sans-Serif';
-				var text = Math.floor(t/60)+":";
+				mapCanvas.font='Bold 24px Sans-Serif';
+				var text=Math.floor(t/60)+":";
 				t%=60;
 				if(t<10) text+="0";
+				text+=t;
 				mapCanvas.fillText(text, sw-10, 5);
 				text="+";
-				t-=Math.floor((duration-moving)/60);
+				t=Math.floor((duration-moving)/60);
 				text+=(Math.floor(t/60)+":");
 				t%=60;
 				if(t<10) text+= "0";
 				text+=t;
 				mapCanvas.fillText(text, sw-10, 30);
 			}
-			mapCanvas.textAlign='left';
+			// mapCanvas.textAlign='left';
 			mapCanvas.font = 'Bold 36px Sans-Serif';
-			mapCanvas.fillText(d,sw/2,2);
+			mapCanvas.fillText(d,0.75*sw,2);
 			mapCanvas.font = 'Bold 16px Sans-Serif';
 			mapCanvas.textAlign='right';
-			// mapCanvas.fillText(((metric)?"m":"ft")+" climbed",sw-5,45);
-			// mapCanvas.font = 'Bold 36px Sans-Serif';
-			if(climb!=null) mapCanvas.fillText(Math.round((metric)?climb:climb*3.281),sw/2-5,20);
+			if(climb!=null) mapCanvas.fillText("/ "+Math.round((metric)?climb:climb*3.281),sw/2,25);
 		}
 		if(tracking && speed>0) { // if tracking show current altitude with coordinates
 			gradient=mapCanvas.createLinearGradient(0,sh-100,0,sh);
@@ -528,6 +530,7 @@
 			d=compass.substr(d*3,3)+" "; // compass point eg. NNE
 			d+=Math.round(((metric)?3.6:2.237)*speed);
 			d+=(metric)?"kph":"mph";
+			mapCanvas.fillText(d,10,sh-70);
 		}
 		mapCanvas.beginPath(); // draw current track as blue line
 	    mapCanvas.strokeStyle = 'rgba(0,255,0,0.5)';
