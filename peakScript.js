@@ -453,9 +453,9 @@
 		mapCanvas.clearRect(0,0,sw,sh);
 		mapCanvas.lineWidth=5;
 		var gradient=mapCanvas.createLinearGradient(0,0,0,100);
-		gradient.addColorStop(0,'black');
-		gradient.addColorStop(1,'#00000000');
-		mapCanvas.fillStyle = gradient;
+		gradient.addColorStop(0,'#333333');
+		gradient.addColorStop(1,'#33333300');
+		mapCanvas.fillStyle=gradient;
 		mapCanvas.fillRect(0,0,sw,100);
 		mapCanvas.fill();
 		mapCanvas.textBaseline='top';
@@ -469,7 +469,7 @@
 		mapCanvas.textAlign='right';
 		if(tracking) {
 			string=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
-			mapCanvas.fillText(string,sw/2);
+			mapCanvas.fillText(string,sw/2,5);
 		}
 		if(distance>0) { // display distance and time travelled and height climbed so far
 			mapCanvas.font='Bold 16px Sans-Serif';
@@ -492,7 +492,6 @@
 				}
 			}
 			if(tracking && trackpoints.length>0) {
-				// mapCanvas.fillText('time (moving)', 100, 45);
 				mapCanvas.textAlign='right';
 				t=Math.floor(moving/60);
 				mapCanvas.font='Bold 24px Sans-Serif';
@@ -509,7 +508,6 @@
 				text+=t;
 				mapCanvas.fillText(text, sw-10, 30);
 			}
-			// mapCanvas.textAlign='left';
 			mapCanvas.font = 'Bold 36px Sans-Serif';
 			mapCanvas.fillText(d,0.75*sw,2);
 			mapCanvas.font = 'Bold 16px Sans-Serif';
