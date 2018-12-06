@@ -467,10 +467,10 @@
 		string=dm(loc.lon, false);
 		mapCanvas.fillText(string,45,25);
 		mapCanvas.textAlign='right';
-		if(tracking) {
+		// if(tracking) {
 			string=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
 			mapCanvas.fillText(string,sw/2,5);
-		}
+		// }
 		if(distance>0) { // display distance and time travelled and height climbed so far
 			mapCanvas.font='Bold 16px Sans-Serif';
 			// mapCanvas.textAlign = 'left';
@@ -523,7 +523,7 @@
 			mapCanvas.fillStyle='white';
 			mapCanvas.textBaseline='alphabetic';
 			mapCanvas.textAlign='left';
-			mapCanvas.font='Bold 48px Sans-Serif';
+			mapCanvas.font='Bold 36px Sans-Serif';
 			d=Math.round((heading+11.25)/22.5); // 16 compass directions: N, NNE, NE,...
 			d=compass.substr(d*3,3)+" "; // compass point eg. NNE
 			d+=Math.round(((metric)?3.6:2.237)*speed);
