@@ -371,8 +371,8 @@
 		lastLoc.time = loc.time;
 		lastLoc.lon = loc.lon;
 		lastLoc.lat = loc.lat;
-		if((hi==0) || ((lo-loc.alt)>2)) {
-			hi=lo=loc.alt; // reset lo and hi at first trackpoint or new lo-point
+		if((trackpoints.length>1)&&((hi==0) || ((lo-loc.alt)>2))) {
+			hi=lo=loc.alt; // reset lo and hi at second trackpoint or new lo-point
 			notify("new lo (and hi)");
 		}
 		else if((loc.alt-hi)>5) {
@@ -423,15 +423,13 @@
 		}
 		document.getElementById("stopButton").style.display="none";
 		document.getElementById("measure").style.display="block";
-		// document.getElementById("heading").innerHTML = "Peak";
 		redraw();
 		if(nodes.length>5) { // offer to save route
 			notify("save route?");
 			document.getElementById('saveName').value="";
 			document.getElementById("saveDialog").style.display = "block";
 		}
-		// IF MORE THAN 5 TRACKPOINTS, OFFER TO SAVE TO DATABASE USING DIALOG TO GIVE DEFAULT (EDITABLE) NAME 'YYMMDD-HH:MM'
-		if(trackpoints.length>5) {
+		if(trackpoints.length>5) { // offer to save track
 			name='';
 			var now = new Date();
 			var name = now.getYear()%100 + months.substr(now.getMonth()*3,3) + now.getDate() + '.'; // YYmonDD
