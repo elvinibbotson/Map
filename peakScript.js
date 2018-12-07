@@ -264,7 +264,7 @@
 		loc.lon=position.coords.longitude;
 		loc.lat=position.coords.latitude;
 		loc.alt=position.coords.altitude;
-		notify("fix at "+loc.lon+","+loc.lat);
+		notify("fix at "+loc.lon+","+loc.lat+","+loc.alt);
 		centreMap();
 		document.getElementById("actionButton").innerHTML='<img src="goButton24px.svg"/>';
 		document.getElementById("actionButton").removeEventListener("click", getFix);
@@ -467,10 +467,10 @@
 		string=dm(loc.lon, false);
 		mapCanvas.fillText(string,45,25);
 		mapCanvas.textAlign='right';
-		// if(tracking) {
+		if(loc.alt!=null) {
 			string=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
 			mapCanvas.fillText(string,sw/2,5);
-		// }
+		}
 		if(distance>0) { // display distance and time travelled and height climbed so far
 			mapCanvas.font='Bold 16px Sans-Serif';
 			// mapCanvas.textAlign = 'left';
