@@ -356,7 +356,11 @@
 		else {
 			dist = measure("distance",loc.lon,loc.lat,lastLoc.lon,lastLoc.lat); // distance since last averaged fix
 			// notify('moved '+Math.round(dist)+"m");
-			if(dist > 3) { // if moving adjust distance, duration, speed, heading
+			if((loc.time-lastLoc.time)>60) { // resample 3 readings after waking up
+				fix=0;
+				return;
+			}
+			else if(dist>3) { // if moving adjust distance, duration, speed, heading
 				moving+=(loc.time-lastLoc.time);
 				var t=trackpoints.length-1; // most recent trackpoint
 				dist=measure("distance",loc.lon,loc.lat,trackpoints[t].lon,trackpoints[t].lat); // distance since last trackpoint
@@ -373,7 +377,7 @@
 		lastLoc.lon = loc.lon;
 		lastLoc.lat = loc.lat;
 		if(trackpoints.length>1) { // ignore first fixes - inaccurate?
-			if((hi==0)||((lo-loc.alt)>2)) { // start altitude logging or new low
+			if((hi==0)||((lo-loc.alt)>5)) { // start altitude logging or new low
 				hi=lo=loc.alt; // reset lo and hi at second trackpoint or new lo-point
 				notify("new lo (and hi):"+hi);
 			}
@@ -516,11 +520,11 @@
 			if(climb!=null) mapCanvas.fillText("/ "+Math.round((metric)?climb:climb*3.281),sw/2,25);
 		}
 		if(tracking && speed>0) { // if tracking show current altitude with coordinates
-			gradient=mapCanvas.createLinearGradient(0,sh-100,0,sh);
+			gradient=mapCanvas.createLinearGradient(0,sh-150,0,sh);
 			gradient.addColorStop(0,'#00000000');
 			gradient.addColorStop(1,'black');
 			mapCanvas.fillStyle = gradient;
-			mapCanvas.fillRect(0,sh-100,sw,sh);
+			mapCanvas.fillRect(0,sh-150,sw,sh);
 			mapCanvas.fillStyle='white';
 			mapCanvas.textBaseline='alphabetic';
 			mapCanvas.textAlign='left';
