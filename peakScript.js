@@ -241,7 +241,7 @@
 	}
 	
 	function addTP() {
-		notify("add trackpoint "+trackpoints.length);
+		notify("trackpoint "+trackpoints.length+" alt:"+loc.alt);
 		var tp={};
 		tp.lon=loc.lon;
 		tp.lat=loc.lat;
@@ -354,7 +354,7 @@
 		}
 		else {
 			dist = measure("distance",loc.lon,loc.lat,lastLoc.lon,lastLoc.lat); // distance since last averaged fix
-			notify('moved '+Math.round(dist)+"m");
+			// notify('moved '+Math.round(dist)+"m");
 			if(dist > 3) { // if moving adjust distance, duration, speed, heading
 				moving+=(loc.time-lastLoc.time);
 				var t=trackpoints.length-1; // most recent trackpoint
@@ -373,17 +373,17 @@
 		lastLoc.lat = loc.lat;
 		if((trackpoints.length>1)&&((hi==0) || ((lo-loc.alt)>2))) {
 			hi=lo=loc.alt; // reset lo and hi at second trackpoint or new lo-point
-			notify("new lo (and hi)");
+			notify("new lo (and hi):"+hi);
 		}
 		else if((loc.alt-hi)>5) {
 			lo = hi;
 			hi = loc.alt; // climbing - set new hi-point
 			climb += (hi-lo); // increment total climbed
-			notify("climbing - new hi");
+			notify("climbing - new hi:"+hi);
 		}
 		else if((hi - loc.alt) > 5) { // going over the top
 			hi = lo = loc.alt; // reset hi & lo until climbing again
-			notify("OTT - new hi & lo");
+			notify("OTT - new hi & lo:"+hi);
 		}
 		notify("lo:"+lo+" hi:"+hi+" climb:"+climb);
 		if((dist>100)||(turn>30)) { // add trackpoint after 100m or when direction changes > 30*
