@@ -201,7 +201,7 @@
 		var touches=event.changedTouches;
 		x0=touches[0].clientX;
 		y0=touches[0].clientY;
-		notify("start drag");
+		// notify("start drag");
 		document.getElementById('list').style.display='none';
 		document.getElementById('menu').style.display='none';
 	}
@@ -211,7 +211,7 @@
 		var touches=event.changedTouches;
 		x=touches[0].clientX;
 		y=touches[0].clientY;
-		notify("drag by "+x+"x"+y+"px");
+		// notify("drag by "+x+"x"+y+"px");
 		loc.lon-=(x-x0)/14400;
 		loc.lat+=(y-y0)/24000;
 		x0=x;
@@ -248,8 +248,8 @@
 		tp.alt=loc.alt;
 		tp.time=loc.time;
 		trackpoints.push(tp);
-		redraw();
 		if(trackpoints.length<2) return;
+		redraw();
 	}
 	
 	function getFix() { // get fix on current location
@@ -264,6 +264,7 @@
 		loc.lon=position.coords.longitude;
 		loc.lat=position.coords.latitude;
 		loc.alt=position.coords.altitude;
+		if(loc.alt!=null) loc.alt=Math.round(loc.alt);
 		notify("fix at "+loc.lon+","+loc.lat+","+loc.alt);
 		centreMap();
 		document.getElementById("actionButton").innerHTML='<img src="goButton24px.svg"/>';
@@ -371,21 +372,23 @@
 		lastLoc.time = loc.time;
 		lastLoc.lon = loc.lon;
 		lastLoc.lat = loc.lat;
-		if((trackpoints.length>1)&&((hi==0) || ((lo-loc.alt)>2))) {
-			hi=lo=loc.alt; // reset lo and hi at second trackpoint or new lo-point
-			notify("new lo (and hi):"+hi);
+		if(trackpoints.length>1) { // ignore first fixes - inaccurate?
+			if((hi==0)||((lo-loc.alt)>2)) { // start altitude logging or new low
+				hi=lo=loc.alt; // reset lo and hi at second trackpoint or new lo-point
+				notify("new lo (and hi):"+hi);
+			}
+			else if((loc.alt-hi)>5) { // climbing
+				lo = hi;
+				hi = loc.alt; // climbing - set new hi-point
+				climb += (hi-lo); // increment total climbed
+				notify("climbing - new hi:"+hi);
+			}
+			else if((hi - loc.alt) > 5) { // going over the top
+				hi = lo = loc.alt; // reset hi & lo until climbing again
+				notify("OTT - new hi & lo:"+hi);
+			}
 		}
-		else if((loc.alt-hi)>5) {
-			lo = hi;
-			hi = loc.alt; // climbing - set new hi-point
-			climb += (hi-lo); // increment total climbed
-			notify("climbing - new hi:"+hi);
-		}
-		else if((hi - loc.alt) > 5) { // going over the top
-			hi = lo = loc.alt; // reset hi & lo until climbing again
-			notify("OTT - new hi & lo:"+hi);
-		}
-		notify("lo:"+lo+" hi:"+hi+" climb:"+climb);
+		// notify("lo:"+lo+" hi:"+hi+" climb:"+climb);
 		if((dist>100)||(turn>30)) { // add trackpoint after 100m or when direction changes > 30*
 			distance += dist;
 			heading = Math.round(direction);
@@ -447,7 +450,7 @@
 
 	function redraw() {
 		var i, p, x, y, r, d, t;
-		notify("redraw - tracking is "+tracking);
+		// notify("redraw - tracking is "+tracking);
 		mapCanvas.clearRect(0,0,sw,sh);
 		mapCanvas.lineWidth=5;
 		var gradient=mapCanvas.createLinearGradient(0,0,0,100);
@@ -530,8 +533,8 @@
 		}
 		mapCanvas.beginPath(); // draw current track as blue line
 	    mapCanvas.strokeStyle = 'rgba(0,255,0,0.5)';
-	    if (nodes.length > 1) {
-			notify("draw route - "+nodes.length+" nodes");
+	    if(nodes.length>1) {
+			// notify("draw route - "+nodes.length+" nodes");
 	    	p=nodes[0];
 	    	// x = (p.lon - loc.lon) * 14400 + sw / 2;
 	    	// x=mapLeft-(mapW-p.lon)*14400;
@@ -555,7 +558,7 @@
 		mapCanvas.beginPath(); // draw current track as blue line
 		mapCanvas.strokeStyle = 'rgba(0,0,255,0.5)';
 	    if(trackpoints.length>1) {
-			notify("draw track - "+trackpoints.length+" trackpoints");
+			// notify("draw track - "+trackpoints.length+" trackpoints");
 	    	p=trackpoints[0];
 	    	// x=mapLeft-(mapW-p.lon)*14400;
 	    	x=sw/2+(p.lon-loc.lon)*14400;
@@ -697,7 +700,7 @@
 		distance=parseInt(route.distance);
 		nodes=route.nodes;
 		dist=0;
-		notify("load track with "+nodes.length+" nodes; length: "+distance+"m");
+		notify("load route with "+nodes.length+" nodes; length: "+distance+"m");
 		document.getElementById("list").style.display='none';
 		loc.lon=nodes[0].lon; // move to start of route
 		loc.lat=nodes[0].lat;
