@@ -357,6 +357,7 @@
 			dist = measure("distance",loc.lon,loc.lat,lastLoc.lon,lastLoc.lat); // distance since last averaged fix
 			// notify('moved '+Math.round(dist)+"m");
 			if((loc.time-lastLoc.time)>60) { // resample 3 readings after waking up
+				lastLoc.time=loc.time;
 				fix=0;
 				return;
 			}
