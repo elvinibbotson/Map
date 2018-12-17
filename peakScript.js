@@ -349,7 +349,7 @@
 		loc.lon=(fixes[0].lon+fixes[1].lon+fixes[2].lon)/3; // average location data
 		loc.lat=(fixes[0].lat+fixes[1].lat+fixes[2].lat)/3;
 		loc.alt=Math.round((fixes[0].alt+fixes[1].alt+fixes[2].alt)/3);
-		// notify(loc.lon+","+loc.lat+", "+loc.alt+"m accuracy:"+accuracy);
+		notify(loc.lon+","+loc.lat+", "+loc.alt+"m accuracy:"+accuracy);
 		if(trackpoints.length<1) { // at start, initialise lastLoc and...
 			addTP(); // ...add first trackpoint
 		}
@@ -393,7 +393,7 @@
 				notify("OTT - new hi & lo:"+hi);
 			}
 		}
-		// notify("lo:"+lo+" hi:"+hi+" climb:"+climb);
+		notify("lo:"+lo+" hi:"+hi+" climb:"+climb);
 		if((dist>100)||(turn>30)) { // add trackpoint after 100m or when direction changes > 30*
 			distance += dist;
 			heading = Math.round(direction);
@@ -775,7 +775,7 @@
 	
 	function notify(note) {
 		notifications.push(note);
-		while(notifications.length>10) notifications.shift();
+		while(notifications.length>25) notifications.shift();
 		console.log(note);
 	}
 	
