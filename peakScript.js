@@ -635,6 +635,7 @@
 		// draw altitude profile
 		notify(n+" trackpoints");
 		altCanvas.beginPath();
+		altCanvas.lineWidth=5;
 	    altCanvas.strokeStyle = 'rgba(0,0,255,0.5)';
 		notify('ready to draw profile');
 		var maxAlt, minAlt;
@@ -663,7 +664,7 @@
 		html+="duration: "+duration+"min<br/>";
 		html+="climb: "+climb+"m<br/>";
 		html+=trackpoints.length+" trackpoints";
-		// alert("track data: "+html);
+		notify("track data: "+html);
 		document.getElementById('track-stats').innerHTML=html;
 		document.getElementById('stats').style.display='block';
 	}
