@@ -633,8 +633,9 @@
 		if(trackpoints.length<5) return;
 		var n=trackpoints.length;
 		// draw altitude profile
+		notify(n+" trackpoints");
 		altCanvas.beginPath();
-	    altCanvas.strokeStyle = 'green';
+	    // altCanvas.strokeStyle = 'green';
 		notify('ready to draw profile');
 		var maxAlt, minAlt;
 		maxAlt=minAlt=0;
