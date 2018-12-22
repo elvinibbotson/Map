@@ -635,6 +635,7 @@
 		// draw altitude profile
 		altCanvas.beginPath();
 	    altCanvas.strokeStyle = 'green';
+		notify('ready to draw profile');
 		var maxAlt, minAlt;
 		maxAlt=minAlt=0;
 		for(var i=0;i<n;i++) {
@@ -642,11 +643,13 @@
 			if(trackpoints[i].alt>maxAlt) maxAlt=trackpoints[i].alt;
 		}
 		var dAlt=maxAlt-minAlt;
+		notify("altitudes "+minAlt+"-"+maxAlt+":"+dAlt);
 		var d=0;
 		var t,x,y;
 		for (i=0;i<n;i++) {
 			t=trackpoints[i];
 			if(i>0) d+=measure('dist',t.lon,t.lat,trackpoints[-1].lon,trackpoints[i-1].lat);
+			notify('i:'+i+' d:'+d);
 			x=sw*d/distance;
 			y=sh*(maxAlt-t.alt)/dAlt/4;
 			if(i<1) altCanvas.moveTo(x,y);
@@ -657,7 +660,7 @@
 		html+="duration: "+duration+"min<br/>";
 		html+="climb: "+climb+"m<br/>";
 		html+=trackpoints.length+" trackpoints";
-		alert("track data: "+html);
+		// alert("track data: "+html);
 		document.getElementById('track-stats').innerHTML=html;
 		document.getElementById('stats').style.display='block';
 	}
