@@ -652,6 +652,7 @@
 			if(i>0) d+=measure('dist',t.lon,t.lat,trackpoints[-1].lon,trackpoints[i-1].lat);
 			notify('i:'+i+' d:'+d);
 			x=sw*d/distance;
+			notify('x: '+x);
 			y=sh*(maxAlt-t.alt)/dAlt/4;
 			notify('line to '+x+','+y);
 			if(i<1) altCanvas.moveTo(x,y);
