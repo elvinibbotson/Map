@@ -111,9 +111,9 @@
 	document.getElementById("mapCanvas").width = sw;
 	document.getElementById("mapCanvas").height = sh;
 	altCanvas = document.getElementById("altCanvas").getContext("2d"); // set up drawing canvas
-	document.getElementById("actionButton").style.top=(sh-120)+'px';
-	document.getElementById("stopButton").style.left=(20)+'px';
-	document.getElementById("stopButton").style.top=(sh-120)+'px';
+	// document.getElementById("actionButton").style.top=(sh-120)+'px';
+	// document.getElementById("stopButton").style.left=(20)+'px';
+	// document.getElementById("stopButton").style.top=(sh-120)+'px';
 	console.log("buttons moved!");
 	document.getElementById("actionButton").style.display='block';
 	for (x = 0; x < 3; x++) { // build map by positioning 10x10 grid of tiles
@@ -650,7 +650,7 @@
 		var t,x,y;
 		for (i=0;i<n;i++) {
 			t=trackpoints[i];
-			if(i>0) d+=measure('dist',t.lon,t.lat,trackpoints[-1].lon,trackpoints[i-1].lat);
+			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[-1].lon,trackpoints[i-1].lat);
 			notify('i:'+i+' d:'+d);
 			x=sw*d/distance;
 			notify('x: '+x);
