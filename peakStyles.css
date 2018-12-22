@@ -126,15 +126,15 @@ input, label, select {
 }
 
 #actionButton {
-	left: 20px;
-	top: 50px;
+	right: 20px;
+	bottom: 50px;
 	background: #333333;
 	display: none;
 }
 
 #stopButton {
 	left: 20px;
-	top: 50px;
+	bottom: 50px;
 	background: red;
 	display: none;
 }

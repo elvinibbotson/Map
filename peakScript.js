@@ -81,8 +81,8 @@
 		document.getElementById("mapCanvas").height = sh;
 		document.getElementById("altCanvas").width=sw;
 		document.getElementById("altCanvas").height = sh/4;
-		document.getElementById("actionButton").style.top=(sh-120)+'px';
-		document.getElementById("stopButton").style.top=(sh-120)+'px';
+		// document.getElementById("actionButton").style.top=(sh-120)+'px';
+		// document.getElementById("stopButton").style.top=(sh-120)+'px';
 		document.getElementById("menu").style.display = "none";
 		centreMap();
 	});
