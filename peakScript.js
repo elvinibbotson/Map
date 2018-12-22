@@ -654,12 +654,12 @@
 		for (i=0;i<n;i++) {
 			t=trackpoints[i];
 			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
-			notify('i:'+i+' d:'+d);
+			// notify('i:'+i+' d:'+d);
 			x=sw*d/distance;
 			y=sh*(maxAlt-t.alt)/dAlt/4;
 			if(i<1) altCanvas.moveTo(x,y);
 			else altCanvas.lineTo(x,y);
-			notify('line to '+x+','+y);
+			// notify('line to '+x+','+y);
 		}
 		altCanvas.stroke();
 		var html="distance: "+distance+"m<br/>";
