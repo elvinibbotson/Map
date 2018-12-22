@@ -640,6 +640,7 @@
 		altCanvas.beginPath();
 		altCanvas.lineWidth=3;
 	    altCanvas.strokeStyle = '#FFFFFF';
+	    altCanvas.strokeRect(10,10,sw-20,sh/4-20);
 		notify('ready to draw profile');
 		var maxAlt, minAlt;
 		maxAlt=minAlt=0;
