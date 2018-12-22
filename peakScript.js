@@ -79,8 +79,8 @@
 		}
 		document.getElementById("mapScreen").style.height = sh+'px';
 		document.getElementById("mapCanvas").height = sh;
-		document.getElementById("altCanvas").width=sw;
-		document.getElementById("altCanvas").height = sh/4;
+		document.getElementById("altCanvas").width=sw*4;
+		document.getElementById("altCanvas").height = sh;
 		// document.getElementById("speedCanvas").top=sh/4+30;
 		// document.getElementById("speedCanvas").height = (sh-60)/4;
 		document.getElementById('track-stats').top=30+sh/2;
@@ -640,6 +640,7 @@
 		altCanvas.beginPath();
 		altCanvas.lineWidth=3;
 	    altCanvas.strokeStyle = '#FFFFFF';
+	    altCanvas.clearRect(0,0,sw,sh);
 	    altCanvas.strokeRect(10,10,sw-20,sh/4-20);
 		notify('ready to draw profile');
 		var maxAlt, minAlt;
