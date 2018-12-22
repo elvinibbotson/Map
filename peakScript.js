@@ -655,9 +655,10 @@
 			x=sw*d/distance;
 			notify('x: '+x);
 			y=sh*(maxAlt-t.alt)/dAlt/4;
-			notify('line to '+x+','+y);
+			
 			if(i<1) altCanvas.moveTo(x,y);
 			else altCanvas.lineTo(x,y);
+			notify('line to '+x+','+y);
 		}
 		altCanvas.stroke();
 		var html="distance: "+distance+"m<br/>";
