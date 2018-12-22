@@ -39,6 +39,10 @@
 		document.getElementById('metric').checked = metric;
 	});
 	document.getElementById("tracks").addEventListener("click", listTracks);
+	document.getElementById('showStats').addEventListener('click', showStats);
+	document.getElementById('doneButton').addEventListener('click', function() {
+		document.getElementById('stats').style.display='none';
+	});
 	document.getElementById("routes").addEventListener("click", listRoutes);
 	document.getElementById("measure").addEventListener("click",function() {
 		measuring=true;
@@ -249,6 +253,7 @@
 		tp.time=loc.time;
 		trackpoints.push(tp);
 		if(trackpoints.length<2) return;
+		if(trackpoints.length>4) document.getElementById('showStats').style.color='white';
 		redraw();
 	}
 	
@@ -619,6 +624,16 @@
 		window.localStorage.setItem('peakLocation', json);
 	}
 	
+	function showStats() {
+		notify('show track stats?');
+		if(trackpoints.length<5) return;
+		var html="distance: "+distance+"m<br/>";
+		html+="duration: "+duration+"min<br/>";
+		html+="climb: "+climb+"m<br/>";
+		html+=trackpoints.length+" trackpoins";
+		document.getElementById('stats').style.display='block';
+	}
+	
 	function saver() {
 		var name = document.getElementById("saveName").value;
 		notify("save track/route as "+name);
@@ -678,6 +693,7 @@
 		dist=0;
 		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"min; climb: "+climb+"m; "+moving+"minutes moving");
 		document.getElementById("list").style.display='none';
+		if(trackpoints.length>4) document.getElementById('showStats').style.color='white';
 		loc.lon=trackpoints[0].lon; // move to start of track
 		loc.lat=trackpoints[0].lat;
 		centreMap();

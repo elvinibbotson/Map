@@ -266,3 +266,49 @@ ul {
   padding: 8px !important;
   float: right;
 }
+
+#showStats {
+  color: gray;
+}
+
+#stats {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 150;
+  display: none;
+}
+
+#alt-profile {
+  position: fixed;
+  left: 0;
+  top:0;
+  width: 100%;
+  height: 25%;
+}
+
+#speed-profile {
+  position: fixed;
+  left: 0;
+  top:25%;
+  width: 100%;
+  height: 25%;
+}
+
+#track-stats {
+  position: fixed;
+  left: 0;
+  top:50%;
+  width: 100%;
+  height: 25%;
+}
+
+#doneButton {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  background: #333333;
+  z-index: 151;
+}
