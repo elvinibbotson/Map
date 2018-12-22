@@ -650,7 +650,7 @@
 		var t,x,y;
 		for (i=0;i<n;i++) {
 			t=trackpoints[i];
-			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[-1].lon,trackpoints[i-1].lat);
+			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
 			notify('i:'+i+' d:'+d);
 			x=sw*d/distance;
 			notify('x: '+x);
