@@ -630,7 +630,8 @@
 		var html="distance: "+distance+"m<br/>";
 		html+="duration: "+duration+"min<br/>";
 		html+="climb: "+climb+"m<br/>";
-		html+=trackpoints.length+" trackpoins";
+		html+=trackpoints.length+" trackpoints";
+		document.getElementById('track-stats').innerHTML=html;
 		document.getElementById('stats').style.display='block';
 	}
 	
