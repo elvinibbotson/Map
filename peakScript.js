@@ -626,11 +626,13 @@
 	
 	function showStats() {
 		notify('show track stats?');
+		document.getElementById("menu").style.display = "none";
 		if(trackpoints.length<5) return;
 		var html="distance: "+distance+"m<br/>";
 		html+="duration: "+duration+"min<br/>";
 		html+="climb: "+climb+"m<br/>";
 		html+=trackpoints.length+" trackpoints";
+		alert("track data: "+html);
 		document.getElementById('track-stats').innerHTML=html;
 		document.getElementById('stats').style.display='block';
 	}
