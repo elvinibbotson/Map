@@ -276,7 +276,6 @@ ul {
   left: 0;
   top: 30px;
   width: 100%;
-  height: 90%;
   background-color: black;
   color: white;
   z-index: 150;
@@ -288,7 +287,6 @@ ul {
   left: 0;
   top:0;
   width: 100%;
-  height: 25%;
 }
 
 #speed-profile {
@@ -296,7 +294,6 @@ ul {
   left: 0;
   top:25%;
   width: 100%;
-  height: 25%;
 }
 
 #track-stats {
@@ -304,7 +301,7 @@ ul {
   left: 0;
   top:50%;
   width: 100%;
-  height: 25%;
+  height:50%;
 }
 
 #doneButton {
