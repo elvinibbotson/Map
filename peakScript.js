@@ -5,6 +5,7 @@
 	var mapLeft, mapTop; // top-left of map relative to screen
 	var mapN = 53.3333; // north and west edges of map (degrees)
 	var mapW = -2.0;
+	var altCanvas; // canvas for track altitude profile
 	var x, y, x0, y0; // horizontal and vertical coordinates/measurements
 	var offset = {};
 	var status; // location & trip data
@@ -78,6 +79,8 @@
 		}
 		document.getElementById("mapScreen").style.height = sh+'px';
 		document.getElementById("mapCanvas").height = sh;
+		document.getElementById("altCanvas").width=sw;
+		document.getElementById("altCanvas").height = sh/4;
 		document.getElementById("actionButton").style.top=(sh-120)+'px';
 		document.getElementById("stopButton").style.top=(sh-120)+'px';
 		document.getElementById("menu").style.display = "none";
@@ -107,7 +110,7 @@
 	mapCanvas = document.getElementById("mapCanvas").getContext("2d"); // set up drawing canvas
 	document.getElementById("mapCanvas").width = sw;
 	document.getElementById("mapCanvas").height = sh;
-	document.getElementById("actionButton").style.left=(sw-70)+'px';
+	altCanvas = document.getElementById("altCanvas").getContext("2d"); // set up drawing canvas
 	document.getElementById("actionButton").style.top=(sh-120)+'px';
 	document.getElementById("stopButton").style.left=(20)+'px';
 	document.getElementById("stopButton").style.top=(sh-120)+'px';
@@ -628,6 +631,28 @@
 		notify('show track stats?');
 		document.getElementById("menu").style.display = "none";
 		if(trackpoints.length<5) return;
+		var n=trackpoints.length;
+		// draw altitude profile
+		altCanvas.beginPath();
+	    altCanvas.strokeStyle = 'green';
+		var maxAlt, minAlt;
+		maxAlt=minAlt=0;
+		for(var i=0;i<n;i++) {
+			if(trackpoints[i].alt<minAlt) minAlt=trackpoints[i].alt;
+			if(trackpoints[i].alt>maxAlt) maxAlt=trackpoints[i].alt;
+		}
+		var dAlt=maxAlt-minAlt;
+		var d=0;
+		var t,x,y;
+		for (i=0;i<n;i++) {
+			t=trackpoints[i];
+			if(i>0) d+=measure('dist',t.lon,t.lat,trackpoints[-1].lon,trackpoints[i-1].lat);
+			x=sw*d/distance;
+			y=sh*(maxAlt-t.alt)/dAlt/4;
+			if(i<1) altCanvas.moveTo(x,y);
+			else altCanvas.lineTo(x,y);
+		}
+		altCanvas.stroke();
 		var html="distance: "+distance+"m<br/>";
 		html+="duration: "+duration+"min<br/>";
 		html+="climb: "+climb+"m<br/>";
