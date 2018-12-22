@@ -636,7 +636,7 @@
 		notify(n+" trackpoints");
 		altCanvas.beginPath();
 		altCanvas.lineWidth=5;
-	    altCanvas.strokeStyle = 'rgba(0,0,255,0.5)';
+	    altCanvas.strokeStyle = '#FFFFFF';
 		notify('ready to draw profile');
 		var maxAlt, minAlt;
 		maxAlt=minAlt=0;
