@@ -635,7 +635,7 @@
 		// draw altitude profile
 		notify(n+" trackpoints");
 		altCanvas.beginPath();
-	    // altCanvas.strokeStyle = 'green';
+	    altCanvas.strokeStyle = 'rgba(0,0,255,0.5)';
 		notify('ready to draw profile');
 		var maxAlt, minAlt;
 		maxAlt=minAlt=0;
@@ -655,6 +655,7 @@
 			y=sh*(maxAlt-t.alt)/dAlt/4;
 			if(i<1) altCanvas.moveTo(x,y);
 			else altCanvas.lineTo(x,y);
+			notify('line to '+x+','+y);
 		}
 		altCanvas.stroke();
 		var html="distance: "+distance+"m<br/>";
