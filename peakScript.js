@@ -79,8 +79,8 @@
 		}
 		document.getElementById("mapScreen").style.height = sh+'px';
 		document.getElementById("mapCanvas").height = sh;
-		document.getElementById("altCanvas").width=sw*4;
-		document.getElementById("altCanvas").height = sh;
+		document.getElementById("altCanvas").width = sw;
+		document.getElementById("altCanvas").height = sh/4;
 		// document.getElementById("speedCanvas").top=sh/4+30;
 		// document.getElementById("speedCanvas").height = (sh-60)/4;
 		document.getElementById('track-stats').top=30+sh/2;
@@ -110,10 +110,12 @@
 	console.log("screen size: "+sw+"x"+sh);
 	document.getElementById("mapScreen").style.width = sw+'px';
 	document.getElementById("mapScreen").style.height = sh+'px';
-	mapCanvas = document.getElementById("mapCanvas").getContext("2d"); // set up drawing canvas
+	mapCan = document.getElementById("mapCanvas").getContext("2d"); // set up drawing canvas
 	document.getElementById("mapCanvas").width = sw;
-	document.getElementById("mapCanvas").height = sh;
+	document.getElementById("mapCanvas").height = sh;vas
 	altCanvas = document.getElementById("altCanvas").getContext("2d"); // set up drawing canvas
+	document.getElementById("altCanvas").width=sw;
+	document.getElementById("altCanvas").heigth=sh/4;
 	// document.getElementById("actionButton").style.top=(sh-120)+'px';
 	// document.getElementById("stopButton").style.left=(20)+'px';
 	// document.getElementById("stopButton").style.top=(sh-120)+'px';
