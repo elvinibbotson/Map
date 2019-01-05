@@ -110,9 +110,9 @@
 	console.log("screen size: "+sw+"x"+sh);
 	document.getElementById("mapScreen").style.width = sw+'px';
 	document.getElementById("mapScreen").style.height = sh+'px';
-	mapCan = document.getElementById("mapCanvas").getContext("2d"); // set up drawing canvas
+	mapCanvas = document.getElementById("mapCanvas").getContext("2d"); // set up drawing canvas
 	document.getElementById("mapCanvas").width = sw;
-	document.getElementById("mapCanvas").height = sh;vas
+	document.getElementById("mapCanvas").height = sh;
 	altCanvas = document.getElementById("altCanvas").getContext("2d"); // set up drawing canvas
 	document.getElementById("altCanvas").width=sw;
 	document.getElementById("altCanvas").heigth=sh/4;
