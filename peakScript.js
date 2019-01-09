@@ -43,7 +43,8 @@
 	document.getElementById("tracks").addEventListener("click", listTracks);
 	document.getElementById('profiles').addEventListener('click', profiles);
 	document.getElementById('doneButton').addEventListener('click', function() {
-		document.getElementById('profilesPanel ').style.display='none';
+		document.getElementById('alt-profile').style.display='none';
+		document.getElementById('speed-profile').style.display='none';
 	});
 	document.getElementById("routes").addEventListener("click", listRoutes);
 	document.getElementById("measure").addEventListener("click",function() {
@@ -646,7 +647,7 @@
 		notify(n+" trackpoints");
 		altCanvas.beginPath();
 		altCanvas.lineWidth=3;
-	    altCanvas.strokeStyle = '#FFFFFF';
+	    altCanvas.strokeStyle = '#00FF00';
 	    altCanvas.clearRect(0,0,w,h);
 	    // altCanvas.strokeRect(10,10,sw-20,sh/4-20);
 		notify('ready to draw profile');
@@ -677,7 +678,8 @@
 		html+=trackpoints.length+" trackpoints";
 		notify("track data: "+html);
 		document.getElementById('profilesPanel').innerHTML=html; */
-		document.getElementById('profilesPanel').style.display='block';
+		document.getElementById('alt-profile').style.display='block';
+		document.getElementById('speed-profile').style.display='block';
 	}
 	
 	function saver() {
