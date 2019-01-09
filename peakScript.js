@@ -45,6 +45,7 @@
 	document.getElementById('doneButton').addEventListener('click', function() {
 		document.getElementById('alt-profile').style.display='none';
 		document.getElementById('speed-profile').style.display='none';
+		document.getElementById('doneButton').style.display='none';
 	});
 	document.getElementById("routes").addEventListener("click", listRoutes);
 	document.getElementById("measure").addEventListener("click",function() {
@@ -680,6 +681,7 @@
 		document.getElementById('profilesPanel').innerHTML=html; */
 		document.getElementById('alt-profile').style.display='block';
 		document.getElementById('speed-profile').style.display='block';
+		document.getElementById('doneButton').style.display='block';
 	}
 	
 	function saver() {

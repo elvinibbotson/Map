@@ -289,6 +289,7 @@ ul {
   height: 40%;
   background-color: #ffffff88;
   z-index: 10;
+  display: none;
 }
 
 #speed-profile {
@@ -299,6 +300,7 @@ ul {
   height: 40%;
   background-color: #ffffff88;
   z-index: 10;
+  display: none;
 }
 
 #doneButton {
@@ -307,4 +309,5 @@ ul {
   bottom: 10px;
   background: #333333;
   z-index: 10;
+  display: none;
 }
