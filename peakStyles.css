@@ -267,20 +267,8 @@ ul {
   float: right;
 }
 
-#showStats {
+#profiles {
   color: gray;
-}
-
-#stats {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: gray;
-  color: white;
-  z-index: 150;
-  display: none;
 }
 
 #profilesPanel {
@@ -290,6 +278,7 @@ ul {
   width: 90%;
   height: 80%;
   z-index: 150;
+  display: none;
 }
 
 #alt-profile {
