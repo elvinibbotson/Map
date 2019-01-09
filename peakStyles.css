@@ -283,30 +283,31 @@ ul {
   display: none;
 }
 
+#profilesPanel {
+  position: fixed;
+  left: 5%;
+  top: 15%;
+  width: 90%;
+  height: 80%;
+  z-index: 150;
+}
+
 #alt-profile {
   position: fixed;
   left: 0;
   top:0;
   width: 100%;
-  height: 25%;
+  height: 40%;
   background-color: blue;
 }
 
 #speed-profile {
   position: fixed;
   left: 0;
-  top:25%;
+  top:40%;
   width: 100%;
-  height: 25%;
+  height: 40%;
   background-color: green;
-}
-
-#track-stats {
-  position: fixed;
-  left: 0;
-  top:50%;
-  width: 100%;
-  height:50%;
 }
 
 #doneButton {

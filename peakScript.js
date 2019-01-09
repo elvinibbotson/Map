@@ -6,6 +6,7 @@
 	var mapN = 53.3333; // north and west edges of map (degrees)
 	var mapW = -2.0;
 	var altCanvas; // canvas for track altitude profile
+	var speedCanvas; // canvas for track speed profile
 	var x, y, x0, y0; // horizontal and vertical coordinates/measurements
 	var offset = {};
 	var status; // location & trip data
@@ -40,9 +41,9 @@
 		document.getElementById('metric').checked = metric;
 	});
 	document.getElementById("tracks").addEventListener("click", listTracks);
-	document.getElementById('showStats').addEventListener('click', showStats);
+	document.getElementById('profiles').addEventListener('click', profiles);
 	document.getElementById('doneButton').addEventListener('click', function() {
-		document.getElementById('stats').style.display='none';
+		document.getElementById('profilesPanel').style.display='none';
 	});
 	document.getElementById("routes").addEventListener("click", listRoutes);
 	document.getElementById("measure").addEventListener("click",function() {
@@ -79,8 +80,8 @@
 		}
 		document.getElementById("mapScreen").style.height = sh+'px';
 		document.getElementById("mapCanvas").height = sh;
-		document.getElementById("altCanvas").width = sw;
-		document.getElementById("altCanvas").height = sh/4;
+		document.getElementById("altCanvas").width = sw*0.9;
+		document.getElementById("altCanvas").height = sh*0.4;
 		// document.getElementById("speedCanvas").top=sh/4+30;
 		// document.getElementById("speedCanvas").height = (sh-60)/4;
 		document.getElementById('track-stats').top=30+sh/2;
@@ -114,8 +115,8 @@
 	document.getElementById("mapCanvas").width = sw;
 	document.getElementById("mapCanvas").height = sh;
 	altCanvas = document.getElementById("altCanvas").getContext("2d"); // set up drawing canvas
-	document.getElementById("altCanvas").width=sw;
-	document.getElementById("altCanvas").heigth=sh/4;
+	document.getElementById("altCanvas").width=sw*0.9;
+	document.getElementById("altCanvas").heigth=sh*0.4;
 	// document.getElementById("actionButton").style.top=(sh-120)+'px';
 	// document.getElementById("stopButton").style.left=(20)+'px';
 	// document.getElementById("stopButton").style.top=(sh-120)+'px';
@@ -261,7 +262,7 @@
 		tp.time=loc.time;
 		trackpoints.push(tp);
 		if(trackpoints.length<2) return;
-		if(trackpoints.length>4) document.getElementById('showStats').style.color='white';
+		if(trackpoints.length>4) document.getElementById('profiles').style.color='white';
 		redraw();
 	}
 	
@@ -510,7 +511,9 @@
 					d=decimal(d/1760);
 				}
 			}
-			if(tracking && trackpoints.length>0) {
+			// draw duration if tracking or track loaded
+			if((duration>0)&&(travkpoints.length>0)) {
+			// if(tracking && trackpoints.length>0) {
 				mapCanvas.textAlign='right';
 				t=Math.floor(moving/60);
 				mapCanvas.font='Bold 24px Sans-Serif';
@@ -632,18 +635,20 @@
 		window.localStorage.setItem('peakLocation', json);
 	}
 	
-	function showStats() {
-		notify('show track stats?');
+	function profiles() {
+		notify('show track profiles?');
 		document.getElementById("menu").style.display = "none";
 		if(trackpoints.length<5) return;
 		var n=trackpoints.length;
 		// draw altitude profile
+		var w=sw*0.9;
+		var h=sh*0.4;
 		notify(n+" trackpoints");
 		altCanvas.beginPath();
 		altCanvas.lineWidth=3;
 	    altCanvas.strokeStyle = '#FFFFFF';
-	    altCanvas.clearRect(0,0,sw,sh);
-	    altCanvas.strokeRect(10,10,sw-20,sh/4-20);
+	    altCanvas.clearRect(0,0,w,h);
+	    // altCanvas.strokeRect(10,10,sw-20,sh/4-20);
 		notify('ready to draw profile');
 		var maxAlt, minAlt;
 		maxAlt=minAlt=0;
@@ -659,20 +664,20 @@
 			t=trackpoints[i];
 			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
 			// notify('i:'+i+' d:'+d);
-			x=sw*d/distance;
-			y=sh*(maxAlt-t.alt)/dAlt/4;
+			x=w*d/distance;
+			y=h*(maxAlt-t.alt)/dAlt/4;
 			if(i<1) altCanvas.moveTo(x,y);
 			else altCanvas.lineTo(x,y);
 			// notify('line to '+x+','+y);
 		}
 		altCanvas.stroke();
-		var html="distance: "+distance+"m<br/>";
+		/* var html="distance: "+distance+"m<br/>";
 		html+="duration: "+duration+"min<br/>";
 		html+="climb: "+climb+"m<br/>";
 		html+=trackpoints.length+" trackpoints";
 		notify("track data: "+html);
-		document.getElementById('track-stats').innerHTML=html;
-		document.getElementById('stats').style.display='block';
+		document.getElementById('profilesPanel').innerHTML=html; */
+		document.getElementById('profilesPanel').style.display='block';
 	}
 	
 	function saver() {
@@ -734,7 +739,7 @@
 		dist=0;
 		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"min; climb: "+climb+"m; "+moving+"minutes moving");
 		document.getElementById("list").style.display='none';
-		if(trackpoints.length>4) document.getElementById('showStats').style.color='white';
+		if(trackpoints.length>4) document.getElementById('profiles').style.color='white';
 		loc.lon=trackpoints[0].lon; // move to start of track
 		loc.lat=trackpoints[0].lat;
 		centreMap();
