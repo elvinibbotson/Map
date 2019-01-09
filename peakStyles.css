@@ -283,20 +283,20 @@ ul {
 
 #alt-profile {
   position: fixed;
-  left: 0;
-  top:0;
-  width: 100%;
+  left: 5%;
+  top:15%;
+  width: 90%;
   height: 40%;
-  background-color: blue;
+  background-color: #ffffff88;
 }
 
 #speed-profile {
   position: fixed;
-  left: 0;
-  top:40%;
-  width: 100%;
+  left: 5%;
+  top:55%;
+  width: 90%;
   height: 40%;
-  background-color: green;
+  background-color: #ffffff88;
 }
 
 #doneButton {

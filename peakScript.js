@@ -43,7 +43,7 @@
 	document.getElementById("tracks").addEventListener("click", listTracks);
 	document.getElementById('profiles').addEventListener('click', profiles);
 	document.getElementById('doneButton').addEventListener('click', function() {
-		document.getElementById('profilesPanel').style.display='none';
+		document.getElementById('profilesPanel ').style.display='none';
 	});
 	document.getElementById("routes").addEventListener("click", listRoutes);
 	document.getElementById("measure").addEventListener("click",function() {
@@ -116,7 +116,7 @@
 	document.getElementById("mapCanvas").height = sh;
 	altCanvas = document.getElementById("altCanvas").getContext("2d"); // set up drawing canvas
 	document.getElementById("altCanvas").width=sw*0.9;
-	document.getElementById("altCanvas").heigth=sh*0.4;
+	document.getElementById("altCanvas").height=sh*0.4;
 	// document.getElementById("actionButton").style.top=(sh-120)+'px';
 	// document.getElementById("stopButton").style.left=(20)+'px';
 	// document.getElementById("stopButton").style.top=(sh-120)+'px';
@@ -512,7 +512,7 @@
 				}
 			}
 			// draw duration if tracking or track loaded
-			if((duration>0)&&(travkpoints.length>0)) {
+			if((duration>0)&&(trackpoints.length>0)) {
 			// if(tracking && trackpoints.length>0) {
 				mapCanvas.textAlign='right';
 				t=Math.floor(moving/60);
@@ -665,7 +665,7 @@
 			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
 			// notify('i:'+i+' d:'+d);
 			x=w*d/distance;
-			y=h*(maxAlt-t.alt)/dAlt/4;
+			y=h*(maxAlt-t.alt)/dAlt;
 			if(i<1) altCanvas.moveTo(x,y);
 			else altCanvas.lineTo(x,y);
 			// notify('line to '+x+','+y);
