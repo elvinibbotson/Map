@@ -680,10 +680,16 @@
 		x=0; // draw km intervals
 		d=distance/1000; // km intervals
 		d=w/d; // km as pixels
-		while(x<w) {
+		altCanvas.lineWidth=1;
+		altCanvas.strokeStyle = '#000000cc';
+		while(x<w) { // km intervals
 			x+=d;
 			altCanvas.moveTo(x,0);
 			altCanvas.lineTo(x,h);
+		}
+		for(i=1;i<5;i++) { // 100m intervals
+			altCanvas.moveTo(0,i*h/5);
+			altCanvas.lineTo(w,i*h/5);
 		}
 		altCanvas.stroke();
 		/* var html="distance: "+distance+"m<br/>";
