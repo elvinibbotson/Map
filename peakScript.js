@@ -677,6 +677,14 @@
 			else altCanvas.lineTo(x,y);
 			// notify('line to '+x+','+y);
 		}
+		x=0; // draw km intervals
+		d=distance/1000; // km intervals
+		d=w/d; // km as pixels
+		while(x<w) {
+			x+=d;
+			altCanvas.moveTo(x,0);
+			altCanvas.lineTo(x,h);
+		}
 		altCanvas.stroke();
 		/* var html="distance: "+distance+"m<br/>";
 		html+="duration: "+duration+"min<br/>";
