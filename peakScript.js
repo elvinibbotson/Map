@@ -646,24 +646,12 @@
 		var w=sw*0.9;
 		var h=sh*0.4;
 		notify(n+" trackpoints");
+		altCanvas.clearRect(0,0,w,h);
 		altCanvas.beginPath();
 		altCanvas.lineWidth=3;
 	    altCanvas.strokeStyle = '#00FFFF';
-	    altCanvas.clearRect(0,0,w,h);
 	    // altCanvas.strokeRect(10,10,sw-20,sh/4-20);
 		notify('ready to draw profile');
-		/* scales profile to altitude range
-		var maxAlt, minAlt;
-		maxAlt=minAlt=0;
-		for(var i=0;i<n;i++) {
-			if(trackpoints[i].alt<minAlt) minAlt=trackpoints[i].alt;
-			if(trackpoints[i].alt>maxAlt) maxAlt=trackpoints[i].alt;
-		}
-		var dAlt=maxAlt-minAlt;
-		notify("altitudes "+minAlt+"-"+maxAlt+":"+dAlt);
-		
-		*/
-		// alternatively, use 0-500m vertical range
 		var d=0;
 		var t,x,y;
 		for (var i=0;i<n;i++) {
@@ -684,6 +672,7 @@
 		d=w/d; // km as pixels
 		altCanvas.lineWidth=1;
 		altCanvas.strokeStyle = '#000000cc';
+		altCanvas.strokeRect(0,0,w,h);
 		while(x<w) { // km intervals
 			x+=d;
 			altCanvas.moveTo(x,0);
@@ -694,12 +683,6 @@
 			altCanvas.lineTo(w,i*h/5);
 		}
 		altCanvas.stroke();
-		/* var html="distance: "+distance+"m<br/>";
-		html+="duration: "+duration+"min<br/>";
-		html+="climb: "+climb+"m<br/>";
-		html+=trackpoints.length+" trackpoints";
-		notify("track data: "+html);
-		document.getElementById('profilesPanel').innerHTML=html; */
 		document.getElementById('alt-profile').style.display='block';
 		document.getElementById('speed-profile').style.display='block';
 		document.getElementById('doneButton').style.display='block';
