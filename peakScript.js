@@ -648,10 +648,11 @@
 		notify(n+" trackpoints");
 		altCanvas.beginPath();
 		altCanvas.lineWidth=3;
-	    altCanvas.strokeStyle = '#00FF00';
+	    altCanvas.strokeStyle = '#00FFFF';
 	    altCanvas.clearRect(0,0,w,h);
 	    // altCanvas.strokeRect(10,10,sw-20,sh/4-20);
 		notify('ready to draw profile');
+		/* scales profile to altitude range
 		var maxAlt, minAlt;
 		maxAlt=minAlt=0;
 		for(var i=0;i<n;i++) {
@@ -660,14 +661,18 @@
 		}
 		var dAlt=maxAlt-minAlt;
 		notify("altitudes "+minAlt+"-"+maxAlt+":"+dAlt);
+		
+		*/
+		// alternatively, use 0-500m vertical range
 		var d=0;
 		var t,x,y;
-		for (i=0;i<n;i++) {
+		for (var i=0;i<n;i++) {
 			t=trackpoints[i];
 			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
 			// notify('i:'+i+' d:'+d);
 			x=w*d/distance;
-			y=h*(maxAlt-t.alt)/dAlt;
+			y=h*(500-t.alt)/500;
+			// y=h*(maxAlt-t.alt)/dAlt;
 			if(i<1) altCanvas.moveTo(x,y);
 			else altCanvas.lineTo(x,y);
 			// notify('line to '+x+','+y);
