@@ -724,17 +724,17 @@
 		speedCanvas.beginPath();
 		speedCanvas.lineWidth=3;
 	    speedCanvas.strokeStyle = 'white';
-		var h=0; // horizontal position
+		var x=0; // horizontal position
 		var t=0; // time (sec)
 		var s=0; // speed (km/hr)
 		for (i=1;i<n;i++) { // for each trackpoint
 			d=measure('distance',trackpoints[i-1].lon,trackpoints[i-1].lat,trackpoints[i].lon,trackpoints[i].lat);
-			h+=d;
+			x+=d;
 			t=trackpoints[i].time-trackpoints[i-1].time;
 			s=3.6*d/t; // km/hr
-			notify('trackpoint '+n+' d:'+d+' s:'+s);
-			speedCanvas.moveTo(w*h/distance,h);
-			speedCanvas.lineTo(w*h/distance,h-s);
+			notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
+			speedCanvas.moveTo(w*x/distance,h);
+			speedCanvas.lineTo(w*x/distance,h-s);
 		}
 		speedCanvas.stroke();
 		document.getElementById('alt-profile').style.display='block';
