@@ -82,8 +82,8 @@
 		}
 		document.getElementById("mapScreen").style.height = sh+'px';
 		document.getElementById("mapCanvas").height = sh;
-		document.getElemenetById("alt-profile").style.width=(sw*0.9)+"px";
-		document.getElemenetById("alt-profile").style.height=(sh*0.4)+"px";
+		// document.getElemenetById("alt-profile").style.width=(sw*0.9)+"px";
+		// document.getElemenetById("alt-profile").style.height=(sh*0.4)+"px";
 		document.getElementById("altCanvas").width = sw*0.9;
 		document.getElementById("altCanvas").height = sh*0.4;
 		// document.getElementById("speedCanvas").top=sh/4+30;
