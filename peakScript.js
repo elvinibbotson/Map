@@ -696,7 +696,7 @@
 		notify('draw speed profile');
 		// speed profile
 		// first create dark background
-		speedCanvas.fillStyle='#000000cc';
+		speedCanvas.fillStyle='#0000ffcc';
 		speedCanvas.clearRect(0,0,w,h);
 		speedCanvas.fillRect(0,0,w,h);
 		// draw grid km x 100m
