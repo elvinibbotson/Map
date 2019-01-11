@@ -693,12 +693,14 @@
 			// notify('line to '+x+','+y);
 		}
 		altCanvas.stroke();
+		notify('draw speed profile');
 		// speed profile
 		// first create dark background
 		speedCanvas.fillStyle='#000000cc';
 		speedCanvas.clearRect(0,0,w,h);
 		speedCanvas.fillRect(0,0,w,h);
 		// draw grid km x 100m
+		notify('draw speed grid');
 		speedCanvas.beginPath();
 		x=0; // draw km intervals
 		d=distance/1000; // km intervals
@@ -718,6 +720,7 @@
 		altCanvas.stroke();
 		// draw speed profile
 		// d=w/n; // spacing of trackpoints
+		notify('draw speed profile');
 		speedCanvas.beginPath();
 		speedCanvas.lineWidth=3;
 	    speedCanvas.strokeStyle = 'white';
