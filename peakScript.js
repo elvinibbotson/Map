@@ -693,10 +693,10 @@
 			// notify('line to '+x+','+y);
 		}
 		altCanvas.stroke();
-		notify('draw speed profile');
+		notify('next: speed profile');
 		// speed profile
 		// first create dark background
-		speedCanvas.fillStyle='#0000ffcc';
+		speedCanvas.fillStyle='#000000cc';
 		speedCanvas.clearRect(0,0,w,h);
 		speedCanvas.fillRect(0,0,w,h);
 		// draw grid km x 100m
@@ -732,6 +732,7 @@
 			h+=d;
 			t=trackpoints[i].time-trackpoints[i-1].time;
 			s=3.6*d/t; // km/hr
+			notify('trackpoint '+n+' d:'+d+' s:'+s);
 			speedCanvas.moveTo(w*h/distance,h);
 			speedCanvas.lineTo(w*h/distance,h-s);
 		}

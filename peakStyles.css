@@ -288,8 +288,7 @@ ul {
   width: 90%;
   height: 40%;
   z-index: 10;
-  background: yellow;
-  display: block;
+  display: none;
 }
 
 #doneButton {
