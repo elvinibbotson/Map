@@ -82,6 +82,8 @@
 		}
 		document.getElementById("mapScreen").style.height = sh+'px';
 		document.getElementById("mapCanvas").height = sh;
+		document.getElemenetById("alt-profile").style.width=(sw*0.9)+"px";
+		document.getElemenetById("alt-profile").style.height=(sh*0.4)+"px";
 		document.getElementById("altCanvas").width = sw*0.9;
 		document.getElementById("altCanvas").height = sh*0.4;
 		// document.getElementById("speedCanvas").top=sh/4+30;
@@ -649,7 +651,7 @@
 		altCanvas.clearRect(0,0,w,h);
 		altCanvas.beginPath();
 		altCanvas.lineWidth=3;
-	    altCanvas.strokeStyle = '#00FFFF';
+	    altCanvas.strokeStyle = 'white';
 	    // altCanvas.strokeRect(10,10,sw-20,sh/4-20);
 		notify('ready to draw profile');
 		var d=0;
@@ -671,7 +673,7 @@
 		d=distance/1000; // km intervals
 		d=w/d; // km as pixels
 		altCanvas.lineWidth=1;
-		altCanvas.strokeStyle = '#000000cc';
+		altCanvas.strokeStyle = 'gray';
 		altCanvas.strokeRect(0,0,w,h);
 		while(x<w) { // km intervals
 			x+=d;
