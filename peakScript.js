@@ -86,9 +86,9 @@
 		// document.getElemenetById("alt-profile").style.height=(sh*0.4)+"px";
 		document.getElementById("altCanvas").width = sw*0.9;
 		document.getElementById("altCanvas").height = sh*0.4;
-		// document.getElementById("speedCanvas").top=sh/4+30;
-		// document.getElementById("speedCanvas").height = (sh-60)/4;
-		document.getElementById('track-stats').top=30+sh/2;
+		document.getElementById("speedCanvas").width=sw*0.9;
+		document.getElementById("speedCanvas").height = sh*0.4;
+		// document.getElementById('track-stats').top=30+sh/2;
 		// document.getElementById("actionButton").style.top=(sh-120)+'px';
 		// document.getElementById("stopButton").style.top=(sh-120)+'px';
 		document.getElementById("menu").style.display = "none";
@@ -121,6 +121,9 @@
 	altCanvas = document.getElementById("altCanvas").getContext("2d"); // set up drawing canvas
 	document.getElementById("altCanvas").width=sw*0.9;
 	document.getElementById("altCanvas").height=sh*0.4;
+	speedCanvas = document.getElementById("speedCanvas").getContext("2d"); // set up drawing canvas
+	document.getElementById("speedCanvas").width=sw*0.9;
+	document.getElementById("speedCanvas").height=sh*0.4;
 	// document.getElementById("actionButton").style.top=(sh-120)+'px';
 	// document.getElementById("stopButton").style.left=(20)+'px';
 	// document.getElementById("stopButton").style.top=(sh-120)+'px';
@@ -644,7 +647,7 @@
 		document.getElementById("menu").style.display = "none";
 		if(trackpoints.length<5) return;
 		var n=trackpoints.length;
-		// draw altitude profile
+		// draw altitude and speed profiles
 		var w=sw*0.9;
 		var h=sh*0.4;
 		notify(n+" trackpoints");
@@ -690,6 +693,46 @@
 			// notify('line to '+x+','+y);
 		}
 		altCanvas.stroke();
+		// speed profile
+		// first create dark background
+		speedCanvas.fillStyle='#000000cc';
+		speedCanvas.clearRect(0,0,w,h);
+		speedCanvas.fillRect(0,0,w,h);
+		// draw grid km x 100m
+		speedCanvas.beginPath();
+		x=0; // draw km intervals
+		d=distance/1000; // km intervals
+		d=w/d; // km as pixels
+		speedCanvas.lineWidth=1;
+		speedCanvas.strokeStyle = 'gray';
+		speedCanvas.strokeRect(0,0,w,h);
+		while(x<w) { // km intervals
+			x+=d;
+			speedCanvas.moveTo(x,0);
+			speedCanvas.lineTo(x,h);
+		}
+		for(i=1;i<5;i++) { // 10km/hr intervals
+			speedCanvas.moveTo(0,i*h/5);
+			speedCanvas.lineTo(w,i*h/5);
+		}
+		altCanvas.stroke();
+		// draw speed profile
+		// d=w/n; // spacing of trackpoints
+		speedCanvas.beginPath();
+		speedCanvas.lineWidth=3;
+	    speedCanvas.strokeStyle = 'white';
+		var h=0; // horizontal position
+		var t=0; // time (sec)
+		var s=0; // speed (km/hr)
+		for (i=1;i<n;i++) { // for each trackpoint
+			d=measure('distance',trackpoints[i-1].lon,trackpoints[i-1].lat,trackpoints[i].lon,trackpoints[i].lat);
+			h+=d;
+			t=trackpoints[i].time-trackpoints[i-1].time;
+			s=3.6*d/t; // km/hr
+			speedCanvas.moveTo(w*h/distance,h);
+			speedCanvas.lineTo(w*h/distance,h-s);
+		}
+		speedCanvas.stroke();
 		document.getElementById('alt-profile').style.display='block';
 		document.getElementById('speed-profile').style.display='block';
 		document.getElementById('doneButton').style.display='block';
