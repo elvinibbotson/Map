@@ -648,7 +648,29 @@
 		var w=sw*0.9;
 		var h=sh*0.4;
 		notify(n+" trackpoints");
+		// first create dark background
+		altCanvas.fillStyle='#000000cc';
 		altCanvas.clearRect(0,0,w,h);
+		altCanvas.fillRect(0,0,w,h);
+		// draw grid km x 100m
+		altCanvas.beginPath();
+		x=0; // draw km intervals
+		d=distance/1000; // km intervals
+		d=w/d; // km as pixels
+		altCanvas.lineWidth=1;
+		altCanvas.strokeStyle = 'gray';
+		altCanvas.strokeRect(0,0,w,h);
+		while(x<w) { // km intervals
+			x+=d;
+			altCanvas.moveTo(x,0);
+			altCanvas.lineTo(x,h);
+		}
+		for(i=1;i<5;i++) { // 100m intervals
+			altCanvas.moveTo(0,i*h/5);
+			altCanvas.lineTo(w,i*h/5);
+		}
+		altCanvas.stroke();
+		// draw altitude profile
 		altCanvas.beginPath();
 		altCanvas.lineWidth=3;
 	    altCanvas.strokeStyle = 'white';
@@ -666,23 +688,6 @@
 			if(i<1) altCanvas.moveTo(x,y);
 			else altCanvas.lineTo(x,y);
 			// notify('line to '+x+','+y);
-		}
-		altCanvas.stroke();
-		altCanvas.beginPath();
-		x=0; // draw km intervals
-		d=distance/1000; // km intervals
-		d=w/d; // km as pixels
-		altCanvas.lineWidth=1;
-		altCanvas.strokeStyle = 'gray';
-		altCanvas.strokeRect(0,0,w,h);
-		while(x<w) { // km intervals
-			x+=d;
-			altCanvas.moveTo(x,0);
-			altCanvas.lineTo(x,h);
-		}
-		for(i=1;i<5;i++) { // 100m intervals
-			altCanvas.moveTo(0,i*h/5);
-			altCanvas.lineTo(w,i*h/5);
 		}
 		altCanvas.stroke();
 		document.getElementById('alt-profile').style.display='block';
