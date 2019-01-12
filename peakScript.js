@@ -42,8 +42,7 @@
 	document.getElementById("tracks").addEventListener("click", listTracks);
 	document.getElementById('profiles').addEventListener('click', profiles);
 	document.getElementById('doneButton').addEventListener('click', function() {
-		document.getElementById('alt-profile').style.display='none';
-		document.getElementById('speed-profile').style.display='none';
+		document.getElementById('profilesPanel').style.display='none';
 		document.getElementById('doneButton').style.display='none';
 	});
 	document.getElementById("routes").addEventListener("click", listRoutes);
@@ -113,9 +112,6 @@
 	profilesCanvas = document.getElementById("profilesCanvas").getContext("2d"); // set up drawing canvas
 	document.getElementById("profilesCanvas").width=sw*0.9;
 	document.getElementById("profilesCanvas").height=sh*0.4;
-	// document.getElementById("actionButton").style.top=(sh-120)+'px';
-	// document.getElementById("stopButton").style.left=(20)+'px';
-	// document.getElementById("stopButton").style.top=(sh-120)+'px';
 	console.log("buttons moved!");
 	document.getElementById("actionButton").style.display='block';
 	for (x = 0; x < 3; x++) { // build map by positioning 10x10 grid of tiles
@@ -126,7 +122,6 @@
 		}
 	}
 	document.getElementById("map").style.display = 'block';
-	// console.log("mapCanvas size: "+document.getElementById("mapCanvas").width+"x"+document.getElementById("mapCanvas").height);
 	status = window.localStorage.getItem('peakLocation'); // recover last location
 	console.log("location status: "+status);
 	if(status) {
@@ -696,8 +691,7 @@
 			profilesCanvas.lineTo(w*x/distance,h-s/50);
 		}
 		profilesCanvas.stroke();
-		document.getElementById('alt-profile').style.display='block';
-		document.getElementById('speed-profile').style.display='block';
+		document.getElementById('profilesPanel').style.display='block';
 		document.getElementById('doneButton').style.display='block';
 	}
 	
