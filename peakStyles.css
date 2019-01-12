@@ -271,7 +271,7 @@ ul {
   color: gray;
 }
 
-#alt-profile {
+#profilesPanel {
   position: fixed;
   left: 5%;
   top:10%;
@@ -280,7 +280,7 @@ ul {
   z-index: 10;
   display: none;
 }
-
+/*
 #speed-profile {
   position: fixed;
   left: 5%;
@@ -290,7 +290,7 @@ ul {
   z-index: 10;
   display: none;
 }
-
+*/
 #doneButton {
   position: fixed;
   right: 10px;

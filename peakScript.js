@@ -5,8 +5,7 @@
 	var mapLeft, mapTop; // top-left of map relative to screen
 	var mapN = 53.3333; // north and west edges of map (degrees)
 	var mapW = -2.0;
-	var altCanvas; // canvas for track altitude profile
-	var speedCanvas; // canvas for track speed profile
+	var profilesCanvas; // canvas for track altitude & speed profiles
 	var x, y, x0, y0; // horizontal and vertical coordinates/measurements
 	var offset = {};
 	var status; // location & trip data
@@ -82,15 +81,8 @@
 		}
 		document.getElementById("mapScreen").style.height = sh+'px';
 		document.getElementById("mapCanvas").height = sh;
-		// document.getElemenetById("alt-profile").style.width=(sw*0.9)+"px";
-		// document.getElemenetById("alt-profile").style.height=(sh*0.4)+"px";
-		document.getElementById("altCanvas").width = sw*0.9;
-		document.getElementById("altCanvas").height = sh*0.4;
-		document.getElementById("speedCanvas").width=sw*0.9;
-		document.getElementById("speedCanvas").height = sh*0.4;
-		// document.getElementById('track-stats').top=30+sh/2;
-		// document.getElementById("actionButton").style.top=(sh-120)+'px';
-		// document.getElementById("stopButton").style.top=(sh-120)+'px';
+		document.getElementById("profilesCanvas").width = sw*0.9;
+		document.getElementById("profilesCanvas").height = sh*0.4;
 		document.getElementById("menu").style.display = "none";
 		centreMap();
 	});
@@ -118,12 +110,9 @@
 	mapCanvas = document.getElementById("mapCanvas").getContext("2d"); // set up drawing canvas
 	document.getElementById("mapCanvas").width = sw;
 	document.getElementById("mapCanvas").height = sh;
-	altCanvas = document.getElementById("altCanvas").getContext("2d"); // set up drawing canvas
-	document.getElementById("altCanvas").width=sw*0.9;
-	document.getElementById("altCanvas").height=sh*0.4;
-	speedCanvas = document.getElementById("speedCanvas").getContext("2d"); // set up drawing canvas
-	document.getElementById("speedCanvas").width=sw*0.9;
-	document.getElementById("speedCanvas").height=sh*0.4;
+	profilesCanvas = document.getElementById("profilesCanvas").getContext("2d"); // set up drawing canvas
+	document.getElementById("profilesCanvas").width=sw*0.9;
+	document.getElementById("profilesCanvas").height=sh*0.4;
 	// document.getElementById("actionButton").style.top=(sh-120)+'px';
 	// document.getElementById("stopButton").style.left=(20)+'px';
 	// document.getElementById("stopButton").style.top=(sh-120)+'px';
@@ -652,33 +641,31 @@
 		var h=sh*0.4;
 		notify(n+" trackpoints");
 		// first create dark background
-		altCanvas.fillStyle='#000000cc';
-		altCanvas.clearRect(0,0,w,h);
-		altCanvas.fillRect(0,0,w,h);
-		// draw grid km x 100m
-		altCanvas.beginPath();
+		profilesCanvas.fillStyle='#000000cc';
+		profilesCanvas.clearRect(0,0,w,h);
+		profilesCanvas.fillRect(0,0,w,h);
+		// draw grid km x 100m/10kph
+		profilesCanvas.beginPath();
 		x=0; // draw km intervals
 		d=distance/1000; // km intervals
 		d=w/d; // km as pixels
-		altCanvas.lineWidth=1;
-		altCanvas.strokeStyle = 'gray';
-		altCanvas.strokeRect(0,0,w,h);
+		profilesCanvas.lineWidth=1;
+		profilesCanvas.strokeStyle = 'gray';
 		while(x<w) { // km intervals
 			x+=d;
-			altCanvas.moveTo(x,0);
-			altCanvas.lineTo(x,h);
+			profilesCanvas.moveTo(x,0);
+			profilesCanvas.lineTo(x,h);
 		}
-		for(i=1;i<5;i++) { // 100m intervals
-			altCanvas.moveTo(0,i*h/5);
-			altCanvas.lineTo(w,i*h/5);
+		for(i=1;i<5;i++) { // 100m/10kph intervals
+			profilesCanvas.moveTo(0,i*h/5);
+			profilesCanvas.lineTo(w,i*h/5);
 		}
-		altCanvas.stroke();
-		// draw altitude profile
-		altCanvas.beginPath();
-		altCanvas.lineWidth=3;
-	    altCanvas.strokeStyle = 'white';
-	    // altCanvas.strokeRect(10,10,sw-20,sh/4-20);
-		notify('ready to draw profile');
+		profilesCanvas.stroke();
+		// draw elevation profile
+		profilesCanvas.beginPath();
+		profilesCanvas.lineWidth=3;
+	    profilesCanvas.strokeStyle = 'yellow'; // elevation profile is yellow
+		notify('ready to draw elevation profile');
 		var d=0;
 		var t,x,y;
 		for (var i=0;i<n;i++) {
@@ -688,42 +675,14 @@
 			x=w*d/distance;
 			y=h*(500-t.alt)/500;
 			// y=h*(maxAlt-t.alt)/dAlt;
-			if(i<1) altCanvas.moveTo(x,y);
-			else altCanvas.lineTo(x,y);
+			if(i<1) profilesCanvas.moveTo(x,y);
+			else profilesCanvas.lineTo(x,y);
 			// notify('line to '+x+','+y);
 		}
-		altCanvas.stroke();
-		notify('next: speed profile');
-		// speed profile
-		// first create dark background
-		speedCanvas.fillStyle='#000000cc';
-		speedCanvas.clearRect(0,0,w,h);
-		speedCanvas.fillRect(0,0,w,h);
-		// draw grid km x 100m
-		notify('draw speed grid');
-		speedCanvas.beginPath();
-		x=0; // draw km intervals
-		d=distance/1000; // km intervals
-		d=w/d; // km as pixels
-		speedCanvas.lineWidth=1;
-		speedCanvas.strokeStyle = 'gray';
-		speedCanvas.strokeRect(0,0,w,h);
-		while(x<w) { // km intervals
-			x+=d;
-			speedCanvas.moveTo(x,0);
-			speedCanvas.lineTo(x,h);
-		}
-		for(i=1;i<5;i++) { // 10km/hr intervals
-			speedCanvas.moveTo(0,i*h/5);
-			speedCanvas.lineTo(w,i*h/5);
-		}
-		altCanvas.stroke();
-		// draw speed profile
-		// d=w/n; // spacing of trackpoints
+		profilesCanvas.stroke();
+		profilesCanvas.beginPath();
 		notify('draw speed profile');
-		speedCanvas.beginPath();
-		speedCanvas.lineWidth=3;
-	    speedCanvas.strokeStyle = 'white';
+	    profilesCanvas.strokeStyle = 'orange'; // speed profile is orange
 		var x=0; // horizontal position
 		var t=0; // time (sec)
 		var s=0; // speed (km/hr)
@@ -733,10 +692,10 @@
 			t=trackpoints[i].time-trackpoints[i-1].time;
 			s=3.6*d/t; // km/hr
 			notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
-			speedCanvas.moveTo(w*x/distance,h);
-			speedCanvas.lineTo(w*x/distance,h-s);
+			profilesCanvas.moveTo(w*x/distance,h);
+			profilesCanvas.lineTo(w*x/distance,h-s/50);
 		}
-		speedCanvas.stroke();
+		profilesCanvas.stroke();
 		document.getElementById('alt-profile').style.display='block';
 		document.getElementById('speed-profile').style.display='block';
 		document.getElementById('doneButton').style.display='block';
