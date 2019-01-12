@@ -686,11 +686,12 @@
 			x+=d;
 			t=trackpoints[i].time-trackpoints[i-1].time;
 			s=3.6*d/t; // km/hr
-			notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
+			// notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
 			profilesCanvas.moveTo(w*x/distance,h);
 			profilesCanvas.lineTo(w*x/distance,h-s/50);
 		}
 		profilesCanvas.stroke();
+		notify("show profiles");
 		document.getElementById('profilesPanel').style.display='block';
 		document.getElementById('doneButton').style.display='block';
 	}
