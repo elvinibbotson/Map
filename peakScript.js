@@ -41,9 +41,12 @@
 	});
 	document.getElementById("tracks").addEventListener("click", listTracks);
 	document.getElementById('profiles').addEventListener('click', profiles);
-	document.getElementById('doneButton').addEventListener('click', function() {
+	/* document.getElementById('doneButton').addEventListener('click', function() {
 		document.getElementById('profilesPanel').style.display='none';
 		document.getElementById('doneButton').style.display='none';
+	}); */
+	document.getElementById('profilesPanel').addEventListener('click', function() {
+		document.getElementById('profilesPanel').style.display='none';
 	});
 	document.getElementById("routes").addEventListener("click", listRoutes);
 	document.getElementById("measure").addEventListener("click",function() {
@@ -639,22 +642,19 @@
 		profilesCanvas.fillStyle='#000000cc';
 		profilesCanvas.clearRect(0,0,w,h);
 		profilesCanvas.fillRect(0,0,w,h);
-		// draw grid km x 100m/10kph
+		// legend
+		profilesCanvas.font='16px Sans-Serif';
+		profilesCanvas.fillStyle='yellow';
+		profilesCanvas.fillText('elevation',10,10);
+		profilesCanvas.fillStyle='orange';
+		profilesCanvas.fillText('speed',10,25);
+		// close button
+		profilesCanvas.strokeStyle='white';
 		profilesCanvas.beginPath();
-		x=0; // draw km intervals
-		d=distance/1000; // km intervals
-		d=w/d; // km as pixels
-		profilesCanvas.lineWidth=1;
-		profilesCanvas.strokeStyle = 'gray';
-		while(x<w) { // km intervals
-			x+=d;
-			profilesCanvas.moveTo(x,0);
-			profilesCanvas.lineTo(x,h);
-		}
-		for(i=1;i<5;i++) { // 100m/10kph intervals
-			profilesCanvas.moveTo(0,i*h/5);
-			profilesCanvas.lineTo(w,i*h/5);
-		}
+		profilesCanvas.moveTo(w-10,10);
+		profilesCanvas.lineTo(w-30,30);
+		profilesCanvas.moveTo(w-10,30);
+		profilesCanvas.lineTo(w-30,10);
 		profilesCanvas.stroke();
 		// draw elevation profile
 		profilesCanvas.beginPath();
@@ -689,6 +689,23 @@
 			if(i%10==0) notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
 			profilesCanvas.moveTo(w*x/distance,h);
 			profilesCanvas.lineTo(w*x/distance,h-s);
+		}
+		profilesCanvas.stroke();
+		// draw grid km x 100m/10kph
+		profilesCanvas.beginPath();
+		x=0; // draw km intervals
+		d=distance/1000; // km intervals
+		d=w/d; // km as pixels
+		profilesCanvas.lineWidth=1;
+		profilesCanvas.strokeStyle = 'gray';
+		while(x<w) { // km intervals
+			x+=d;
+			profilesCanvas.moveTo(x,0);
+			profilesCanvas.lineTo(x,h);
+		}
+		for(i=1;i<5;i++) { // 100m/10kph intervals
+			profilesCanvas.moveTo(0,i*h/5);
+			profilesCanvas.lineTo(w,i*h/5);
 		}
 		profilesCanvas.stroke();
 		notify("show profiles");
