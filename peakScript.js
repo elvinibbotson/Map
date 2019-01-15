@@ -378,12 +378,12 @@
 				var direction=measure("heading",trackpoints[t].lon,trackpoints[t].lat,loc.lon,loc.lat); // heading since last trackpoint
 				var turn=Math.abs(direction-heading);
 				if(turn>180) turn=360-turn;
-				duration=loc.time-trackpoints[0].time;
+			// time;
+				lastLoc.lon = loc.lon;	duration=loc.time-trackpoints[0].time;
 			}
-			else speed=0;
+			else speed=0; // time
 		}
-		lastLoc.time = loc.time;
-		lastLoc.lon = loc.lon;
+		lastLoc.time = loc.
 		lastLoc.lat = loc.lat;
 		if(trackpoints.length>1) { // ignore first fixes - inaccurate?
 			if((hi==0)||((lo-loc.alt)>5)) { // start altitude logging or new low
@@ -645,9 +645,9 @@
 		// legend
 		profilesCanvas.font='16px Sans-Serif';
 		profilesCanvas.fillStyle='yellow';
-		profilesCanvas.fillText('elevation',10,10);
+		profilesCanvas.fillText('elevation',10,20);
 		profilesCanvas.fillStyle='orange';
-		profilesCanvas.fillText('speed',10,25);
+		profilesCanvas.fillText('speed',10,35);
 		// close button
 		profilesCanvas.strokeStyle='white';
 		profilesCanvas.beginPath();
@@ -688,7 +688,7 @@
 			s=3.6*d/t; // km/hr
 			if(i%10==0) notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
 			profilesCanvas.moveTo(w*x/distance,h);
-			profilesCanvas.lineTo(w*x/distance,h-s);
+			profilesCanvas.lineTo(w*x/distance,h(1-s/50)); // h=50kph
 		}
 		profilesCanvas.stroke();
 		// draw grid km x 100m/10kph
