@@ -688,7 +688,7 @@
 			s=3.6*d/t; // km/hr
 			if(i%10==0) notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
 			profilesCanvas.moveTo(w*x/distance,h);
-			profilesCanvas.lineTo(w*x/distance,h(1-s/50)); // h=50kph
+			profilesCanvas.lineTo(w*x/distance,h-h*s/50); // h=50kph
 		}
 		profilesCanvas.stroke();
 		// draw grid km x 100m/10kph
