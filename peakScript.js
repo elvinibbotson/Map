@@ -692,6 +692,7 @@
 		}
 		profilesCanvas.stroke();
 		// draw grid km x 100m/10kph
+		notify("draw grid");
 		profilesCanvas.beginPath();
 		x=0; // draw km intervals
 		d=distance/1000; // km intervals
