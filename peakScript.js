@@ -646,7 +646,7 @@
 		profilesCanvas.font='16px Sans-Serif';
 		profilesCanvas.fillStyle='yellow';
 		profilesCanvas.fillText('elevation',10,20);
-		profilesCanvas.fillStyle='orange';
+		profilesCanvas.fillStyle='silver';
 		profilesCanvas.fillText('speed',10,35);
 		// close button
 		profilesCanvas.strokeStyle='white';
@@ -677,7 +677,7 @@
 		profilesCanvas.stroke();
 		profilesCanvas.beginPath();
 		notify('draw speed profile');
-	    profilesCanvas.strokeStyle = 'orange'; // speed profile is orange
+	    profilesCanvas.strokeStyle = 'silver'; // speed profile is silver
 		var x=0; // horizontal position
 		var t=0; // time (sec)
 		var s=0; // speed (km/hr)
