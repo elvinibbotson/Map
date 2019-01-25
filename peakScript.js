@@ -378,12 +378,15 @@
 				var direction=measure("heading",trackpoints[t].lon,trackpoints[t].lat,loc.lon,loc.lat); // heading since last trackpoint
 				var turn=Math.abs(direction-heading);
 				if(turn>180) turn=360-turn;
+				
+				notify('dist: '+dist+' moving:'+moving+' direction:'+direction);
 			// time;
 				lastLoc.lon = loc.lon;	duration=loc.time-trackpoints[0].time;
 			}
 			else speed=0; // time
 		}
-		lastLoc.time = loc.
+		lastLoc.time = loc.time;
+		lastLoc.lon=loc.lon;
 		lastLoc.lat = loc.lat;
 		if(trackpoints.length>1) { // ignore first fixes - inaccurate?
 			if((hi==0)||((lo-loc.alt)>5)) { // start altitude logging or new low
