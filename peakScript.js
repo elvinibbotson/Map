@@ -357,7 +357,7 @@
 		loc.lon=(fixes[0].lon+fixes[1].lon+fixes[2].lon)/3; // average location data
 		loc.lat=(fixes[0].lat+fixes[1].lat+fixes[2].lat)/3;
 		loc.alt=Math.round((fixes[0].alt+fixes[1].alt+fixes[2].alt)/3);
-		notify(loc.lon+","+loc.lat+", "+loc.alt+"m accuracy:"+accuracy);
+		// notify(loc.lon+","+loc.lat+", "+loc.alt+"m accuracy:"+accuracy);
 		if(trackpoints.length<1) { // at start, initialise lastLoc and...
 			addTP(); // ...add first trackpoint
 		}
@@ -378,12 +378,10 @@
 				var direction=measure("heading",trackpoints[t].lon,trackpoints[t].lat,loc.lon,loc.lat); // heading since last trackpoint
 				var turn=Math.abs(direction-heading);
 				if(turn>180) turn=360-turn;
-				
-				notify('dist: '+dist+' moving:'+moving+' direction:'+direction);
-			// time;
+				// notify('dist: '+dist+' moving:'+moving+' direction:'+direction);
 				lastLoc.lon = loc.lon;	duration=loc.time-trackpoints[0].time;
 			}
-			else speed=0; // time
+			else speed=0;
 		}
 		lastLoc.time = loc.time;
 		lastLoc.lon=loc.lon;
