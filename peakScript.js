@@ -36,6 +36,7 @@
 		console.log("toggle menu");
 		var display = document.getElementById("menu").style.display;
 		document.getElementById("list").style.display="none";
+		document.getElementById('profilesPanel').style.display='none';
 		document.getElementById("menu").style.display = (display=="block")?"none":"block";
 		document.getElementById('metric').checked = metric;
 	});
