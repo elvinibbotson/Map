@@ -487,7 +487,56 @@
 			string=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
 			mapCanvas.fillText(string,sw/2,5);
 		}
-		if(distance>0) { // display distance and time travelled and height climbed so far
+		// draw current route as green line
+		mapCanvas.beginPath();
+	    mapCanvas.strokeStyle = 'rgba(0,255,0,0.5)';
+	    if(nodes.length>1) {
+			// notify("draw route - "+nodes.length+" nodes");
+	    	p=nodes[0];
+	    	// x = (p.lon - loc.lon) * 14400 + sw / 2;
+	    	// x=mapLeft-(mapW-p.lon)*14400;
+	    	x=sw/2+(p.lon-loc.lon)*14400;
+	    	// y = (loc.lat - p.lat) * 24000 + sh / 2;
+	    	// y=mapTop-(p.lat-mapN)*24000;
+	    	y=sh/2+(loc.lat-p.lat)*24000;
+	    	mapCanvas.moveTo(x, y);
+	    	for(i=1;i<nodes.length;i++) {
+	    		p=nodes[i];
+	       		// x = (p.lon - loc.lon) * 14400 + sw / 2;
+	       		// x=mapLeft-(mapW-p.lon)*14400;
+	       		x=sw/2+(p.lon-loc.lon)*14400;
+	       		// y = (loc.lat - p.lat) * 24000 + sh / 2;
+	       		// y=mapTop-(p.lat-mapN)*24000;
+	       		y=sh/2+(loc.lat-p.lat)*24000;
+	       		mapCanvas.lineTo(x, y);
+	    	}
+	    	mapCanvas.stroke();
+		}
+		// draw current track as blue line
+		mapCanvas.beginPath();
+		mapCanvas.strokeStyle = 'rgba(0,0,255,0.5)';
+	    if(trackpoints.length>1) {
+			// notify("draw track - "+trackpoints.length+" trackpoints");
+	    	p=trackpoints[0];
+	    	// x=mapLeft-(mapW-p.lon)*14400;
+	    	x=sw/2+(p.lon-loc.lon)*14400;
+	    	// y=mapTop-(p.lat-mapN)*24000;
+	    	y=sh/2+(loc.lat-p.lat)*24000;
+	    	mapCanvas.moveTo(x, y);
+	    	for(i=1;i<trackpoints.length;i++) {
+	    		p=trackpoints[i];
+	       		// x=mapLeft-(mapW-p.lon)*14400;
+	       		x=sw/2+(p.lon-loc.lon)*14400;
+	       		// y=mapTop-(p.lat-mapN)*24000;
+	       		y=sh/2+(loc.lat-p.lat)*24000;
+	       		mapCanvas.lineTo(x, y);
+	    	}
+			if(tracking) mapCanvas.lineTo(sw/2,sh/2);
+		}
+		mapCanvas.rect(sw/2-8,sh/2-8,16,16);	 // blue square at current location
+		mapCanvas.stroke();
+		// display distance and time travelled and height climbed so far
+		if(distance>0) {
 			mapCanvas.font='Bold 16px Sans-Serif';
 			// mapCanvas.textAlign = 'left';
 			d=distance+dist;
@@ -532,7 +581,8 @@
 			mapCanvas.textAlign='right';
 			if(climb!=null) mapCanvas.fillText("/ "+Math.round((metric)?climb:climb*3.281),sw/2,25);
 		}
-		if(tracking && speed>0) { // if tracking show current altitude with coordinates
+		// show current speed and direction
+		if(tracking && speed>0) {
 			gradient=mapCanvas.createLinearGradient(0,sh-150,0,sh);
 			gradient.addColorStop(0,'#00000000');
 			gradient.addColorStop(1,'black');
@@ -548,52 +598,14 @@
 			d+=(metric)?"kph":"mph";
 			mapCanvas.fillText(d,10,sh-70);
 		}
-		mapCanvas.beginPath(); // draw current track as blue line
-	    mapCanvas.strokeStyle = 'rgba(0,255,0,0.5)';
-	    if(nodes.length>1) {
-			// notify("draw route - "+nodes.length+" nodes");
-	    	p=nodes[0];
-	    	// x = (p.lon - loc.lon) * 14400 + sw / 2;
-	    	// x=mapLeft-(mapW-p.lon)*14400;
-	    	x=sw/2+(p.lon-loc.lon)*14400;
-	    	// y = (loc.lat - p.lat) * 24000 + sh / 2;
-	    	// y=mapTop-(p.lat-mapN)*24000;
-	    	y=sh/2+(loc.lat-p.lat)*24000;
-	    	mapCanvas.moveTo(x, y);
-	    	for(i=1;i<nodes.length;i++) {
-	    		p=nodes[i];
-	       		// x = (p.lon - loc.lon) * 14400 + sw / 2;
-	       		// x=mapLeft-(mapW-p.lon)*14400;
-	       		x=sw/2+(p.lon-loc.lon)*14400;
-	       		// y = (loc.lat - p.lat) * 24000 + sh / 2;
-	       		// y=mapTop-(p.lat-mapN)*24000;
-	       		y=sh/2+(loc.lat-p.lat)*24000;
-	       		mapCanvas.lineTo(x, y);
-	    	}
-	    	mapCanvas.stroke();
+		else if((distance>0)&&(moving>0) {
+			speed=distance/moving; // m/s
+			speed=(metric)?
+			speed=Match.round(((metric)?3.6:2.237)*speed);
+			d="average: "+speed+(metric)?"kph":"mph";
+			mapCanvas.fillStyle='black';
+			mapCanvas.fillText(d,10,sh-70);
 		}
-		mapCanvas.beginPath(); // draw current track as blue line
-		mapCanvas.strokeStyle = 'rgba(0,0,255,0.5)';
-	    if(trackpoints.length>1) {
-			// notify("draw track - "+trackpoints.length+" trackpoints");
-	    	p=trackpoints[0];
-	    	// x=mapLeft-(mapW-p.lon)*14400;
-	    	x=sw/2+(p.lon-loc.lon)*14400;
-	    	// y=mapTop-(p.lat-mapN)*24000;
-	    	y=sh/2+(loc.lat-p.lat)*24000;
-	    	mapCanvas.moveTo(x, y);
-	    	for(i=1;i<trackpoints.length;i++) {
-	    		p=trackpoints[i];
-	       		// x=mapLeft-(mapW-p.lon)*14400;
-	       		x=sw/2+(p.lon-loc.lon)*14400;
-	       		// y=mapTop-(p.lat-mapN)*24000;
-	       		y=sh/2+(loc.lat-p.lat)*24000;
-	       		mapCanvas.lineTo(x, y);
-	    	}
-			if(tracking) mapCanvas.lineTo(sw/2,sh/2);
-		}
-		mapCanvas.rect(sw/2-8,sh/2-8,16,16);	 // blue square at current location
-		mapCanvas.stroke();
 	}
 	
 	function centreMap() { // move map to current location
