@@ -598,10 +598,9 @@
 			d+=(metric)?"kph":"mph";
 			mapCanvas.fillText(d,10,sh-70);
 		}
-		else if((distance>0)&&(moving>0) {
+		else if((distance>0)&&(moving>0)) {
 			speed=distance/moving; // m/s
-			speed=(metric)?
-			speed=Match.round(((metric)?3.6:2.237)*speed);
+			speed=Math.round(((metric)?3.6:2.237)*speed);
 			d="average: "+speed+(metric)?"kph":"mph";
 			mapCanvas.fillStyle='black';
 			mapCanvas.fillText(d,10,sh-70);
