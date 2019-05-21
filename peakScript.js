@@ -32,6 +32,14 @@
 	var notifications=[];
 	
 	// console.log("variables initialised");
+	window.onresize=function(evt) {
+		sh=window.innerHeight;
+		console.log("window height: "+sh);
+		document.getElementById("mapScreen").style.height = sh+'px';
+		document.getElementById("mapCanvas").height = sh;
+		
+		redraw();
+	}
 	document.getElementById("menuButton").addEventListener("click", function() {
 		console.log("toggle menu");
 		var display = document.getElementById("menu").style.display;
@@ -42,10 +50,6 @@
 	});
 	document.getElementById("tracks").addEventListener("click", listTracks);
 	document.getElementById('profiles').addEventListener('click', profiles);
-	/* document.getElementById('doneButton').addEventListener('click', function() {
-		document.getElementById('profilesPanel').style.display='none';
-		document.getElementById('doneButton').style.display='none';
-	}); */
 	document.getElementById('profilesPanel').addEventListener('click', function() {
 		document.getElementById('profilesPanel').style.display='none';
 	});
@@ -73,6 +77,7 @@
 		console.log("metric is "+metric);
 		document.getElementById("menu").style.display = "none";
 	});
+	/*
 	document.getElementById("compact").addEventListener("change", function() {
 		if(this.checked) {
 			notify("switch compact view ON");
@@ -89,6 +94,7 @@
 		document.getElementById("menu").style.display = "none";
 		centreMap();
 	});
+	*/
 	document.getElementById('diagnostics').addEventListener('click', showNotifications);
 	document.getElementById("actionButton").addEventListener("click", getFix);
 	document.getElementById("stopButton").addEventListener("click", cease);
@@ -105,8 +111,8 @@
 	});
 	loc.lat = 53.2;
 	loc.lon = -1.75;	// sw = window.innerWidth;	// sh = window.innerHeight;
-	sw=screen.width;
-	sh=screen.height;
+	sw=window.innerWidth;
+	sh=window.innerHeight;
 	console.log("screen size: "+sw+"x"+sh);
 	document.getElementById("mapScreen").style.width = sw+'px';
 	document.getElementById("mapScreen").style.height = sh+'px';
