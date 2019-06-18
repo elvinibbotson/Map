@@ -77,24 +77,6 @@
 		console.log("metric is "+metric);
 		document.getElementById("menu").style.display = "none";
 	});
-	/*
-	document.getElementById("compact").addEventListener("change", function() {
-		if(this.checked) {
-			notify("switch compact view ON");
-			sh=sh/2+20; // restrict to top half of screen
-		}
-		else {
-			notify("switch compact view OFF");
-			sh=(sh-20)*2; // use full screen
-		}
-		document.getElementById("mapScreen").style.height = sh+'px';
-		document.getElementById("mapCanvas").height = sh;
-		document.getElementById("profilesCanvas").width = sw*0.9;
-		document.getElementById("profilesCanvas").height = sh*0.4;
-		document.getElementById("menu").style.display = "none";
-		centreMap();
-	});
-	*/
 	document.getElementById('diagnostics').addEventListener('click', showNotifications);
 	document.getElementById("actionButton").addEventListener("click", getFix);
 	document.getElementById("stopButton").addEventListener("click", cease);
@@ -122,7 +104,6 @@
 	profilesCanvas = document.getElementById("profilesCanvas").getContext("2d"); // set up drawing canvas
 	document.getElementById("profilesCanvas").width=sw*0.9;
 	document.getElementById("profilesCanvas").height=sh*0.4;
-	console.log("buttons moved!");
 	document.getElementById("actionButton").style.display='block';
 	for (x = 0; x < 3; x++) { // build map by positioning 10x10 grid of tiles
 		for (var y = 0; y < 3; y++) {
@@ -602,7 +583,7 @@
 			d=compass.substr(d*3,3)+" "; // compass point eg. NNE
 			d+=Math.round(((metric)?3.6:2.237)*speed);
 			d+=(metric)?"kph":"mph";
-			mapCanvas.fillText(d,10,sh-70);
+			mapCanvas.fillText(d,10,sh-10);
 		}
 		else if((distance>0)&&(moving>0)) {
 			speed=distance/moving; // m/s
