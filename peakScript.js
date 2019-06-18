@@ -590,7 +590,7 @@
 			speed=Math.round(((metric)?3.6:2.237)*speed);
 			d="average: "+speed+(metric)?"kph":"mph";
 			mapCanvas.fillStyle='black';
-			mapCanvas.fillText(d,10,sh-70);
+			mapCanvas.fillText(d,10,sh-10);
 		}
 	}
 	
