@@ -587,8 +587,8 @@
 			else if(moving>0) { // show average speed
 				speed=distance/moving; // m/s
 				speed=Math.round(((metric)?3.6:2.237)*speed);
-				notify('track dist:'+distance+' moving:'+moving+' speed:'+speed);
-				d=speed+(metric)?"kph":"mph";
+				// notify('track dist:'+distance+' moving:'+moving+' speed:'+speed);
+				d='@'+speed+(metric)?"kph":"mph";
 			}
 			mapCanvas.fillText(d,10,sh-10);
 		}
