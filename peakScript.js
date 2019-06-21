@@ -568,7 +568,30 @@
 			mapCanvas.textAlign='right';
 			if(climb!=null) mapCanvas.fillText("/ "+Math.round((metric)?climb:climb*3.281),sw/2,25);
 		}
-		// show current speed and direction
+		if(distance>0) {
+			gradient=mapCanvas.createLinearGradient(0,sh-150,0,sh);
+			gradient.addColorStop(0,'#00000000');
+			gradient.addColorStop(1,'black');
+			mapCanvas.fillStyle = gradient;
+			mapCanvas.fillRect(0,sh-150,sw,sh);
+			mapCanvas.fillStyle='white';
+			mapCanvas.textBaseline='alphabetic';
+			mapCanvas.textAlign='left';
+			mapCanvas.font='Bold 36px Sans-Serif';
+			if(tracking && speed>0) { // show current speed and direction
+				d=Math.round((heading+11.25)/22.5); // 16 compass directions: N, NNE, NE,...
+				d=compass.substr(d*3,3)+" "; // compass point eg. NNE
+				d+=Math.round(((metric)?3.6:2.237)*speed);
+				d+=(metric)?"kph":"mph";
+			}
+			else if(moving>0) { // show average speed
+				speed=distance/moving; // m/s
+				speed=Math.round(((metric)?3.6:2.237)*speed);
+				d=speed+(metric)?"kph":"mph";
+			}
+			mapCanvas.fillText(d,10,sh-10);
+		}
+		/* above code repaces...
 		if(tracking && speed>0) {
 			gradient=mapCanvas.createLinearGradient(0,sh-150,0,sh);
 			gradient.addColorStop(0,'#00000000');
@@ -592,6 +615,7 @@
 			mapCanvas.fillStyle='black';
 			mapCanvas.fillText(d,10,sh-10);
 		}
+		*/
 	}
 	
 	function centreMap() { // move map to current location
