@@ -577,19 +577,24 @@
 			mapCanvas.fillStyle='white';
 			mapCanvas.textBaseline='alphabetic';
 			mapCanvas.textAlign='left';
-			mapCanvas.font='Bold 36px Sans-Serif';
+			// mapCanvas.font='Bold 36px Sans-Serif';
 			if(tracking && speed>0) { // show current speed and direction
+				mapCanvas.font='Bold 36px Sans-Serif';
 				d=Math.round((heading+11.25)/22.5); // 16 compass directions: N, NNE, NE,...
 				d=compass.substr(d*3,3)+" "; // compass point eg. NNE
-				d+=Math.round(((metric)?3.6:2.237)*speed);
-				d+=(metric)?"kph":"mph";
+				// d+=Math.round(((metric)?3.6:2.237)*speed);
+				// d+=(metric)?"kph":"mph";
 			}
 			else if(moving>0) { // show average speed
+				mapCanvas.font='24px Sans-Serif';
+				d='average ';
 				speed=distance/moving; // m/s
-				speed=Math.round(((metric)?3.6:2.237)*speed);
+				// d+=Math.round(((metric)?3.6:2.237)*speed);
 				// notify('track dist:'+distance+' moving:'+moving+' speed:'+speed);
-				d='@'+speed+(metric)?"kph":"mph";
+				// d+=(metric)?"kph":"mph";
 			}
+			d+=Math.round(((metric)?3.6:2.237)*speed);
+			d+=(metric)?"kph":"mph";
 			mapCanvas.fillText(d,10,sh-10);
 		}
 		/* above code repaces...
