@@ -594,6 +594,7 @@
 				// d+=(metric)?"kph":"mph";
 			}
 			d+=Math.round(((metric)?3.6:2.237)*speed);
+			notify('d: '+d);
 			d+=(metric)?"kph":"mph";
 			mapCanvas.fillText(d,10,sh-10);
 		}
