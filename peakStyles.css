@@ -202,14 +202,14 @@ input, label, select {
 	font-size: 1.2em;
 	z-index: 5;
 	display: none;
-	overflow:hidden;
-	overflow-y:scroll;
 }
 
 ul {
   list-style-type: none;
   color: white;
   background-color: black;
+  overflow:hidden;
+  overflow-y:scroll;
 }
 
 .listItem {
