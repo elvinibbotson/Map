@@ -812,7 +812,7 @@
 		loc.lat=trackpoints[0].lat;
 		centreMap();
 		redraw();
-		document.getElementById('list').style.display='none';
+		document.getElementById('listPanel').style.display='none';
 	}
 	
 	function deleteTrack() {
@@ -825,7 +825,7 @@
 		window.localStorage.setItem("peakTracks",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
-		document.getElementById('list').style.display='none';
+		document.getElementById('listPanel').style.display='none';
 	}
 	
 	function loadRoute() {
@@ -841,7 +841,7 @@
 		loc.lat=nodes[0].lat;
 		centreMap();
 		redraw();
-		document.getElementById('list').style.display='none';
+		document.getElementById('listPanel').style.display='none';
 	}
 	
 	function deleteRoute() {
@@ -854,7 +854,7 @@
 		window.localStorage.setItem("peakRoutes",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
-		document.getElementById('list').style.display='none';
+		document.getElementById('listPanel').style.display='none';
 	}
 
 	function dm(degrees, lat) {
