@@ -141,7 +141,7 @@
 	}
 	function listTracks() {
 		document.getElementById("menu").style.display = "none";
-		console.log('list '+trackNames.length+' tracks');
+		notify('list '+trackNames.length+' tracks');
 		if(trackNames.length<1) return;
 		document.getElementById("listHeader").innerHTML="<b>Tracks</b>";
 		// var trackList=document.createElement('ul');
