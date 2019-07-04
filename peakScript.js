@@ -145,7 +145,7 @@
 		if(trackNames.length<1) return;
 		document.getElementById("listHeader").innerHTML="<b>Tracks</b>";
 		// var trackList=document.createElement('ul');
-		id('list').innerHTML='';
+		document.getElementById('list').innerHTML='';
 		for(var i=0; i<trackNames.length; i++) {
   			var listItem = document.createElement('li');
   			listItem.classList.add('listItem');
@@ -161,7 +161,7 @@
 			listItem.appendChild(itemName);
 			listItem.appendChild(delButton);
 			// trackList.appendChild(listItem);
-			id('list').appendChild(listItem);
+			document.getElementById('list').appendChild(listItem);
   		}
   		// document.getElementById('list').appendChild(trackList);
   		// document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
