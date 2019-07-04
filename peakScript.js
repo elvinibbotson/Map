@@ -163,9 +163,10 @@
 			// trackList.appendChild(listItem);
 			id('list').appendChild(listItem);
   		}
-  		document.getElementById('list').appendChild(trackList);
+  		// document.getElementById('list').appendChild(trackList);
   		// document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
-		document.getElementById("list").style.display = "block";
+		document.getElementById("listPanel").style.display = "block";
+		notify('track list populated with '+trackNames.length+' tracks');
 	}
 	function listRoutes() {
 		document.getElementById("menu").style.display = "none";
