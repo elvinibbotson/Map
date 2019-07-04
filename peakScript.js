@@ -43,7 +43,7 @@
 	document.getElementById("menuButton").addEventListener("click", function() {
 		console.log("toggle menu");
 		var display = document.getElementById("menu").style.display;
-		document.getElementById("list").style.display="none";
+		document.getElementById("listPanel").style.display="none";
 		document.getElementById('profilesPanel').style.display='none';
 		document.getElementById("menu").style.display = (display=="block")?"none":"block";
 		document.getElementById('metric').checked = metric;
@@ -143,8 +143,9 @@
 		document.getElementById("menu").style.display = "none";
 		console.log('list '+trackNames.length+' tracks');
 		if(trackNames.length<1) return;
-		document.getElementById("list").innerHTML="<b>Tracks</b>";
-		var trackList=document.createElement('ul');
+		document.getElementById("listHeader").innerHTML="<b>Tracks</b>";
+		// var trackList=document.createElement('ul');
+		id('list').innerHTML='';
 		for(var i=0; i<trackNames.length; i++) {
   			var listItem = document.createElement('li');
   			listItem.classList.add('listItem');
@@ -159,7 +160,8 @@
 			delButton.addEventListener('click', function() {listIndex=this.index; deleteTrack();});
 			listItem.appendChild(itemName);
 			listItem.appendChild(delButton);
-			trackList.appendChild(listItem);
+			// trackList.appendChild(listItem);
+			id('list').appendChild(listItem);
   		}
   		document.getElementById('list').appendChild(trackList);
   		// document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
