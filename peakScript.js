@@ -228,6 +228,8 @@
 	}
 	
 	function endMove(event) {
+	    notify('end drag');
+	    var touches=event.changedTouches;
 	    x0=touches[0].clientX;
 		y0=touches[0].clientY;
 		notify('end at '+x0+','+y0+' measuring: '+measuring);
