@@ -139,9 +139,11 @@
 		routeNames=json.names;
 		notify(routeNames.length+' routes');
 	}
+	
+	// LIST TRACKS
 	function listTracks() {
 		document.getElementById("menu").style.display = "none";
-		notify('list '+trackNames.length+' tracks');
+		console.log('list '+trackNames.length+' tracks');
 		if(trackNames.length<1) return;
 		document.getElementById("listHeader").innerHTML="<b>Tracks</b>";
 		// var trackList=document.createElement('ul');
@@ -161,7 +163,7 @@
 			listItem.appendChild(itemName);
 			listItem.appendChild(delButton);
 			// trackList.appendChild(listItem);
-			document.getElementById('list').appendChild(listItem);
+			id('list').appendChild(listItem);
   		}
   		// document.getElementById('list').appendChild(trackList);
   		// document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
@@ -812,7 +814,7 @@
 		loc.lat=trackpoints[0].lat;
 		centreMap();
 		redraw();
-		document.getElementById('listPanel').style.display='none';
+		document.getElementById('list').style.display='none';
 	}
 	
 	function deleteTrack() {
@@ -825,7 +827,7 @@
 		window.localStorage.setItem("peakTracks",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
-		document.getElementById('listPanel').style.display='none';
+		document.getElementById('list').style.display='none';
 	}
 	
 	function loadRoute() {
@@ -841,7 +843,7 @@
 		loc.lat=nodes[0].lat;
 		centreMap();
 		redraw();
-		document.getElementById('listPanel').style.display='none';
+		document.getElementById('list').style.display='none';
 	}
 	
 	function deleteRoute() {
@@ -854,7 +856,7 @@
 		window.localStorage.setItem("peakRoutes",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
-		document.getElementById('listPanel').style.display='none';
+		document.getElementById('list').style.display='none';
 	}
 
 	function dm(degrees, lat) {
