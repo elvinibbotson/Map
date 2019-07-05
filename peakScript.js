@@ -85,7 +85,7 @@
 	// id("mapOverlay").addEventListener("mousedown", startMove);
 	id("mapOverlay").addEventListener("touchmove", move);
 	// id("mapOverlay").addEventListener("mousemove", move);
-	id('mapOverlay').addEventListener('touchEnd', endMove);
+	id('mapOverlay').addEventListener('touchend', endMove);
 	id("saveButton").addEventListener("click", saver);
 	id("cancelButton").addEventListener("click", function() {
 	  id("saveDialog").style.display="none";
