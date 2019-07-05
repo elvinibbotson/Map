@@ -32,29 +32,29 @@
 	var notifications=[];
 	
 	// console.log("variables initialised");
+	// EVENT HANDLERS
 	window.onresize=function(evt) {
 		sh=window.innerHeight;
 		console.log("window height: "+sh);
-		document.getElementById("mapScreen").style.height = sh+'px';
-		document.getElementById("mapCanvas").height = sh;
-		
+		id("mapScreen").style.height = sh+'px';
+		id("mapCanvas").height = sh;
 		redraw();
 	}
-	document.getElementById("menuButton").addEventListener("click", function() {
+	id("menuButton").addEventListener("click", function() {
 		console.log("toggle menu");
-		var display = document.getElementById("menu").style.display;
-		document.getElementById("listPanel").style.display="none";
-		document.getElementById('profilesPanel').style.display='none';
-		document.getElementById("menu").style.display = (display=="block")?"none":"block";
-		document.getElementById('metric').checked = metric;
+		var display=id("menu").style.display;
+		id("listPanel").style.display="none";
+		id('profilesPanel').style.display='none';
+		id("menu").style.display = (display=="block")?"none":"block";
+		id('metric').checked = metric;
 	});
-	document.getElementById("tracks").addEventListener("click", listTracks);
-	document.getElementById('profiles').addEventListener('click', profiles);
-	document.getElementById('profilesPanel').addEventListener('click', function() {
-		document.getElementById('profilesPanel').style.display='none';
+	id("tracks").addEventListener("click", listTracks);
+	id('profiles').addEventListener('click', profiles);
+	id('profilesPanel').addEventListener('click', function() {
+		id('profilesPanel').style.display='none';
 	});
-	document.getElementById("routes").addEventListener("click", listRoutes);
-	document.getElementById("measure").addEventListener("click",function() {
+	id("routes").addEventListener("click", listRoutes);
+    id("measure").addEventListener("click",function() {
 		measuring=true;
 		distance=0;
 		dist=0;
@@ -67,27 +67,28 @@
 		lastLoc.lon=loc.lon;
 		lastLoc.lat=loc.lat;
 		notify("measuring");
-		document.getElementById("stopButton").style.display="block";
-		document.getElementById("actionButton").style.display = "none";
-		document.getElementById("menu").style.display = "none";
+		id("stopButton").style.display="block";
+		id("actionButton").style.display = "none";
+		id("menu").style.display = "none";
 	});
-	document.getElementById("metric").addEventListener("change", function() {
+	id("metric").addEventListener("change", function() {
 		metric=this.checked;
 		window.localStorage.setItem('metric', metric);
 		console.log("metric is "+metric);
-		document.getElementById("menu").style.display = "none";
+		id("menu").style.display = "none";
 	});
-	document.getElementById('diagnostics').addEventListener('click', showNotifications);
-	document.getElementById("actionButton").addEventListener("click", getFix);
-	document.getElementById("stopButton").addEventListener("click", cease);
-	document.getElementById("mapOverlay").addEventListener("click", moveTo);
-	document.getElementById("mapOverlay").addEventListener("touchstart", startMove);
-	document.getElementById("mapOverlay").addEventListener("mousedown", startMove);
-	document.getElementById("mapOverlay").addEventListener("touchmove", move);
-	document.getElementById("mapOverlay").addEventListener("mousemove", move);
-	document.getElementById("saveButton").addEventListener("click", saver);
-	document.getElementById("cancelButton").addEventListener("click", function() {
-	  document.getElementById("saveDialog").style.display="none";
+	id('diagnostics').addEventListener('click', showNotifications);
+	id("actionButton").addEventListener("click", getFix);
+	id("stopButton").addEventListener("click", cease);
+	// id("mapOverlay").addEventListener("click", moveTo);
+	id("mapOverlay").addEventListener("touchstart", startMove);
+	// id("mapOverlay").addEventListener("mousedown", startMove);
+	id("mapOverlay").addEventListener("touchmove", move);
+	// id("mapOverlay").addEventListener("mousemove", move);
+	id('mapOverlay').addEventListener('touchEnd', endMove);
+	id("saveButton").addEventListener("click", saver);
+	id("cancelButton").addEventListener("click", function() {
+	  id("saveDialog").style.display="none";
 	  measuring=false;
 	  nodes=[];
 	});
@@ -142,12 +143,12 @@
 	
 	// LIST TRACKS
 	function listTracks() {
-		document.getElementById("menu").style.display = "none";
+		id("menu").style.display = "none";
 		notify('list '+trackNames.length+' tracks');
 		if(trackNames.length<1) return;
-		document.getElementById("listHeader").innerHTML="<b>Tracks</b>";
+		id("listHeader").innerHTML="<b>Tracks</b>";
 		// var trackList=document.createElement('ul');
-		document.getElementById('list').innerHTML='';
+		id('list').innerHTML='';
 		for(var i=0; i<trackNames.length; i++) {
 		    // notify('track '+i);
   			var listItem = document.createElement('li');
@@ -166,19 +167,21 @@
 			listItem.appendChild(itemName);
 			listItem.appendChild(delButton);
 			// trackList.appendChild(listItem);
-			document.getElementById('list').appendChild(listItem);
+			id('list').appendChild(listItem);
   		}
   		// document.getElementById('list').appendChild(trackList);
   		// document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
-		document.getElementById("listPanel").style.display = "block";
+		id("listPanel").style.display = "block";
 		notify('track list populated with '+trackNames.length+' tracks');
 	}
+	
+	// LIST ROUTES
 	function listRoutes() {
-		document.getElementById("menu").style.display = "none";
+		id("menu").style.display = "none";
 		console.log('list '+routeNames.length+' routes');
 		if(routeNames.length<1) return;
-		document.getElementById("list").innerHTML="<b>Routes</b>";
-		var routeList=document.createElement('ul');
+		id("listHeader").innerHTML="<b>Routes</b>";
+		// var routeList=document.createElement('ul');
 		for(var i=0; i<routeNames.length; i++) {
   			var listItem = document.createElement('li');
   			listItem.classList.add('listItem');
@@ -193,24 +196,26 @@
 			delButton.addEventListener('click', function() {listIndex=this.index; deleteRoute();});
 			listItem.appendChild(itemName);
 			listItem.appendChild(delButton);
-			routeList.appendChild(listItem);
+			// routeList.appendChild(listItem);
+			id('list').appendChild(listItem);
   		}
-  		document.getElementById('list').appendChild(routeList);
+  		// document.getElementById('list').appendChild(routeList);
   		// document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
-		document.getElementById("list").style.display = "block";
+		id("listPanel").style.display = "block";
 	}
 	
+	// DRAG MAP
 	function startMove(event) {
 		var touches=event.changedTouches;
 		x0=touches[0].clientX;
 		y0=touches[0].clientY;
 		// notify("start drag");
-		document.getElementById('list').style.display='none';
-		document.getElementById('menu').style.display='none';
+		id('list').style.display='none';
+		id('menu').style.display='none';
 	}
 	
 	function move(event) {
-		document.getElementById('menu').style.display='none';
+		id('menu').style.display='none';
 		var touches=event.changedTouches;
 		x=touches[0].clientX;
 		y=touches[0].clientY;
@@ -221,7 +226,22 @@
 		y0=y;
 		centreMap();
 	}
-
+	
+	function endMove(event) {
+	    x0=touches[0].clientX;
+		y0=touches[0].clientY;
+		if(measuring) {
+			var node={};
+			node.lon=loc.lon;
+			node.lat=loc.lat;
+			nodes.push(node);
+			distance+=measure('distance',lastLoc.lon,lastLoc.lat,loc.lon,loc.lat);
+			console.log('distance: '+distance+"m");
+			lastLoc.lon=loc.lon;
+			lastLoc.lat=loc.lat;
+		}
+	}
+    /*
 	function moveTo(event) {
 		document.getElementById("list").style.display = "none";
 		document.getElementById('menu').style.display='none';
@@ -242,7 +262,9 @@
 		}
 		centreMap();
 	}
+	*/
 	
+	// ADD TRACKPOINT
 	function addTP() {
 		notify("trackpoint "+trackpoints.length+" alt:"+loc.alt);
 		var tp={};
@@ -256,6 +278,7 @@
 		redraw();
 	}
 	
+	// LOCATION FIX
 	function getFix() { // get fix on current location
 		if(navigator.geolocation) {
 			var opt={enableHighAccuracy: true, timeout: 15000, maximumAge: 0};
@@ -271,9 +294,9 @@
 		if(loc.alt!=null) loc.alt=Math.round(loc.alt);
 		notify("fix at "+loc.lon+","+loc.lat+","+loc.alt);
 		centreMap();
-		document.getElementById("actionButton").innerHTML='<img src="goButton24px.svg"/>';
-		document.getElementById("actionButton").removeEventListener("click", getFix);
-		document.getElementById("actionButton").addEventListener("click", go);
+		id("actionButton").innerHTML='<img src="goButton24px.svg"/>';
+		id("actionButton").removeEventListener("click", getFix);
+		id("actionButton").addEventListener("click", go);
 		ready=true;
 		window.setTimeout(timeUp,15000); // revert to fix button after 15 secs
 	}
@@ -281,12 +304,13 @@
 	function timeUp() {
 		if(tracking) return;
 		console.log("times up - back to fix button");
-		document.getElementById("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
-		document.getElementById("actionButton").removeEventListener("click", go);
-		document.getElementById("actionButton").addEventListener("click", getFix);
+		id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
+		id("actionButton").removeEventListener("click", go);
+		id("actionButton").addEventListener("click", getFix);
 		ready=false;
 	}
 	
+	// START TRACKING
 	function go() { // start tracking location
 		ready=false;
 		tracking = true;
@@ -307,10 +331,10 @@
     		} else  {
        		alert("Geolocation is not supported by this browser.");
     		}
-		document.getElementById("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
-		document.getElementById("actionButton").removeEventListener("click", go);
-		document.getElementById("actionButton").addEventListener("click", stopStart);
-		document.getElementById("measure").style.display='none';
+		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
+		id("actionButton").removeEventListener("click", go);
+		id("actionButton").addEventListener("click", stopStart);
+		id("measure").style.display='none';
 	}
 	
 	function stopStart() {
@@ -324,14 +348,14 @@
 		addTP(); // add trackpoint on pause
 		tracking = false;
 		navigator.geolocation.clearWatch(geolocator);
-		document.getElementById("stopButton").style.display="block";
-		document.getElementById("actionButton").innerHTML='<img src="goButton24px.svg"/>';
+		id("stopButton").style.display="block";
+		id("actionButton").innerHTML='<img src="goButton24px.svg"/>';
 	}
 	
 	function resume() { // restart tracking after pausing
 		console.log("RESUME");
-		document.getElementById("stopButton").style.display="none";
-		document.getElementById("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
+		id("stopButton").style.display="none";
+		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
 		tracking = true;
 		var opt={enableHighAccuracy: true, timeout: 15000, maximumAge: 0};
 		geolocator = navigator.geolocation.watchPosition(sampleLocation, locationError, opt);
@@ -426,21 +450,22 @@
 		alert(message);
 	}
 	
+	// STOP TRACKING
 	function cease(event) {
 		notify("CEASE: tracking is "+tracking+"; measuring is "+measuring+"; "+trackpoints.length+" trackpoints");
 		if(tracking) {
 			navigator.geolocation.clearWatch(geolocator);
-			document.getElementById("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
-			document.getElementById("actionButton").removeEventListener("click", stopStart);
-			document.getElementById("actionButton").addEventListener("click", getFix);
+			id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
+			id("actionButton").removeEventListener("click", stopStart);
+			id("actionButton").addEventListener("click", getFix);
 		}
-		document.getElementById("stopButton").style.display="none";
-		document.getElementById("measure").style.display="block";
+		id("stopButton").style.display="none";
+		id("measure").style.display="block";
 		redraw();
 		if(nodes.length>5) { // offer to save route
 			notify("save route?");
-			document.getElementById('saveName').value="";
-			document.getElementById("saveDialog").style.display = "block";
+			id('saveName').value="";
+			id("saveDialog").style.display = "block";
 		}
 		if(trackpoints.length>5) { // offer to save track
 			name='';
@@ -453,11 +478,12 @@
 			if(t<10) name+="0";
 			name+=t; // YYmonDD.HH:MM
 			notify("track name: "+name);
-			document.getElementById("saveName").value=name;
-			document.getElementById("saveDialog").style.display = "block";
+			id("saveName").value=name;
+			id("saveDialog").style.display = "block";
 		}
 	}
 
+    // REDRAW MAP OVERLAY
 	function redraw() {
 		var i, p, x, y, r, d, t;
 		// notify("redraw - tracking is "+tracking);
@@ -606,33 +632,9 @@
 			d+=(metric)?"kph":"mph";
 			mapCanvas.fillText(d,10,sh-10);
 		}
-		/* above code repaces...
-		if(tracking && speed>0) {
-			gradient=mapCanvas.createLinearGradient(0,sh-150,0,sh);
-			gradient.addColorStop(0,'#00000000');
-			gradient.addColorStop(1,'black');
-			mapCanvas.fillStyle = gradient;
-			mapCanvas.fillRect(0,sh-150,sw,sh);
-			mapCanvas.fillStyle='white';
-			mapCanvas.textBaseline='alphabetic';
-			mapCanvas.textAlign='left';
-			mapCanvas.font='Bold 36px Sans-Serif';
-			d=Math.round((heading+11.25)/22.5); // 16 compass directions: N, NNE, NE,...
-			d=compass.substr(d*3,3)+" "; // compass point eg. NNE
-			d+=Math.round(((metric)?3.6:2.237)*speed);
-			d+=(metric)?"kph":"mph";
-			mapCanvas.fillText(d,10,sh-10);
-		}
-		else if((distance>0)&&(moving>0)) {
-			speed=distance/moving; // m/s
-			speed=Math.round(((metric)?3.6:2.237)*speed);
-			d="average: "+speed+(metric)?"kph":"mph";
-			mapCanvas.fillStyle='black';
-			mapCanvas.fillText(d,10,sh-10);
-		}
-		*/
 	}
 	
+	// POSITION MAP
 	function centreMap() { // move map to current location
 		// notify("centre map at N"+loc.lat+" E"+loc.lon);
 		var i, x, y;
@@ -658,19 +660,15 @@
 		var map = document.getElementById("map");
 		map.style.left = mapLeft+"px";
 		map.style.top = mapTop+"px";
-		/*
-		var string = dm(loc.lat, true) + " " + dm(loc.lon, false) + " ";
-		if(tracking) string += (metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
-		document.getElementById('heading').innerHTML = string;
-		*/
 		redraw();
 		json=JSON.stringify(loc);
 		window.localStorage.setItem('peakLocation', json);
 	}
 	
+	// SHOW TRACK PROFILES
 	function profiles() {
 		notify('show track profiles?');
-		document.getElementById("menu").style.display = "none";
+		id("menu").style.display = "none";
 		if(trackpoints.length<5) return;
 		var n=trackpoints.length;
 		// draw altitude and speed profiles
@@ -749,10 +747,11 @@
 		}
 		profilesCanvas.stroke();
 		notify("show profiles");
-		document.getElementById('profilesPanel').style.display='block';
-		document.getElementById('doneButton').style.display='block';
+		id('profilesPanel').style.display='block';
+		id('doneButton').style.display='block';
 	}
 	
+	// SAVE TRACK/ROUTE
 	function saver() {
 		var name = document.getElementById("saveName").value;
 		notify("save track/route as "+name);
@@ -794,12 +793,13 @@
 			var tracks={};
 			tracks.names=trackNames;
 			notify("save tracknames: "+tracks.names);
-			var json=JSON.stringify(tracks);
+			json=JSON.stringify(tracks);
 			window.localStorage.setItem("peakTracks",json);
 		}
-		document.getElementById("saveDialog").style.display="none";
+		id("saveDialog").style.display="none";
 	}
 	
+	// LOAD TRACK
 	function loadTrack() {
 		notify('load track '+listIndex+": "+trackNames[listIndex]);
 		var json=window.localStorage.getItem(trackNames[listIndex]);
@@ -811,15 +811,15 @@
 		trackpoints=track.trackpoints;
 		dist=0;
 		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"min; climb: "+climb+"m; "+moving+"minutes moving");
-		document.getElementById("list").style.display='none';
+		id("listPanel").style.display='none';
 		if(trackpoints.length>4) document.getElementById('profiles').style.color='white';
 		loc.lon=trackpoints[0].lon; // move to start of track
 		loc.lat=trackpoints[0].lat;
 		centreMap();
 		redraw();
-		document.getElementById('list').style.display='none';
 	}
 	
+	// DELETE TRACK
 	function deleteTrack() {
 		var name=trackNames[listIndex];
 		alert('delete track '+listIndex+": "+name);
@@ -830,9 +830,10 @@
 		window.localStorage.setItem("peakTracks",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
-		document.getElementById('list').style.display='none';
+		id('listPanel').style.display='none';
 	}
 	
+	// LOAD ROUTE
 	function loadRoute() {
 		notify('load route '+listIndex+": "+routeNames[listIndex]);
 		var json=window.localStorage.getItem(routeNames[listIndex]);
@@ -846,9 +847,10 @@
 		loc.lat=nodes[0].lat;
 		centreMap();
 		redraw();
-		document.getElementById('list').style.display='none';
+		id('listPanel').style.display='none';
 	}
 	
+	// DELETE ROUTE
 	function deleteRoute() {
 		var name=routeNames[listIndex];
 		alert('delete route '+listIndex+": "+name);
@@ -859,9 +861,10 @@
 		window.localStorage.setItem("peakRoutes",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
-		document.getElementById('list').style.display='none';
+		id('listPanel').style.display='none';
 	}
 
+    // UTILITY FUNCTIONS
 	function dm(degrees, lat) {
 	    var ddmm;
 	    var negative = false;
@@ -921,6 +924,10 @@
 		}
 		alert(message);
 		document.getElementById('menu').style.display='none';
+	}
+	
+	function id(el) {
+	    return document.getElementById(el);
 	}
 
 // implement service worker if browser is PWA friendly
