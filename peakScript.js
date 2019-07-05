@@ -149,24 +149,24 @@
 		// var trackList=document.createElement('ul');
 		document.getElementById('list').innerHTML='';
 		for(var i=0; i<trackNames.length; i++) {
-		    notify('track '+i);
+		    // notify('track '+i);
   			var listItem = document.createElement('li');
   			listItem.classList.add('listItem');
 			var itemName = document.createElement('span');
 			itemName.index=i;
 			itemName.classList.add('itemName');
 			itemName.innerHTML = trackNames[i];
-			notify('name: '+trackNames[i]);
+			// notify('name: '+trackNames[i]);
 			itemName.addEventListener('click', function(){listIndex=this.index; loadTrack();});
 			var delButton = document.createElement('button');
 			delButton.index=i;
 			delButton.classList.add('deleteButton');
 			delButton.addEventListener('click', function() {listIndex=this.index; deleteTrack();});
-			notify('delete button added');
+			notify('delete button added for track '+i);
 			listItem.appendChild(itemName);
 			listItem.appendChild(delButton);
 			// trackList.appendChild(listItem);
-			id('list').appendChild(listItem);
+			document.getElementById('list').appendChild(listItem);
   		}
   		// document.getElementById('list').appendChild(trackList);
   		// document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
