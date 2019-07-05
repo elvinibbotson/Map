@@ -156,11 +156,13 @@
 			itemName.index=i;
 			itemName.classList.add('itemName');
 			itemName.innerHTML = trackNames[i];
+			notify('name: '+trackNames[i]);
 			itemName.addEventListener('click', function(){listIndex=this.index; loadTrack();});
 			var delButton = document.createElement('button');
 			delButton.index=i;
 			delButton.classList.add('deleteButton');
 			delButton.addEventListener('click', function() {listIndex=this.index; deleteTrack();});
+			notify('delete button added');
 			listItem.appendChild(itemName);
 			listItem.appendChild(delButton);
 			// trackList.appendChild(listItem);
