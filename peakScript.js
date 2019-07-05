@@ -163,7 +163,7 @@
 			delButton.index=i;
 			delButton.classList.add('deleteButton');
 			delButton.addEventListener('click', function() {listIndex=this.index; deleteTrack();});
-			notify('delete button added for track '+i);
+			// notify('delete button added for track '+i);
 			listItem.appendChild(itemName);
 			listItem.appendChild(delButton);
 			// trackList.appendChild(listItem);
@@ -210,7 +210,7 @@
 		x0=touches[0].clientX;
 		y0=touches[0].clientY;
 		// notify("start drag");
-		id('list').style.display='none';
+		id('listPanel').style.display='none';
 		id('menu').style.display='none';
 	}
 	
@@ -230,6 +230,7 @@
 	function endMove(event) {
 	    x0=touches[0].clientX;
 		y0=touches[0].clientY;
+		notify('end at '+x0+','+y0+' measuring: '+measuring);
 		if(measuring) {
 			var node={};
 			node.lon=loc.lon;
@@ -239,6 +240,7 @@
 			console.log('distance: '+distance+"m");
 			lastLoc.lon=loc.lon;
 			lastLoc.lat=loc.lat;
+			centreMap();
 		}
 	}
     /*
