@@ -97,23 +97,23 @@
 	sw=window.innerWidth;
 	sh=window.innerHeight;
 	console.log("screen size: "+sw+"x"+sh);
-	document.getElementById("mapScreen").style.width = sw+'px';
-	document.getElementById("mapScreen").style.height = sh+'px';
-	mapCanvas = document.getElementById("mapCanvas").getContext("2d"); // set up drawing canvas
-	document.getElementById("mapCanvas").width = sw;
-	document.getElementById("mapCanvas").height = sh;
-	profilesCanvas = document.getElementById("profilesCanvas").getContext("2d"); // set up drawing canvas
-	document.getElementById("profilesCanvas").width=sw*0.9;
-	document.getElementById("profilesCanvas").height=sh*0.4;
-	document.getElementById("actionButton").style.display='block';
+	id("mapScreen").style.width = sw+'px';
+	id("mapScreen").style.height = sh+'px';
+	mapCanvas=id("mapCanvas").getContext("2d"); // set up drawing canvas
+	id("mapCanvas").width = sw;
+	id("mapCanvas").height = sh;
+	profilesCanvas=id("profilesCanvas").getContext("2d"); // set up drawing canvas
+	id("profilesCanvas").width=sw*0.9;
+	id("profilesCanvas").height=sh*0.4;
+	id("actionButton").style.display='block';
 	for (x = 0; x < 3; x++) { // build map by positioning 10x10 grid of tiles
 		for (var y = 0; y < 3; y++) {
-			var tile = document.getElementById("tile" + y + x);
+			var tile=id("tile" + y + x);
 			tile.style.left = (x * 720) +'px';
 			tile.style.top = (y * 800) +'px';
 		}
 	}
-	document.getElementById("map").style.display = 'block';
+	id("map").style.display='block';
 	status = window.localStorage.getItem('peakLocation'); // recover last location
 	console.log("location status: "+status);
 	if(status) {
@@ -127,7 +127,7 @@
 	}
 	centreMap(); // go to saved location
 	metric = window.localStorage.getItem("metric");
-	document.getElementById('metric').checked = metric;
+	id('metric').checked=metric;
 	// get list of saved tracks
 	var json=JSON.parse(window.localStorage.getItem("peakTracks"));
 	console.log("routes: "+json);
@@ -169,8 +169,6 @@
 			// trackList.appendChild(listItem);
 			id('list').appendChild(listItem);
   		}
-  		// document.getElementById('list').appendChild(trackList);
-  		// document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
 		id("listPanel").style.display = "block";
 		notify('track list populated with '+trackNames.length+' tracks');
 	}
@@ -199,8 +197,6 @@
 			// routeList.appendChild(listItem);
 			id('list').appendChild(listItem);
   		}
-  		// document.getElementById('list').appendChild(routeList);
-  		// document.getElementById('closeListButton').addEventListener('click', function() {document.getElementById('list').style.display='none'});
 		id("listPanel").style.display = "block";
 	}
 	
@@ -245,28 +241,6 @@
 			centreMap();
 		}
 	}
-    /*
-	function moveTo(event) {
-		document.getElementById("list").style.display = "none";
-		document.getElementById('menu').style.display='none';
-		x=sw/2-event.clientX;
-		y=sh/2-event.clientY;
-		console.log("move to "+x+", "+y+" from current position");
-		loc.lat+=y/24000;
-		loc.lon-=x/14400;
-		if(measuring) {
-			var node={};
-			node.lon=loc.lon;
-			node.lat=loc.lat;
-			nodes.push(node);
-			distance+=measure('distance',lastLoc.lon,lastLoc.lat,loc.lon,loc.lat);
-			console.log('distance: '+distance+"m");
-			lastLoc.lon=loc.lon;
-			lastLoc.lat=loc.lat;
-		}
-		centreMap();
-	}
-	*/
 	
 	// ADD TRACKPOINT
 	function addTP() {
@@ -278,7 +252,7 @@
 		tp.time=loc.time;
 		trackpoints.push(tp);
 		if(trackpoints.length<2) return;
-		if(trackpoints.length>4) document.getElementById('profiles').style.color='white';
+		if(trackpoints.length>4) id('profiles').style.color='white';
 		redraw();
 	}
 	
@@ -651,8 +625,8 @@
 		for(x=0;x<3;x++) { // populate 3x3 tile grid
 			for(y=0;y<3;y++) {
 				if(((row+y)<0)||((row+y>9))||((col+x)<0)||((col+x)>9))
-					document.getElementById("img"+y+x).src="tiles/blank.jpg";
-				else document.getElementById("img"+y+x).src="tiles/"+(row+y)+(col+x)+".jpg";
+					id("img"+y+x).src="tiles/blank.jpg";
+				else id("img"+y+x).src="tiles/"+(row+y)+(col+x)+".jpg";
 			}
 		}
 		var N=mapN-row/30;
@@ -661,7 +635,7 @@
 		mapLeft=(W-loc.lon)*14400+sw/2;
 		mapTop=(loc.lat-N)*24000+sh/2;
 		console.log("map position: "+mapLeft+", "+mapTop);
-		var map = document.getElementById("map");
+		var map=id("map");
 		map.style.left = mapLeft+"px";
 		map.style.top = mapTop+"px";
 		redraw();
@@ -697,7 +671,23 @@
 		profilesCanvas.moveTo(w-10,30);
 		profilesCanvas.lineTo(w-30,10);
 		profilesCanvas.stroke();
-		// draw elevation profile
+		// speed profile
+		profilesCanvas.beginPath();
+ 	    profilesCanvas.strokeStyle = 'silver'; // speed profile is silver
+		var x=0; // horizontal position
+		var t=0; // time (sec)
+		var s=0; // speed (km/hr)
+		for (i=1;i<n;i++) { // for each trackpoint
+			d=measure('distance',trackpoints[i-1].lon,trackpoints[i-1].lat,trackpoints[i].lon,trackpoints[i].lat);
+			x+=d;
+			t=trackpoints[i].time-trackpoints[i-1].time;
+			s=3.6*d/t; // km/hr
+			if(i%10==0) notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
+			profilesCanvas.moveTo(w*x/distance,h);
+			profilesCanvas.lineTo(w*x/distance,h-h*s/50); // h=50kph
+		}
+		profilesCanvas.stroke();
+		// elevation profile
 		profilesCanvas.beginPath();
 		profilesCanvas.lineWidth=3;
 	    profilesCanvas.strokeStyle = 'yellow'; // elevation profile is yellow
@@ -714,22 +704,6 @@
 			if(i<1) profilesCanvas.moveTo(x,y);
 			else profilesCanvas.lineTo(x,y);
 			// notify('line to '+x+','+y);
-		}
-		profilesCanvas.stroke();
-		profilesCanvas.beginPath();
-		notify('draw speed profile');
-	    profilesCanvas.strokeStyle = 'silver'; // speed profile is silver
-		var x=0; // horizontal position
-		var t=0; // time (sec)
-		var s=0; // speed (km/hr)
-		for (i=1;i<n;i++) { // for each trackpoint
-			d=measure('distance',trackpoints[i-1].lon,trackpoints[i-1].lat,trackpoints[i].lon,trackpoints[i].lat);
-			x+=d;
-			t=trackpoints[i].time-trackpoints[i-1].time;
-			s=3.6*d/t; // km/hr
-			if(i%10==0) notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
-			profilesCanvas.moveTo(w*x/distance,h);
-			profilesCanvas.lineTo(w*x/distance,h-h*s/50); // h=50kph
 		}
 		profilesCanvas.stroke();
 		// draw grid km x 100m/10kph
@@ -757,7 +731,7 @@
 	
 	// SAVE TRACK/ROUTE
 	function saver() {
-		var name = document.getElementById("saveName").value;
+		var name=id("saveName").value;
 		notify("save track/route as "+name);
 		// DEAL WITH SAVING ROUTE
 		if(measuring) { // save as route?
@@ -816,7 +790,7 @@
 		dist=0;
 		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"min; climb: "+climb+"m; "+moving+"minutes moving");
 		id("listPanel").style.display='none';
-		if(trackpoints.length>4) document.getElementById('profiles').style.color='white';
+		if(trackpoints.length>4) id('profiles').style.color='white';
 		loc.lon=trackpoints[0].lon; // move to start of track
 		loc.lat=trackpoints[0].lat;
 		centreMap();
@@ -846,12 +820,11 @@
 		nodes=route.nodes;
 		dist=0;
 		notify("load route with "+nodes.length+" nodes; length: "+distance+"m");
-		document.getElementById("list").style.display='none';
+		id("list").style.display='none';
 		loc.lon=nodes[0].lon; // move to start of route
 		loc.lat=nodes[0].lat;
 		centreMap();
 		redraw();
-		id('listPanel').style.display='none';
 	}
 	
 	// DELETE ROUTE
@@ -927,7 +900,7 @@
 			message+=notifications[i]+"; ";
 		}
 		alert(message);
-		document.getElementById('menu').style.display='none';
+		id('menu').style.display='none';
 	}
 	
 	function id(el) {
