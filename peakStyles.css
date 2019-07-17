@@ -193,8 +193,10 @@ input, label, select {
 
 #listPanel {
     position: fixed;
-	top:40px;
+	top: 0;
 	left: 0;
+	width: 100%;
+	height: 100%;
 	padding-left: 20px;
 	padding-right: 20px;
 	color: white;

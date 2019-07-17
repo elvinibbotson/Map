@@ -19,7 +19,7 @@
 	var trackpoints = []; // array of track objects - locations, altitudes, timestamps, lengths, durations,...
 	var routeNames=[];
 	var nodes=[]; // array of route node locations
-	var metric = false;
+	var metric=false;
     var geolocator = null;
 	var loc={};
 	var lastLoc = {};
@@ -46,7 +46,7 @@
 		id("listPanel").style.display="none";
 		id('profilesPanel').style.display='none';
 		id("menu").style.display = (display=="block")?"none":"block";
-		id('metric').checked = metric;
+		id('metric').checked=metric;
 	});
 	id("tracks").addEventListener("click", listTracks);
 	id('profiles').addEventListener('click', profiles);
@@ -73,9 +73,9 @@
 	});
 	id("metric").addEventListener("change", function() {
 		metric=this.checked;
-		window.localStorage.setItem('metric', metric);
+		window.localStorage.setItem('metric',metric);
 		console.log("metric is "+metric);
-		id("menu").style.display = "none";
+		id("menu").style.display="none";
 	});
 	id('diagnostics').addEventListener('click', showNotifications);
 	id("actionButton").addEventListener("click", getFix);
@@ -91,6 +91,9 @@
 	  id("saveDialog").style.display="none";
 	  measuring=false;
 	  nodes=[];
+	});
+	id('listHeader').addEventListener('click', function() {
+	    id('list').style.display='none';  
 	});
 	loc.lat = 53.2;
 	loc.lon = -1.75;	// sw = window.innerWidth;	// sh = window.innerHeight;
@@ -126,13 +129,14 @@
 		if(loc.lat<53) loc.lat=53;
 	}
 	centreMap(); // go to saved location
-	metric = window.localStorage.getItem("metric");
+	metric=window.localStorage.getItem("metric");
+	console.log("metric is "+metric);
 	id('metric').checked=metric;
 	// get list of saved tracks
 	var json=JSON.parse(window.localStorage.getItem("peakTracks"));
 	console.log("routes: "+json);
 	if(json!=null) {
-		trackNames = json.names;
+		trackNames=json.names;
 		notify(trackNames.length+' tracks');
 	}
 	json=JSON.parse(window.localStorage.getItem("peakRoutes"));
@@ -156,7 +160,7 @@
 			var itemName = document.createElement('span');
 			itemName.index=i;
 			itemName.classList.add('itemName');
-			itemName.innerHTML = trackNames[i];
+			itemName.innerHTML=trackNames[i];
 			// notify('name: '+trackNames[i]);
 			itemName.addEventListener('click', function(){listIndex=this.index; loadTrack();});
 			var delButton = document.createElement('button');
@@ -594,16 +598,11 @@
 				mapCanvas.font='Bold 36px Sans-Serif';
 				d=Math.round((heading+11.25)/22.5); // 16 compass directions: N, NNE, NE,...
 				d=compass.substr(d*3,3)+" "; // compass point eg. NNE
-				// d+=Math.round(((metric)?3.6:2.237)*speed);
-				// d+=(metric)?"kph":"mph";
 			}
 			else if(moving>0) { // show average speed
 				mapCanvas.font='24px Sans-Serif';
 				d='average ';
 				speed=distance/moving; // m/s
-				// d+=Math.round(((metric)?3.6:2.237)*speed);
-				// notify('track dist:'+distance+' moving:'+moving+' speed:'+speed);
-				// d+=(metric)?"kph":"mph";
 			}
 			d+=Math.round(((metric)?3.6:2.237)*speed);
 			notify('d: '+d);
@@ -651,26 +650,14 @@
 		var n=trackpoints.length;
 		// draw altitude and speed profiles
 		var w=sw*0.9;
-		var h=sh*0.4;
+		var h=sh*0.25; // was 0.4;
+		var maxAlt=0;
+		var maxSpeed=0;
 		notify(n+" trackpoints");
 		// first create dark background
 		profilesCanvas.fillStyle='#000000cc';
 		profilesCanvas.clearRect(0,0,w,h);
 		profilesCanvas.fillRect(0,0,w,h);
-		// legend
-		profilesCanvas.font='16px Sans-Serif';
-		profilesCanvas.fillStyle='yellow';
-		profilesCanvas.fillText('elevation',10,20);
-		profilesCanvas.fillStyle='silver';
-		profilesCanvas.fillText('speed',10,35);
-		// close button
-		profilesCanvas.strokeStyle='white';
-		profilesCanvas.beginPath();
-		profilesCanvas.moveTo(w-10,10);
-		profilesCanvas.lineTo(w-30,30);
-		profilesCanvas.moveTo(w-10,30);
-		profilesCanvas.lineTo(w-30,10);
-		profilesCanvas.stroke();
 		// speed profile
 		profilesCanvas.beginPath();
  	    profilesCanvas.strokeStyle = 'silver'; // speed profile is silver
@@ -678,15 +665,22 @@
 		var t=0; // time (sec)
 		var s=0; // speed (km/hr)
 		for (i=1;i<n;i++) { // for each trackpoint
+		    if(trackpoints[i].alt>maxAlt) maxAlt=trackpoints[i].alt;
 			d=measure('distance',trackpoints[i-1].lon,trackpoints[i-1].lat,trackpoints[i].lon,trackpoints[i].lat);
 			x+=d;
 			t=trackpoints[i].time-trackpoints[i-1].time;
 			s=3.6*d/t; // km/hr
+			if(s>maxSpeed) maxSpeed=s;
 			if(i%10==0) notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
+			if(i<1) profilesCanvas.moveTo(w+x/distance,h-h*s/50); // h=50kph
+			else profilesCanvas.lineTo(w+x/distance,h-h*s/50);
+			/*
 			profilesCanvas.moveTo(w*x/distance,h);
 			profilesCanvas.lineTo(w*x/distance,h-h*s/50); // h=50kph
+			*/
 		}
 		profilesCanvas.stroke();
+		
 		// elevation profile
 		profilesCanvas.beginPath();
 		profilesCanvas.lineWidth=3;
@@ -723,6 +717,20 @@
 			profilesCanvas.moveTo(0,i*h/5);
 			profilesCanvas.lineTo(w,i*h/5);
 		}
+		profilesCanvas.stroke();
+		// legend
+		profilesCanvas.font='16px Sans-Serif';
+		profilesCanvas.fillStyle='yellow';
+		profilesCanvas.fillText('elevation - max: '+maxAlt+'m',10,20);
+		profilesCanvas.fillStyle='silver';
+		profilesCanvas.fillText('speed - max: '+maxSpeed+'kph',10,35);
+		// draw close button
+		profilesCanvas.strokeStyle='white';
+		profilesCanvas.beginPath();
+		profilesCanvas.moveTo(w-10,10);
+		profilesCanvas.lineTo(w-30,30);
+		profilesCanvas.moveTo(w-10,30);
+		profilesCanvas.lineTo(w-30,10);
 		profilesCanvas.stroke();
 		notify("show profiles");
 		id('profilesPanel').style.display='block';
