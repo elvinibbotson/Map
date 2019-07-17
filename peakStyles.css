@@ -202,7 +202,7 @@ input, label, select {
 	color: white;
 	background-color: black;
 	font-size: 1.2em;
-	z-index: 5;
+	z-index: 30;
 	display: none;
     overflow-x: hidden;
     overflow-y: auto;
@@ -283,7 +283,12 @@ input, label, select {
   left: 5%;
   top:10%;
   width: 90%;
-  height: 40%;
+  height: 25%;
   z-index: 10;
   display: none;
+}
+#closeButton {
+    position: fixed;
+    top:0;
+    right:0;
 }
