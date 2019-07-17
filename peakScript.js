@@ -130,7 +130,8 @@
 		if(loc.lat<53) loc.lat=53;
 	}
 	centreMap(); // go to saved location
-	metric=window.localStorage.getItem("metric");
+    // ALWAYS START IN IMPERIAL UNITS
+	// metric=window.localStorage.getItem("metric");
 	id('metric').checked=metric;
 	console.log("metric is "+metric+' - checked is '+id('metric').checked)
 	// get list of saved tracks
@@ -666,15 +667,14 @@
 		var t=0; // time (sec)
 		var s=0; // speed (km/hr)
 		for (i=1;i<n;i++) { // for each trackpoint
-		    if(trackpoints[i].alt>maxAlt) maxAlt=trackpoints[i].alt;
 			d=measure('distance',trackpoints[i-1].lon,trackpoints[i-1].lat,trackpoints[i].lon,trackpoints[i].lat);
 			x+=d;
 			t=trackpoints[i].time-trackpoints[i-1].time;
 			s=3.6*d/t; // km/hr
 			if(s>maxSpeed) maxSpeed=s;
 			if(i%10==0) notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
-			if(i<1) profilesCanvas.moveTo(w+x/distance,h-h*s/50); // h=50kph
-			else profilesCanvas.lineTo(w+x/distance,h-h*s/50);
+			if(i<1) profilesCanvas.moveTo(w*x/distance,h-h*s/50); // h=50kph
+			else profilesCanvas.lineTo(w*x/distance,h-h*s/50);
 			/*
 			profilesCanvas.moveTo(w*x/distance,h);
 			profilesCanvas.lineTo(w*x/distance,h-h*s/50); // h=50kph
@@ -691,6 +691,7 @@
 		var t,x,y;
 		for (var i=0;i<n;i++) {
 			t=trackpoints[i];
+			if(t.alt>maxAlt) maxAlt=t.alt;
 			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
 			// notify('i:'+i+' d:'+d);
 			x=w*d/distance;
