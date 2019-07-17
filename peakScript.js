@@ -92,8 +92,8 @@
 	  measuring=false;
 	  nodes=[];
 	});
-	id('listHeader').addEventListener('click', function() {
-	    id('list').style.display='none';  
+	id('closeButton').addEventListener('click', function() {
+	    id('listPanel').style.display='none';  
 	});
 	loc.lat = 53.2;
 	loc.lon = -1.75;	// sw = window.innerWidth;	// sh = window.innerHeight;
@@ -734,7 +734,7 @@
 		profilesCanvas.stroke();
 		notify("show profiles");
 		id('profilesPanel').style.display='block';
-		id('doneButton').style.display='block';
+		// id('doneButton').style.display='block';
 	}
 	
 	// SAVE TRACK/ROUTE
@@ -828,7 +828,7 @@
 		nodes=route.nodes;
 		dist=0;
 		notify("load route with "+nodes.length+" nodes; length: "+distance+"m");
-		id("list").style.display='none';
+		id("listPanel").style.display='none';
 		loc.lon=nodes[0].lon; // move to start of route
 		loc.lat=nodes[0].lat;
 		centreMap();
