@@ -696,7 +696,7 @@
 			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
 			// notify('i:'+i+' d:'+d);
 			x=w*d/distance;
-			y=h*(600-t.alt)*10000/distance; // for 10km distance vertical scale is 0-600m
+			y=h*(1000-t.alt*5000/distance); // for 5km distance vertical scale is 0-1000m
 			// y=h*(maxAlt-t.alt)/dAlt;
 			if(i<1) profilesCanvas.moveTo(x,y);
 			else profilesCanvas.lineTo(x,y);
