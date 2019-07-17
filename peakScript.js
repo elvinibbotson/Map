@@ -46,7 +46,7 @@
 		id("listPanel").style.display="none";
 		id('profilesPanel').style.display='none';
 		id("menu").style.display = (display=="block")?"none":"block";
-		id('metric').checked=metric;
+		// id('metric').checked=metric;
 	});
 	id("tracks").addEventListener("click", listTracks);
 	id('profiles').addEventListener('click', profiles);
