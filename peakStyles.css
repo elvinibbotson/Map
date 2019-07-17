@@ -162,7 +162,7 @@ input, label, select {
 #list {
     list-style-type: none;
     color: white;
-    background-color: black;
+    background-color: #333333;
     display: flex;
     flex-direction: column;
 }
@@ -175,7 +175,7 @@ input, label, select {
   width: 16px;
   height: 16px;
   float: right;
-  border: none;
+  border: 1px white solid;
   outline: none;
   background: url(deleteButton16px.svg) center center no-repeat;
 }
