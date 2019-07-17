@@ -130,9 +130,8 @@
 	}
 	centreMap(); // go to saved location
 	metric=window.localStorage.getItem("metric");
-	console.log("metric is "+metric);
 	id('metric').checked=metric;
-	console.log('metric.checked is '+id('metric').checked)
+	console.log("metric is "+metric+' - checked is '+id('metric').checked)
 	// get list of saved tracks
 	var json=JSON.parse(window.localStorage.getItem("peakTracks"));
 	console.log("routes: "+json);
