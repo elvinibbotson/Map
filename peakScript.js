@@ -206,7 +206,8 @@
 			// routeList.appendChild(listItem);
 			id('list').appendChild(listItem);
   		}
-		id("listScreen").style.display = "block";
+		// id("listScreen").style.display = "block";
+		showList();
 	}
 	
 	// DRAG MAP
