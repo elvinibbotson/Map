@@ -490,8 +490,9 @@
 		mapCanvas.fillText(string,45,25);
 		mapCanvas.textAlign='right';
 		if(loc.alt!=null) {
-			string=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
-			mapCanvas.fillText(string,sw/2,5);
+			// string=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
+			// mapCanvas.fillText(string,sw/2,5);
+			mapCanvas.fillText(loc.alt+"m",sw/2,5); // elevation in m
 		}
 		// draw current route as green line
 		mapCanvas.beginPath();
@@ -585,7 +586,8 @@
 			mapCanvas.fillText(d,0.75*sw,2);
 			mapCanvas.font = 'Bold 16px Sans-Serif';
 			mapCanvas.textAlign='right';
-			if(climb!=null) mapCanvas.fillText("/ "+Math.round((metric)?climb:climb*3.281),sw/2,25);
+			// if(climb!=null) mapCanvas.fillText("/ "+Math.round((metric)?climb:climb*3.281),sw/2,25);
+			if(climb!=null) mapCanvas.fillText("/ "+Math.round(climb),sw/2,25); // climb in m
 		}
 		if(distance>0) {
 			gradient=mapCanvas.createLinearGradient(0,sh-150,0,sh);
@@ -696,7 +698,7 @@
 			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
 			// notify('i:'+i+' d:'+d);
 			x=w*d/distance;
-			y=h-h*t.alt*10/distance;
+			y=h-h*t.alt*20/distance;
 			// y=h*(maxAlt-t.alt)/dAlt;
 			if(i<1) profilesCanvas.moveTo(x,y);
 			else profilesCanvas.lineTo(x,y);
@@ -726,7 +728,8 @@
 		profilesCanvas.fillStyle='yellow';
 		profilesCanvas.fillText('elevation - max: '+maxAlt+'m',10,20);
 		profilesCanvas.fillStyle='silver';
-		profilesCanvas.fillText('speed - max: '+Math.round(maxSpeed)+'kph',10,35);
+		maxSpeed=Math.round((metric)?maxSpeed:maxSpeed*0.62137);
+		profilesCanvas.fillText('speed - max: '+maxSpeed+(metric)?'kph':'mph',10,35);
 		// draw close button
 		profilesCanvas.strokeStyle='white';
 		profilesCanvas.beginPath();
