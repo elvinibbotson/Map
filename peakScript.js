@@ -696,7 +696,7 @@
 			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
 			// notify('i:'+i+' d:'+d);
 			x=w*d/distance;
-			y=h-h*(600-t.alt)*10/distance;
+			y=h-h*t.alt*10/distance;
 			// y=h*(maxAlt-t.alt)/dAlt;
 			if(i<1) profilesCanvas.moveTo(x,y);
 			else profilesCanvas.lineTo(x,y);
