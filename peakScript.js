@@ -43,7 +43,7 @@
 	id("menuButton").addEventListener("click", function() {
 		console.log("toggle menu");
 		var display=id("menu").style.display;
-		id("listPanel").style.display="none";
+		id("listScreen").style.display="none";
 		id('profilesPanel').style.display='none';
 		id("menu").style.display = (display=="block")?"none":"block";
 		id('metric').checked=metric;
@@ -94,7 +94,7 @@
 	  nodes=[];
 	});
 	id('closeButton').addEventListener('click', function() {
-	    id('listPanel').style.display='none';  
+	    id('listScreen').style.display='none';  
 	});
 	loc.lat = 53.2;
 	loc.lon = -1.75;	// sw = window.innerWidth;	// sh = window.innerHeight;
@@ -175,7 +175,7 @@
 			// trackList.appendChild(listItem);
 			id('list').appendChild(listItem);
   		}
-		id("listPanel").style.display = "block";
+		id("listScreen").style.display = "block";
 		notify('track list populated with '+trackNames.length+' tracks');
 	}
 	
@@ -204,7 +204,7 @@
 			// routeList.appendChild(listItem);
 			id('list').appendChild(listItem);
   		}
-		id("listPanel").style.display = "block";
+		id("listScreen").style.display = "block";
 	}
 	
 	// DRAG MAP
@@ -213,7 +213,7 @@
 		x0=touches[0].clientX;
 		y0=touches[0].clientY;
 		// notify("start drag");
-		id('listPanel').style.display='none';
+		id('listScreen').style.display='none';
 		id('menu').style.display='none';
 	}
 	
@@ -800,7 +800,7 @@
 		trackpoints=track.trackpoints;
 		dist=0;
 		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"min; climb: "+climb+"m; "+moving+"minutes moving");
-		id("listPanel").style.display='none';
+		id("listScreen").style.display='none';
 		if(trackpoints.length>4) id('profiles').style.color='white';
 		loc.lon=trackpoints[0].lon; // move to start of track
 		loc.lat=trackpoints[0].lat;
@@ -820,7 +820,7 @@
 		window.localStorage.setItem("peakTracks",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
-		id('listPanel').style.display='none';
+		id('listScreen').style.display='none';
 	}
 	
 	// LOAD ROUTE
@@ -832,7 +832,7 @@
 		nodes=route.nodes;
 		dist=0;
 		notify("load route with "+nodes.length+" nodes; length: "+distance+"m");
-		id("listPanel").style.display='none';
+		id("listScreen").style.display='none';
 		loc.lon=nodes[0].lon; // move to start of route
 		loc.lat=nodes[0].lat;
 		centreMap();
@@ -850,7 +850,7 @@
 		window.localStorage.setItem("peakRoutes",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
-		id('listPanel').style.display='none';
+		id('listScreen').style.display='none';
 	}
 
     // UTILITY FUNCTIONS
