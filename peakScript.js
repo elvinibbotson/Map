@@ -489,7 +489,7 @@
 		string=dm(loc.lon, false);
 		mapCanvas.fillText(string,45,25);
 		mapCanvas.textAlign='right';
-		if(loc.alt!==null) {
+		if(loc.alt!=null) {
 			// string=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
 			// mapCanvas.fillText(string,sw/2,5);
 			mapCanvas.fillText(loc.alt+"m",sw/2,5); // elevation in m
@@ -663,7 +663,7 @@
 		profilesCanvas.fillStyle='#000000cc';
 		profilesCanvas.clearRect(0,0,w,h);
 		profilesCanvas.fillRect(0,0,w,h);
-		// speed profile
+		/* speed profile
 		profilesCanvas.beginPath();
  	    profilesCanvas.strokeStyle = 'silver'; // speed profile is silver
 		var x=0; // horizontal position
@@ -678,13 +678,9 @@
 			if(i%10==0) notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
 			if(i<1) profilesCanvas.moveTo(w*x/distance,h-h*s/200); // h=200kph
 			else profilesCanvas.lineTo(w*x/distance,h-h*s/200);
-			/*
-			profilesCanvas.moveTo(w*x/distance,h);
-			profilesCanvas.lineTo(w*x/distance,h-h*s/50); // h=50kph
-			*/
 		}
 		profilesCanvas.stroke();
-		
+		*/
 		// elevation profile
 		profilesCanvas.beginPath();
 		profilesCanvas.lineWidth=3;
