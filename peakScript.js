@@ -188,7 +188,7 @@
 		if(routeNames.length<1) return;
 		// id("listHeader").innerHTML="<b>Routes</b>";
 		// var routeList=document.createElement('ul');
-		id('list').innerHTML='<li>ROUTES</li>';
+		id('list').innerHTML="<li class='listItem'><b>ROUTES</b><span id='closeButton'><img src='closeButton24px.svg'/></li>";
 		for(var i=0; i<routeNames.length; i++) {
   			var listItem = document.createElement('li');
   			listItem.classList.add('listItem');
