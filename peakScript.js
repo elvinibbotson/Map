@@ -93,9 +93,11 @@
 	  measuring=false;
 	  nodes=[];
 	});
+	/*
 	id('closeButton').addEventListener('click', function() {
 	    id('listScreen').style.display='none';  
 	});
+	*/
 	loc.lat = 53.2;
 	loc.lon = -1.75;	// sw = window.innerWidth;	// sh = window.innerHeight;
 	sw=window.innerWidth;
