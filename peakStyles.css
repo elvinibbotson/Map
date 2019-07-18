@@ -178,7 +178,7 @@ input, label, select {
   width: 16px;
   height: 16px;
   float: right;
-  border: 1px white solid;
+  border: none;
   outline: none;
   background: url(deleteButton16px.svg) center center no-repeat;
 }
