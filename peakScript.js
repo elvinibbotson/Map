@@ -188,7 +188,7 @@
 		if(routeNames.length<1) return;
 		// id("listHeader").innerHTML="<b>Routes</b>";
 		// var routeList=document.createElement('ul');
-		id('list').innerHTML="<li class='listItem'><b>ROUTES</b><span id='closeButton'><img src='closeButton24px.svg'/></li>";
+		id('list').innerHTML="<li class='listItem'><b>ROUTES</b><span id='closeButton' onclick='hideList'><img src='closeButton24px.svg'/></li>";
 		for(var i=0; i<routeNames.length; i++) {
   			var listItem = document.createElement('li');
   			listItem.classList.add('listItem');
@@ -856,6 +856,15 @@
 	}
 
     // UTILITY FUNCTIONS
+    
+    function showList() {
+        id('listScreen').style.display='block';
+    }
+    
+    function hideList() {
+        id('listScreen').style.display='none';
+    }
+    
 	function dm(degrees, lat) {
 	    var ddmm;
 	    var negative = false;
