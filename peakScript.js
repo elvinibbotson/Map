@@ -489,7 +489,7 @@
 		string=dm(loc.lon, false);
 		mapCanvas.fillText(string,45,25);
 		mapCanvas.textAlign='right';
-		if(loc.alt!=null) {
+		if(loc.alt!==null) {
 			// string=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
 			// mapCanvas.fillText(string,sw/2,5);
 			mapCanvas.fillText(loc.alt+"m",sw/2,5); // elevation in m
@@ -705,7 +705,7 @@
 			// notify('line to '+x+','+y);
 		}
 		profilesCanvas.stroke();
-		// draw grid km x 100m/10kph
+		/* draw grid km x 100m/10kph
 		notify("draw grid");
 		profilesCanvas.beginPath();
 		x=0; // draw km intervals
@@ -722,6 +722,7 @@
 			profilesCanvas.moveTo(0,i*h/5);
 			profilesCanvas.lineTo(w,i*h/5);
 		}
+		*/
 		profilesCanvas.stroke();
 		// legend
 		profilesCanvas.font='16px Sans-Serif';
@@ -729,7 +730,7 @@
 		profilesCanvas.fillText('elevation - max: '+maxAlt+'m',10,20);
 		profilesCanvas.fillStyle='silver';
 		maxSpeed=Math.round((metric)?maxSpeed:maxSpeed*0.62137);
-		profilesCanvas.fillText('speed - max: '+maxSpeed+(metric)?'kph':'mph',10,35);
+		profilesCanvas.fillText('speed - max: '+maxSpeed+((metric)?'kph':'mph'),10,35);
 		// draw close button
 		profilesCanvas.strokeStyle='white';
 		profilesCanvas.beginPath();
