@@ -674,8 +674,8 @@
 			s=3.6*d/t; // km/hr
 			if(s>maxSpeed) maxSpeed=s;
 			if(i%10==0) notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
-			if(i<1) profilesCanvas.moveTo(w*x/distance,h-h*s*2/maxSpeed); // h=maxSpeed*2
-			else profilesCanvas.lineTo(w*x/distance,h-h*s*2/maxSpeed);
+			if(i<1) profilesCanvas.moveTo(w*x/distance,h-h*s/100); // h=100kph
+			else profilesCanvas.lineTo(w*x/distance,h-h*s/100);
 			/*
 			profilesCanvas.moveTo(w*x/distance,h);
 			profilesCanvas.lineTo(w*x/distance,h-h*s/50); // h=50kph
@@ -696,7 +696,7 @@
 			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
 			// notify('i:'+i+' d:'+d);
 			x=w*d/distance;
-			y=h*(1000-t.alt*5000/distance)/1000; // for 5km distance vertical scale is 0-1000m
+			y=h*(600-t.alt)*6/distance; // for 5km distance vertical scale is 0-1000m
 			// y=h*(maxAlt-t.alt)/dAlt;
 			if(i<1) profilesCanvas.moveTo(x,y);
 			else profilesCanvas.lineTo(x,y);
@@ -726,7 +726,7 @@
 		profilesCanvas.fillStyle='yellow';
 		profilesCanvas.fillText('elevation - max: '+maxAlt+'m',10,20);
 		profilesCanvas.fillStyle='silver';
-		profilesCanvas.fillText('speed - max: '+maxSpeed+'kph',10,35);
+		profilesCanvas.fillText('speed - max: '+Math.round(maxSpeed)+'kph',10,35);
 		// draw close button
 		profilesCanvas.strokeStyle='white';
 		profilesCanvas.beginPath();

@@ -158,6 +158,10 @@ input, label, select {
     -webkit-overflow-scrolling: touch;
 }
 
+#closeButton {
+    float: right;
+}
+
 #list {
     list-style-type: none;
     color: white;
@@ -236,8 +240,4 @@ input, label, select {
   z-index: 10;
   display: none;
 }
-#closeButton {
-    position: fixed;
-    top:0;
-    right:0;
-}
+
