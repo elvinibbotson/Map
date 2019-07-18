@@ -157,7 +157,7 @@ input, label, select {
     background-color: blue;
 	display: none;
     z-index: 30;
-}
+/* }
 
 #listPanel {
     position: fixed;
@@ -167,6 +167,7 @@ input, label, select {
     height: 100%
 	color: white;
 	background-color: yellow;
+	*/
 	font-size: 1.2em;
     overflow-x: hidden;
     overflow-y: auto;
