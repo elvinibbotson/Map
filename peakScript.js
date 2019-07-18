@@ -154,7 +154,7 @@
 		id("menu").style.display = "none";
 		notify('list '+trackNames.length+' tracks');
 		if(trackNames.length<1) return;
-		id("listHeader").innerHTML="<b>Tracks</b>";
+		// id("listHeader").innerHTML="<b>Tracks</b>";
 		// var trackList=document.createElement('ul');
 		id('list').innerHTML='';
 		for(var i=0; i<trackNames.length; i++) {
@@ -186,7 +186,7 @@
 		id("menu").style.display = "none";
 		console.log('list '+routeNames.length+' routes');
 		if(routeNames.length<1) return;
-		id("listHeader").innerHTML="<b>Routes</b>";
+		// id("listHeader").innerHTML="<b>Routes</b>";
 		// var routeList=document.createElement('ul');
 		id('list').innerHTML='';
 		for(var i=0; i<routeNames.length; i++) {
