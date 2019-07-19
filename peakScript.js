@@ -164,7 +164,7 @@
 		// id("listHeader").innerHTML="<b>Tracks</b>";
 		// var trackList=document.createElement('ul');
 		// id('list').innerHTML='';
-		id('list').innerHTML="<li class='listItem'><b>ROUTES</b></li>";
+		id('list').innerHTML="<li class='listItem'><b>TRACKS</b></li>";
 		for(var i=0; i<trackNames.length; i++) {
 		    // notify('track '+i);
   			var listItem = document.createElement('li');
@@ -615,11 +615,13 @@
 				d=Math.round((heading+11.25)/22.5); // 16 compass directions: N, NNE, NE,...
 				d=compass.substr(d*3,3)+" "; // compass point eg. NNE
 			}
+			/*
 			else if(moving>0) { // show average speed
 				mapCanvas.font='24px Sans-Serif';
 				d='average ';
 				speed=distance/moving; // m/s
 			}
+			*/
 			d+=Math.round(((metric)?3.6:2.237)*speed);
 			notify('d: '+d);
 			d+=(metric)?"kph":"mph";
@@ -665,30 +667,33 @@
 		if(trackpoints.length<5) return;
 		var n=trackpoints.length;
 		// draw altitude and speed profiles
-		var w=sw*0.9;
-		var h=sh*0.25; // was 0.4;
+		var w=sw;
+		var h=sh*0.2; // was 0.4;
+		var minAlt=1000;
 		var maxAlt=0;
 		var maxSpeed=0;
+		var averageSpeed=distance/moving;
 		notify(n+" trackpoints");
 		// first create dark background
 		profilesCanvas.fillStyle='#000000cc';
 		profilesCanvas.clearRect(0,0,w,h);
 		profilesCanvas.fillRect(0,0,w,h);
-		/* speed profile
-		profilesCanvas.beginPath();
- 	    profilesCanvas.strokeStyle = 'silver'; // speed profile is silver
-		var x=0; // horizontal position
+		// speeds
+		// profilesCanvas.beginPath();
+ 	    // profilesCanvas.strokeStyle = 'silver'; // speed profile is silver
+		// var x=0; // horizontal position
 		var t=0; // time (sec)
-		var s=0; // speed (km/hr)
+		var s=0; // compute maximium speed (km/hr)
 		for (i=1;i<n;i++) { // for each trackpoint
 			d=measure('distance',trackpoints[i-1].lon,trackpoints[i-1].lat,trackpoints[i].lon,trackpoints[i].lat);
-			x+=d;
+			// x+=d;
 			t=trackpoints[i].time-trackpoints[i-1].time;
 			s=3.6*d/t; // km/hr
 			if(s>maxSpeed) maxSpeed=s;
-			if(i%10==0) notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
-			if(i<1) profilesCanvas.moveTo(w*x/distance,h-h*s/200); // h=200kph
-			else profilesCanvas.lineTo(w*x/distance,h-h*s/200);
+			// if(i%10==0) notify('trackpoint '+i+' d:'+Math.floor(d)+'m s:'+Math.floor(s)+"kph");
+			// if(i<1) profilesCanvas.moveTo(w*x/distance,h-h*s/200); // h=200kph
+			// else profilesCanvas.lineTo(w*x/distance,h-h*s/200);
+			
 		}
 		profilesCanvas.stroke();
 		*/
@@ -705,7 +710,7 @@
 			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
 			// notify('i:'+i+' d:'+d);
 			x=w*d/distance;
-			y=h-h*t.alt*20/distance;
+			y=0.75*h-h*t.alt*20/distance;
 			// y=h*(maxAlt-t.alt)/dAlt;
 			if(i<1) profilesCanvas.moveTo(x,y);
 			else profilesCanvas.lineTo(x,y);
@@ -737,7 +742,8 @@
 		profilesCanvas.fillText('elevation - max: '+maxAlt+'m',10,20);
 		profilesCanvas.fillStyle='silver';
 		maxSpeed=Math.round((metric)?maxSpeed:maxSpeed*0.62137);
-		profilesCanvas.fillText('speed - max: '+maxSpeed+((metric)?'kph':'mph'),10,35);
+		averageSpeed=Math.round((metric)?averageSpeed:averageSpeed*0.62137);
+		profilesCanvas.fillText('speeds: '+maxSpeed+' max '+averageSpeed+' average '+((metric)?'kph':'mph'),10,35);
 		// draw close button
 		profilesCanvas.strokeStyle='white';
 		profilesCanvas.beginPath();
