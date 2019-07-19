@@ -667,6 +667,11 @@
 		var averageSpeed=distance/moving;
 		notify(n+" trackpoints");
 		// first create dark background
+		var gradient=profilesCanvas.createLinearGradient(0,0,0,h);
+		gradient.addColorStop(0,'#00000000');
+			gradient.addColorStop(1,'black');
+			mapCanvas.fillStyle = gradient;
+			mapCanvas.fillRect(0,0,w,h);
 		/* clear background
 		profilesCanvas.fillStyle='#000000cc';
 		profilesCanvas.clearRect(0,0,w,h);
@@ -731,10 +736,10 @@
 		profilesCanvas.stroke();
 		// legend
 		profilesCanvas.font='16px Sans-Serif';
-		profilesCanvas.fillStyle='yellow';
-		profilesCanvas.fillText('elevation: '+minAlt+'-'+maxAlt+'m',10,20);
-		profilesCanvas.fillStyle='silver';
 		profilesCanvas.textBaseline='alphabetic';
+		profilesCanvas.fillStyle='yellow';
+		profilesCanvas.fillText('elevation: '+minAlt+'-'+maxAlt+'m',10,h-25);
+		profilesCanvas.fillStyle='silver';
 		maxSpeed=Math.round((metric)?maxSpeed:maxSpeed*0.62137);
 		averageSpeed=Math.round((metric)?averageSpeed:averageSpeed*0.62137);
 		profilesCanvas.fillText('speeds: '+maxSpeed+' max '+averageSpeed+' average '+((metric)?'kph':'mph'),10,h-5);
