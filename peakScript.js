@@ -43,22 +43,13 @@
 	id("menuButton").addEventListener("click", function() {
 		console.log("toggle menu");
 		var display=id("menu").style.display;
-		// id("listScreen").style.display="none";
 		show('listScreen',false);
-		// id('profilesPanel').style.display='none';
 		show('profilesPanel',false);
 		id("menu").style.display = (display=="block")?"none":"block";
 		id('metric').checked=metric;
 		console.log("open menu - metric is "+metric+" - checked is "+id('metric').checked);
 	});
 	id("tracks").addEventListener("click", listTracks);
-	id('profiles').addEventListener('click', profiles);
-	/*
-	id('profilesPanel').addEventListener('click', function() {
-		// id('profilesPanel').style.display='none';
-		show('profilesPanel',false);
-	});
-	*/
 	id("routes").addEventListener("click", listRoutes);
     id("measure").addEventListener("click",function() {
 		measuring=true;
@@ -73,38 +64,29 @@
 		lastLoc.lon=loc.lon;
 		lastLoc.lat=loc.lat;
 		notify("measuring");
-		// id("stopButton").style.display="block";
 		show('stopButton',true);
-		// id("actionButton").style.display = "none";
 		show('actionButton',false);
-		// id("menu").style.display = "none";
 		show('menu',false);
 	});
 	id("metric").addEventListener("change", function() {
 		metric=this.checked;
 		window.localStorage.setItem('metric',metric);
 		console.log("metric is "+metric);
-		// id("menu").style.display="none";
 		show('menu',false);
 	});
 	id('diagnostics').addEventListener('click', showNotifications);
 	id("actionButton").addEventListener("click", getFix);
 	id("stopButton").addEventListener("click", cease);
-	// id("mapOverlay").addEventListener("click", moveTo);
 	id("mapOverlay").addEventListener("touchstart", startMove);
-	// id("mapOverlay").addEventListener("mousedown", startMove);
 	id("mapOverlay").addEventListener("touchmove", move);
-	// id("mapOverlay").addEventListener("mousemove", move);
 	id('mapOverlay').addEventListener('touchend', endMove);
 	id("saveButton").addEventListener("click", saver);
 	id("cancelButton").addEventListener("click", function() {
-	  // id("saveDialog").style.display="none";
 	  show('saveDialog',false);
 	  measuring=false;
 	  nodes=[];
 	});
 	id('closeButton').addEventListener('click', function() {
-	    // id('listScreen').style.display='none';
 	    show('listScreen',false);
 	});
 	loc.lat = 53.2;
@@ -120,7 +102,6 @@
 	profilesCanvas=id("profilesCanvas").getContext("2d"); // set up drawing canvas
 	id("profilesCanvas").width=sw;
 	id("profilesCanvas").height=sh*0.2;
-	// id("actionButton").style.display='block';
 	show('actionButton',true);
 	for (x = 0; x < 3; x++) { // build map by positioning 10x10 grid of tiles
 		for (var y = 0; y < 3; y++) {
@@ -129,7 +110,7 @@
 			tile.style.top = (y * 800) +'px';
 		}
 	}
-	id("map").style.display='block';
+	show('map',true);
 	status = window.localStorage.getItem('peakLocation'); // recover last location
 	console.log("location status: "+status);
 	if(status) {
@@ -161,12 +142,9 @@
 	
 	// LIST TRACKS
 	function listTracks() {
-		id("menu").style.display = "none";
+	    show('menu',false);
 		notify('list '+trackNames.length+' tracks');
 		if(trackNames.length<1) return;
-		// id("listHeader").innerHTML="<b>Tracks</b>";
-		// var trackList=document.createElement('ul');
-		// id('list').innerHTML='';
 		id('list').innerHTML="<li class='listItem'><b>TRACKS</b></li>";
 		for(var i=0; i<trackNames.length; i++) {
 		    // notify('track '+i);
@@ -188,17 +166,15 @@
 			// trackList.appendChild(listItem);
 			id('list').appendChild(listItem);
   		}
-		id("listScreen").style.display = "block";
+  		show('listScreen',true);
 		notify('track list populated with '+trackNames.length+' tracks');
 	}
 	
 	// LIST ROUTES
 	function listRoutes() {
-		id("menu").style.display = "none";
+	    show('menu',false);
 		console.log('list '+routeNames.length+' routes');
 		if(routeNames.length<1) return;
-		// id("listHeader").innerHTML="<b>Routes</b>";
-		// var routeList=document.createElement('ul');
 		id('list').innerHTML="<li class='listItem'><b>ROUTES</b></li>";
 		for(var i=0; i<routeNames.length; i++) {
   			var listItem = document.createElement('li');
@@ -217,8 +193,7 @@
 			// routeList.appendChild(listItem);
 			id('list').appendChild(listItem);
   		}
-		// id("listScreen").style.display = "block";
-		showList();
+		show('listScreen',true);
 	}
 	
 	// DRAG MAP
@@ -226,13 +201,12 @@
 		var touches=event.changedTouches;
 		x0=touches[0].clientX;
 		y0=touches[0].clientY;
-		// notify("start drag");
-		id('listScreen').style.display='none';
-		id('menu').style.display='none';
+		show('listScreen',false);
+		show('menu',false);
 	}
 	
 	function move(event) {
-		id('menu').style.display='none';
+	    show('menu',false);
 		var touches=event.changedTouches;
 		x=touches[0].clientX;
 		y=touches[0].clientY;
@@ -273,7 +247,6 @@
 		tp.time=loc.time;
 		trackpoints.push(tp);
 		if(trackpoints.length<2) return;
-		if(trackpoints.length>4) id('profiles').style.color='white';
 		redraw();
 	}
 	
@@ -333,7 +306,7 @@
 		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
 		id("actionButton").removeEventListener("click", go);
 		id("actionButton").addEventListener("click", stopStart);
-		id("measure").style.display='none';
+		show('measure',false);
 	}
 	
 	function stopStart() {
@@ -347,17 +320,17 @@
 		addTP(); // add trackpoint on pause
 		tracking = false;
 		navigator.geolocation.clearWatch(geolocator);
-		id("stopButton").style.display="block";
+		show('stopButton',true);
 		id("actionButton").innerHTML='<img src="goButton24px.svg"/>';
 	}
 	
 	function resume() { // restart tracking after pausing
 		console.log("RESUME");
-		id("stopButton").style.display="none";
+		show('stopButton',false);
 		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
 		tracking = true;
 		var opt={enableHighAccuracy: true, timeout: 15000, maximumAge: 0};
-		geolocator = navigator.geolocation.watchPosition(sampleLocation, locationError, opt);
+		geolocator=navigator.geolocation.watchPosition(sampleLocation, locationError, opt);
 	}
 	
 	function sampleLocation(position) {
@@ -459,13 +432,13 @@
 			id("actionButton").removeEventListener("click", stopStart);
 			id("actionButton").addEventListener("click", getFix);
 		}
-		id("stopButton").style.display="none";
-		id("measure").style.display="block";
+		show('stopButton',false);
+		show('measure',true);
 		redraw();
 		if(nodes.length>5) { // offer to save route
 			notify("save route?");
 			id('saveName').value="";
-			id("saveDialog").style.display = "block";
+			show('saveDialog',true);
 		}
 		if(trackpoints.length>5) { // offer to save track
 			name='';
@@ -479,7 +452,7 @@
 			name+=t; // YYmonDD.HH:MM
 			notify("track name: "+name);
 			id("saveName").value=name;
-			id("saveDialog").style.display = "block";
+			show('saveDialog',true);
 		}
 	}
 
@@ -658,7 +631,7 @@
 	// SHOW TRACK PROFILES
 	function profiles() {
 		notify('show track profiles?');
-		id("menu").style.display = "none";
+		show('menu',false);
 		if(trackpoints.length<5) return;
 		var n=trackpoints.length;
 		// draw altitude and speed profiles
@@ -668,7 +641,7 @@
 		var maxAlt=0;
 		var maxSpeed=0;
 		var avSpeed=distance/moving;
-		notify('average speed: '+avSpeed+'kph');
+		notify('distance:'+distance+' moving:'+moving+' average speed:'+avSpeed+'kph');
 		notify(n+" trackpoints");
 		// first create dark background
 		profilesCanvas.clearRect(0,0,w,h);
@@ -711,22 +684,12 @@
 		// elevations and speeds
 		profilesCanvas.font='16px Sans-Serif';
 		profilesCanvas.textBaseline='alphabetic';
-		// profilesCanvas.fillStyle='yellow';
-		// profilesCanvas.fillText('elevation: '+minAlt+'-'+maxAlt+'m',10,h-25);
 		profilesCanvas.fillStyle='white';
 		maxSpeed=Math.round((metric)?maxSpeed:maxSpeed*0.62137);
 		avSpeed=Math.round((metric)?avSpeed:avSpeed*0.62137);
 		profilesCanvas.fillText(minAlt+'-'+maxAlt+'m '+maxSpeed+' max '+avSpeed+' average '+((metric)?'kph':'mph'),10,h-5);
-		// draw close button
-		profilesCanvas.strokeStyle='white';
-		profilesCanvas.beginPath();
-		profilesCanvas.moveTo(w-10,10);
-		profilesCanvas.lineTo(w-30,30);
-		profilesCanvas.moveTo(w-10,30);
-		profilesCanvas.lineTo(w-30,10);
-		profilesCanvas.stroke();
 		notify("show profiles");
-		id('profilesPanel').style.display='block';
+		show('profilesPanel',true);
 	}
 	
 	// SAVE TRACK/ROUTE
@@ -774,7 +737,7 @@
 			json=JSON.stringify(tracks);
 			window.localStorage.setItem("peakTracks",json);
 		}
-		id("saveDialog").style.display="none";
+		show('saveDialog',false);
 	}
 	
 	// LOAD TRACK
@@ -789,7 +752,7 @@
 		trackpoints=track.trackpoints;
 		dist=0;
 		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"min; climb: "+climb+"m; "+moving+"minutes moving");
-		id("listScreen").style.display='none';
+		show('listScreen',false);
 		if(trackpoints.length>4) id('profiles').style.color='white';
 		loc.lon=trackpoints[0].lon; // move to start of track
 		loc.lat=trackpoints[0].lat;
@@ -809,7 +772,7 @@
 		window.localStorage.setItem("peakTracks",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
-		id('listScreen').style.display='none';
+		show('listScreen',false);
 	}
 	
 	// LOAD ROUTE
@@ -821,7 +784,7 @@
 		nodes=route.nodes;
 		dist=0;
 		notify("load route with "+nodes.length+" nodes; length: "+distance+"m");
-		id("listScreen").style.display='none';
+		show('listScreen',false);
 		loc.lon=nodes[0].lon; // move to start of route
 		loc.lat=nodes[0].lat;
 		centreMap();
@@ -839,18 +802,10 @@
 		window.localStorage.setItem("peakRoutes",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
-		id('listScreen').style.display='none';
+		show('listScreen',false);
 	}
 
     // UTILITY FUNCTIONS
-    
-    function showList() {
-        id('listScreen').style.display='block';
-    }
-    
-    function hideList() {
-        id('listScreen').style.display='none';
-    }
     
 	function dm(degrees, lat) {
 	    var ddmm;
@@ -914,7 +869,6 @@
 			message+=notifications[i]+"; ";
 		}
 		alert(message);
-		// id('menu').style.display='none';
 		show('menu',false);
 	}
 	
