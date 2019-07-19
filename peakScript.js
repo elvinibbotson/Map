@@ -676,9 +676,11 @@
 		var averageSpeed=distance/moving;
 		notify(n+" trackpoints");
 		// first create dark background
+		/* clear background
 		profilesCanvas.fillStyle='#000000cc';
 		profilesCanvas.clearRect(0,0,w,h);
 		profilesCanvas.fillRect(0,0,w,h);
+		*/
 		// speeds
 		// profilesCanvas.beginPath();
  	    // profilesCanvas.strokeStyle = 'silver'; // speed profile is silver
@@ -702,14 +704,15 @@
 	    profilesCanvas.strokeStyle = 'yellow'; // elevation profile is yellow
 		notify('ready to draw elevation profile');
 		var d=0;
-		var t,x,y;
+		var x,y;
 		for (var i=0;i<n;i++) {
 			t=trackpoints[i];
+			if(t.alt<minAlt) minAlt=t.alt;
 			if(t.alt>maxAlt) maxAlt=t.alt;
 			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
 			// notify('i:'+i+' d:'+d);
 			x=w*d/distance;
-			y=0.75*h-h*t.alt*20/distance;
+			y=0.8*h-h*t.alt*20/distance;
 			// y=h*(maxAlt-t.alt)/dAlt;
 			if(i<1) profilesCanvas.moveTo(x,y);
 			else profilesCanvas.lineTo(x,y);
@@ -738,11 +741,12 @@
 		// legend
 		profilesCanvas.font='16px Sans-Serif';
 		profilesCanvas.fillStyle='yellow';
-		profilesCanvas.fillText('elevation - max: '+maxAlt+'m',10,20);
+		profilesCanvas.fillText('elevation: '+minAlt+'-'+maxAlt+'m',10,20);
 		profilesCanvas.fillStyle='silver';
+		profilesCanvas.textBaseline='bottom';
 		maxSpeed=Math.round((metric)?maxSpeed:maxSpeed*0.62137);
 		averageSpeed=Math.round((metric)?averageSpeed:averageSpeed*0.62137);
-		profilesCanvas.fillText('speeds: '+maxSpeed+' max '+averageSpeed+' average '+((metric)?'kph':'mph'),10,35);
+		profilesCanvas.fillText('speeds: '+maxSpeed+' max '+averageSpeed+' average '+((metric)?'kph':'mph'),10,h-5);
 		// draw close button
 		profilesCanvas.strokeStyle='white';
 		profilesCanvas.beginPath();
