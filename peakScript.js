@@ -166,8 +166,7 @@
 			// trackList.appendChild(listItem);
 			id('list').appendChild(listItem);
   		}
-  		listItem='<li onclick="clear();">CLEAR</li>';
-  		id('list').appendChild(listItem);
+  		id('list').innerHTML+='<li onclick="clear()">CLEAR</li>';
   		show('listScreen',true);
 		notify('track list populated with '+trackNames.length+' tracks');
 	}
@@ -194,8 +193,7 @@
 			listItem.appendChild(delButton);
 			id('list').appendChild(listItem);
   		}
-  		listItem='<li onclick="clear();">CLEAR</li>';
-  		id('list').appendChild(listItem);
+  		id('list').innerHTML+='<li onclick="clear()">CLEAR</li>';
 		show('listScreen',true);
 	}
 	
