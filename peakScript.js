@@ -88,6 +88,9 @@
 	});
 	id('closeButton').addEventListener('click', function() {
 	    show('listScreen',false);
+	    trackpoints=[];
+	    nodes=[];
+	    show('actionButton',true);
 	});
 	loc.lat = 53.2;
 	loc.lon = -1.75;	// sw = window.innerWidth;	// sh = window.innerHeight;
