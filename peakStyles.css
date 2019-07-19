@@ -175,7 +175,7 @@ input, label, select {
 }
 
 #closeButton {
-    float: right;
+    float: left;
 }
 
 #list {
@@ -250,10 +250,10 @@ input, label, select {
 #profilesPanel {
   position: fixed;
   left: 5%;
-  top:10%;
-  width: 90%;
-  height: 25%;
-  z-index: 10;
+  bottom: 0;
+  width: 100%;
+  height: 20%;
+  z-index: 50;
   display: none;
 }
 

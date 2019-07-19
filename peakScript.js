@@ -43,8 +43,10 @@
 	id("menuButton").addEventListener("click", function() {
 		console.log("toggle menu");
 		var display=id("menu").style.display;
-		id("listScreen").style.display="none";
-		id('profilesPanel').style.display='none';
+		// id("listScreen").style.display="none";
+		show('listScreen',false);
+		// id('profilesPanel').style.display='none';
+		show('profilesPanel',false);
 		id("menu").style.display = (display=="block")?"none":"block";
 		id('metric').checked=metric;
 		console.log("open menu - metric is "+metric+" - checked is "+id('metric').checked);
@@ -52,7 +54,8 @@
 	id("tracks").addEventListener("click", listTracks);
 	id('profiles').addEventListener('click', profiles);
 	id('profilesPanel').addEventListener('click', function() {
-		id('profilesPanel').style.display='none';
+		// id('profilesPanel').style.display='none';
+		show('profilesPanel',false);
 	});
 	id("routes").addEventListener("click", listRoutes);
     id("measure").addEventListener("click",function() {
@@ -68,15 +71,19 @@
 		lastLoc.lon=loc.lon;
 		lastLoc.lat=loc.lat;
 		notify("measuring");
-		id("stopButton").style.display="block";
-		id("actionButton").style.display = "none";
-		id("menu").style.display = "none";
+		// id("stopButton").style.display="block";
+		show('stopButton',true);
+		// id("actionButton").style.display = "none";
+		show('actionButton',false);
+		// id("menu").style.display = "none";
+		show('menu',false);
 	});
 	id("metric").addEventListener("change", function() {
 		metric=this.checked;
 		window.localStorage.setItem('metric',metric);
 		console.log("metric is "+metric);
-		id("menu").style.display="none";
+		// id("menu").style.display="none";
+		show('menu',false);
 	});
 	id('diagnostics').addEventListener('click', showNotifications);
 	id("actionButton").addEventListener("click", getFix);
@@ -89,15 +96,14 @@
 	id('mapOverlay').addEventListener('touchend', endMove);
 	id("saveButton").addEventListener("click", saver);
 	id("cancelButton").addEventListener("click", function() {
-	  id("saveDialog").style.display="none";
+	  // id("saveDialog").style.display="none";
+	  show('saveDialog',false);
 	  measuring=false;
 	  nodes=[];
 	});
-	/*
 	id('closeButton').addEventListener('click', function() {
 	    id('listScreen').style.display='none';  
 	});
-	*/
 	loc.lat = 53.2;
 	loc.lon = -1.75;	// sw = window.innerWidth;	// sh = window.innerHeight;
 	sw=window.innerWidth;
@@ -111,7 +117,8 @@
 	profilesCanvas=id("profilesCanvas").getContext("2d"); // set up drawing canvas
 	id("profilesCanvas").width=sw*0.9;
 	id("profilesCanvas").height=sh*0.4;
-	id("actionButton").style.display='block';
+	// id("actionButton").style.display='block';
+	show('actionButton',true);
 	for (x = 0; x < 3; x++) { // build map by positioning 10x10 grid of tiles
 		for (var y = 0; y < 3; y++) {
 			var tile=id("tile" + y + x);
@@ -156,7 +163,8 @@
 		if(trackNames.length<1) return;
 		// id("listHeader").innerHTML="<b>Tracks</b>";
 		// var trackList=document.createElement('ul');
-		id('list').innerHTML='';
+		// id('list').innerHTML='';
+		id('list').innerHTML="<li class='listItem'><b>ROUTES</b></li>";
 		for(var i=0; i<trackNames.length; i++) {
 		    // notify('track '+i);
   			var listItem = document.createElement('li');
@@ -188,7 +196,7 @@
 		if(routeNames.length<1) return;
 		// id("listHeader").innerHTML="<b>Routes</b>";
 		// var routeList=document.createElement('ul');
-		id('list').innerHTML="<li class='listItem'><b>ROUTES</b><span id='closeButton' onclick='hideList()'><img src='closeButton24px.svg'/></li>";
+		id('list').innerHTML="<li class='listItem'><b>ROUTES</b></li>";
 		for(var i=0; i<routeNames.length; i++) {
   			var listItem = document.createElement('li');
   			listItem.classList.add('listItem');
@@ -912,6 +920,10 @@
 	    return Math.floor(n * 10 + 0.5) / 10;
 	}
 	
+	function show(element,visible) {
+	    id(element).style.display=(visible)?'block':'none';
+	}
+	
 	function notify(note) {
 		notifications.push(note);
 		while(notifications.length>25) notifications.shift();
@@ -924,7 +936,8 @@
 			message+=notifications[i]+"; ";
 		}
 		alert(message);
-		id('menu').style.display='none';
+		// id('menu').style.display='none';
+		show('menu',false);
 	}
 	
 	function id(el) {
