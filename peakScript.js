@@ -91,6 +91,7 @@
 	    trackpoints=[];
 	    nodes=[];
 	    show('actionButton',true);
+	    redraw();
 	});
 	loc.lat = 53.2;
 	loc.lon = -1.75;	// sw = window.innerWidth;	// sh = window.innerHeight;
@@ -644,7 +645,7 @@
 		var minAlt=1000;
 		var maxAlt=0;
 		var maxSpeed=0;
-		var avSpeed=distance/moving;
+		var avSpeed=distance*3.6/moving; // kph
 		notify('distance:'+distance+' moving:'+moving+' average speed:'+avSpeed+'kph');
 		notify(n+" trackpoints");
 		// first create dark background
@@ -691,7 +692,7 @@
 		profilesCanvas.fillStyle='white';
 		maxSpeed=Math.round((metric)?maxSpeed:maxSpeed*0.62137);
 		avSpeed=Math.round((metric)?avSpeed:avSpeed*0.62137);
-		profilesCanvas.fillText(minAlt+'-'+maxAlt+'m '+maxSpeed+' max '+avSpeed+' average '+((metric)?'kph':'mph'),10,h-5);
+		profilesCanvas.fillText(minAlt+'-'+maxAlt+'m ;'+maxSpeed+' max '+avSpeed+' average '+((metric)?'kph':'mph'),10,h-5);
 		notify("show profiles");
 		show('profilesPanel',true);
 	}
