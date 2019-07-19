@@ -162,22 +162,6 @@ input, label, select {
     -webkit-overflow-scrolling: touch;
 }
 
-/*
-#listPanel {
-    position: fixed;
-    left: 0;
-    top: 50px;
-    width: 100%
-    height: 100%
-	color: white;
-	background-color: #333333;
-	font-size: 1.2em;
-    overflow-x: hidden;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-*/
-
 #closeButton {
     position: fixed;
     top:0;
@@ -248,10 +232,6 @@ input, label, select {
 .dialog-buttons {
   padding: 8px !important;
   float: right;
-}
-
-#profiles {
-  color: gray;
 }
 
 #profilesPanel {
