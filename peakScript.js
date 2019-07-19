@@ -601,7 +601,7 @@
 			// if(climb!=null) mapCanvas.fillText("/ "+Math.round((metric)?climb:climb*3.281),sw/2,25);
 			if(climb!=null) mapCanvas.fillText("/ "+Math.round(climb),sw/2,25); // climb in m
 		}
-		if(distance>0) {
+		if(tracking && speed>0) { // show current speed and direction
 			gradient=mapCanvas.createLinearGradient(0,sh-150,0,sh);
 			gradient.addColorStop(0,'#00000000');
 			gradient.addColorStop(1,'black');
@@ -611,20 +611,11 @@
 			mapCanvas.textBaseline='alphabetic';
 			mapCanvas.textAlign='left';
 			// mapCanvas.font='Bold 36px Sans-Serif';
-			if(tracking && speed>0) { // show current speed and direction
-				mapCanvas.font='Bold 36px Sans-Serif';
-				d=Math.round((heading+11.25)/22.5); // 16 compass directions: N, NNE, NE,...
-				d=compass.substr(d*3,3)+" "; // compass point eg. NNE
-			}
-			/*
-			else if(moving>0) { // show average speed
-				mapCanvas.font='24px Sans-Serif';
-				d='average ';
-				speed=distance/moving; // m/s
-			}
-			*/
+			mapCanvas.font='Bold 36px Sans-Serif';
+			d=Math.round((heading+11.25)/22.5); // 16 compass directions: N, NNE, NE,...
+			d=compass.substr(d*3,3)+" "; // compass point eg. NNE
 			d+=Math.round(((metric)?3.6:2.237)*speed);
-			notify('d: '+d);
+			// notify('d: '+d);
 			d+=(metric)?"kph":"mph";
 			mapCanvas.fillText(d,10,sh-10);
 		}
@@ -743,7 +734,7 @@
 		profilesCanvas.fillStyle='yellow';
 		profilesCanvas.fillText('elevation: '+minAlt+'-'+maxAlt+'m',10,20);
 		profilesCanvas.fillStyle='silver';
-		profilesCanvas.textBaseline='bottom';
+		profilesCanvas.textBaseline='alphabetic';
 		maxSpeed=Math.round((metric)?maxSpeed:maxSpeed*0.62137);
 		averageSpeed=Math.round((metric)?averageSpeed:averageSpeed*0.62137);
 		profilesCanvas.fillText('speeds: '+maxSpeed+' max '+averageSpeed+' average '+((metric)?'kph':'mph'),10,h-5);
