@@ -695,8 +695,6 @@
 			// else profilesCanvas.lineTo(w*x/distance,h-h*s/200);
 			
 		}
-		profilesCanvas.stroke();
-		*/
 		// elevation profile
 		profilesCanvas.beginPath();
 		profilesCanvas.lineWidth=3;
