@@ -664,14 +664,14 @@
 		var minAlt=1000;
 		var maxAlt=0;
 		var maxSpeed=0;
-		var averageSpeed=distance/moving;
+		var averageSpeed=Math.round(distance/moving);
 		notify(n+" trackpoints");
 		// first create dark background
 		var gradient=profilesCanvas.createLinearGradient(0,0,0,h);
 		gradient.addColorStop(0,'#00000000');
 			gradient.addColorStop(1,'black');
-			mapCanvas.fillStyle = gradient;
-			mapCanvas.fillRect(0,0,w,h);
+			profilesCanvas.fillStyle = gradient;
+			profilesCanvas.fillRect(0,0,w,h);
 		/* clear background
 		profilesCanvas.fillStyle='#000000cc';
 		profilesCanvas.clearRect(0,0,w,h);
