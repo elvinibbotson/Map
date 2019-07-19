@@ -166,6 +166,8 @@
 			// trackList.appendChild(listItem);
 			id('list').appendChild(listItem);
   		}
+  		listItem='<li onclick="clear();">CLEAR</li>';
+  		id('list').appendChild(listItem);
   		show('listScreen',true);
 		notify('track list populated with '+trackNames.length+' tracks');
 	}
@@ -190,9 +192,10 @@
 			delButton.addEventListener('click', function() {listIndex=this.index; deleteRoute();});
 			listItem.appendChild(itemName);
 			listItem.appendChild(delButton);
-			// routeList.appendChild(listItem);
 			id('list').appendChild(listItem);
   		}
+  		listItem='<li onclick="clear();">CLEAR</li>';
+  		id('list').appendChild(listItem);
 		show('listScreen',true);
 	}
 	
@@ -757,7 +760,17 @@
 		loc.lat=trackpoints[0].lat;
 		centreMap();
 		redraw();
+		show('actionButton',false);
 		profiles();
+	}
+	
+	// CLEAR TRACK/ROUTE
+	function clear() {
+	    notify('clear track/route');
+	    trackpoints=[];
+	    nodes=[];
+	    show('actionButton',true);
+	    redraw();
 	}
 	
 	// DELETE TRACK
