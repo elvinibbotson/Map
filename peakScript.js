@@ -753,7 +753,6 @@
 		dist=0;
 		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"min; climb: "+climb+"m; "+moving+"minutes moving");
 		show('listScreen',false);
-		if(trackpoints.length>4) id('profiles').style.color='white';
 		loc.lon=trackpoints[0].lon; // move to start of track
 		loc.lat=trackpoints[0].lat;
 		centreMap();
