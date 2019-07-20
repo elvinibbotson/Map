@@ -290,15 +290,15 @@
 	// START TRACKING
 	function go() { // start tracking location
 		ready=false;
-		tracking = true;
+		tracking=true;
 		trackpoints = [];
-		loc = {};
-		lastLoc = {};
-		distance = 0;
+		loc={};
+		lastLoc={};
+		distance=0;
 		duration=moving=0;
-		heading = 0;
-		speed = 0;
-		hi = lo = climb = 0;
+		heading=0;
+		speed=0;
+		hi=lo=climb=0;
 		notify("start tracking");
 		fix=0;
 		fixes=[];
@@ -354,13 +354,13 @@
 		loc.lon=(fixes[0].lon+fixes[1].lon+fixes[2].lon)/3; // average location data
 		loc.lat=(fixes[0].lat+fixes[1].lat+fixes[2].lat)/3;
 		loc.alt=Math.round((fixes[0].alt+fixes[1].alt+fixes[2].alt)/3);
-		if(loc.alt<1) return; // avoid zero-elevation fixes
+		// if(loc.alt<1) return; // avoid zero-elevation fixes
 		// notify(loc.lon+","+loc.lat+", "+loc.alt+"m accuracy:"+accuracy);
 		if(trackpoints.length<1) { // at start, initialise lastLoc and...
 			addTP(); // ...add first trackpoint
 		}
 		else {
-			dist = measure("distance",loc.lon,loc.lat,lastLoc.lon,lastLoc.lat); // distance since last averaged fix
+			dist=measure("distance",loc.lon,loc.lat,lastLoc.lon,lastLoc.lat); // distance since last averaged fix
 			// notify('moved '+Math.round(dist)+"m");
 			if((loc.time-lastLoc.time)>60) { // resample 3 readings after waking up
 				lastLoc.time=loc.time;
@@ -377,7 +377,8 @@
 				var turn=Math.abs(direction-heading);
 				if(turn>180) turn=360-turn;
 				// notify('dist: '+dist+' moving:'+moving+' direction:'+direction);
-				lastLoc.lon = loc.lon;	duration=loc.time-trackpoints[0].time;
+				lastLoc.lon=loc.lon;
+				duration=loc.time-trackpoints[0].time;
 			}
 			else speed=0;
 		}
@@ -402,10 +403,10 @@
 		}
 		notify("lo:"+lo+" hi:"+hi+" climb:"+climb);
 		if((dist>100)||(turn>30)) { // add trackpoint after 100m or when direction changes > 30*
-			distance += dist;
-			heading = Math.round(direction);
+			distance+=dist;
+			heading=Math.round(direction);
 			addTP();
-			dist = 0;
+			dist=0;
 		}
 		centreMap();
 	}
