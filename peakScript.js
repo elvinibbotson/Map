@@ -25,7 +25,7 @@
 	var lastLoc = {};
 	var fix;
 	var fixes=[];
-	var accuracy, dist, distance, heading, speed, hi, lo, climb, duration, moving; // fix & track data
+	var dist, distance, heading, speed, hi, lo, climb, duration, moving; // fix & track data
 	var deg = "&#176;";
 	var compass="N  NNENE ENEE  ESESE SSES  SSWSW WSWW  WNWNW NNWN  ";
 	var months="JanFebMarAprMayJunJulAugSepOctNovDec";
@@ -339,9 +339,11 @@
 	}
 	
 	function sampleLocation(position) {
-		var accuracy=position.coords.accuracy;
-		// notify("fix "+fix+" accuracy: "+accuracy);
-		if(accuracy>50) return; // skip inaccurate fixes
+		if(position.coords.accuracy>50) return; // skip inaccurate fixes
+		if(position.coords.alt===null) {
+		    notify('alt: null');
+		    return;
+		}
 		fixes[fix]={};
 		fixes[fix].lon=position.coords.longitude;
 		fixes[fix].lat=position.coords.latitude;
@@ -355,7 +357,6 @@
 		loc.lat=(fixes[0].lat+fixes[1].lat+fixes[2].lat)/3;
 		loc.alt=Math.round((fixes[0].alt+fixes[1].alt+fixes[2].alt)/3);
 		// if(loc.alt<1) return; // avoid zero-elevation fixes
-		// notify(loc.lon+","+loc.lat+", "+loc.alt+"m accuracy:"+accuracy);
 		if(trackpoints.length<1) { // at start, initialise lastLoc and...
 			addTP(); // ...add first trackpoint
 		}
