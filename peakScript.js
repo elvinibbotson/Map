@@ -758,7 +758,7 @@
 		climb=parseInt(track.climb);
 		trackpoints=track.trackpoints;
 		dist=0;
-		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"min; climb: "+climb+"m; "+moving+"minutes moving");
+		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"sec; climb: "+climb+"m; "+moving+"seconds moving");
 		show('listScreen',false);
 		loc.lon=trackpoints[0].lon; // move to start of track
 		loc.lat=trackpoints[0].lat;
