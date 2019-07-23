@@ -389,20 +389,20 @@
 		if(trackpoints.length>1) { // ignore first fixes - inaccurate?
 			if((hi==0)||((lo-loc.alt)>5)) { // start altitude logging or new low
 				hi=lo=loc.alt; // reset lo and hi at second trackpoint or new lo-point
-				notify("new lo (and hi):"+hi);
+				// notify("new lo (and hi):"+hi);
 			}
 			else if((loc.alt-hi)>5) { // climbing
 				lo = hi;
 				hi = loc.alt; // climbing - set new hi-point
 				climb += (hi-lo); // increment total climbed
-				notify("climbing - new hi:"+hi);
+				// notify("climbing - new hi:"+hi);
 			}
 			else if((hi - loc.alt) > 5) { // going over the top
 				hi = lo = loc.alt; // reset hi & lo until climbing again
-				notify("OTT - new hi & lo:"+hi);
+				// notify("OTT - new hi & lo:"+hi);
 			}
 		}
-		notify("lo:"+lo+" hi:"+hi+" climb:"+climb);
+		// notify("lo:"+lo+" hi:"+hi+" climb:"+climb);
 		if((dist>100)||(turn>30)) { // add trackpoint after 100m or when direction changes > 30*
 			distance+=dist;
 			heading=Math.round(direction);
@@ -637,7 +637,7 @@
 	
 	// SHOW TRACK PROFILES
 	function profiles() {
-		notify('show track profiles?');
+		// notify('show track profiles?');
 		show('menu',false);
 		if(trackpoints.length<5) return;
 		var n=trackpoints.length;
@@ -695,7 +695,7 @@
 		maxSpeed=Math.round((metric)?maxSpeed:maxSpeed*0.62137);
 		avSpeed=Math.round((metric)?avSpeed:avSpeed*0.62137);
 		profilesCanvas.fillText(minAlt+'-'+maxAlt+'m ;'+maxSpeed+' max '+avSpeed+' average '+((metric)?'kph':'mph'),10,h-5);
-		notify("show profiles");
+		// notify("show profiles");
 		show('profilesPanel',true);
 	}
 	
