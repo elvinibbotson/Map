@@ -340,10 +340,6 @@
 	
 	function sampleLocation(position) {
 		if(position.coords.accuracy>50) return; // skip inaccurate fixes
-		if(position.coords.alt===null) {
-		    notify('alt: null');
-		    return;
-		}
 		fixes[fix]={};
 		fixes[fix].lon=position.coords.longitude;
 		fixes[fix].lat=position.coords.latitude;
@@ -356,8 +352,7 @@
 		loc.lon=(fixes[0].lon+fixes[1].lon+fixes[2].lon)/3; // average location data
 		loc.lat=(fixes[0].lat+fixes[1].lat+fixes[2].lat)/3;
 		loc.alt=Math.round((fixes[0].alt+fixes[1].alt+fixes[2].alt)/3);
-		// if(loc.alt<1) return; // avoid zero-elevation fixes
-		if(trackpoints.length<1) { // at start, initialise lastLoc and...
+		if((trackpoints.length<1)&&(loc.alt>0)) {
 			addTP(); // ...add first trackpoint
 		}
 		else {
