@@ -1,10 +1,11 @@
 {
   "name": "saxton PWA",
   "short_name": "saxton",
+  "version": 1,
   "icons": [
 	{
-		"src": "saxton.png",
-		"sizes": "192x192",
+		"src": "saxton512.png",
+		"sizes": "512x512",
 		"type": "image/png",
 		"purpose": "any maskable"
 	}
