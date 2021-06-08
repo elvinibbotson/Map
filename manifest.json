@@ -13,6 +13,6 @@
   "start_url": "/saxton/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "white",
-  "theme_color": "white"
+  "background_color": "green",
+  "theme_color": "green"
 }
