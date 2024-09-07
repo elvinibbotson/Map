@@ -5,30 +5,20 @@
   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   	<title>saxton</title>
-  	<link rel="stylesheet" type="text/css" href="peakStyles.css">
+  	<link rel="stylesheet" type="text/css" href="saxtonStyles.css">
+  	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    	integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    	crossorigin=""/>
   	<link rel="manifest" href="manifest.json">
+  	<script src="saxtonScript.js" async></script>
+  	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    	integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    	crossorigin=""></script>
   	<meta name="application-name" content="saxton">
 </head>
 <body>
 <main class="main">
-	<div id="main" class="content">
-		<div id="mapScreen">
-			<div id="map">
-                <div id="tile00" class="tile"><img id="img00" src="tiles/24.jpg" /></div>
-                <div id="tile01" class="tile"><img id="img01" src="tiles/25.jpg" /></div>
-                <div id="tile02" class="tile"><img id="img02" src="tiles/26.jpg" /></div>
-                <div id="tile10" class="tile"><img id="img10" src="tiles/34.jpg" /></div>
-                <div id="tile11" class="tile"><img id="img11" src="tiles/35.jpg" /></div>
-                <div id="tile12" class="tile"><img id="img12" src="tiles/36.jpg" /></div>
-                <div id="tile20" class="tile"><img id="img20" src="tiles/44.jpg" /></div>
-                <div id="tile21" class="tile"><img id="img21" src="tiles/45.jpg" /></div>
-                <div id="tile22" class="tile"><img id="img22" src="tiles/46.jpg" /></div>
-			</div>
-			<div id="mapOverlay">
-				<canvas id="mapCanvas" width="100" height="100"></canvas>
-			</div>
-		</div>
-	</div>
+	<div id="map"></div>
 </main>
 <button id="menuButton" type="menu" menu="menu" class="menuButton" aria-label="Menu"></button>
 <div id='actionButton' class='round-button'><img src='fixButton24px.svg'/></div>
@@ -64,6 +54,6 @@
 <div id='profilesPanel'>
     <canvas id="profilesCanvas" width="100" height="100"></canvas>
 </div>
-<script src="peakScript.js" async></script>
+<!--script src="saxtonScript.js" async></script-->
 </body>
 </html>
