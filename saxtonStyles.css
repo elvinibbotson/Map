@@ -60,8 +60,8 @@ input, label, select {
 .round-button {
 	display: block;
 	position: fixed;
-	width: 50px;
-	height: 50px;
+	width: 36px;
+	height: 36px;
 	border: 0px solid #222;
 	border-radius: 50%;
 	box-shadow: 0,0,3px,gray;
@@ -72,19 +72,33 @@ input, label, select {
 	display: block;
 	width: 24px;
 	height: 24px;
-	padding: 13px;
+	padding: 6px;
+}
+
+#plusButton {
+	left: 20px;
+	bottom: 20px;
+	background: #333333;
+	display: block;
+}
+
+#minusButton {
+	left: 60px;
+	bottom: 20px;
+	background: #333333;
+	display: block;
 }
 
 #actionButton {
 	right: 20px;
 	bottom: 20px;
 	background: #333333;
-	display: block;
+	display: none;
 }
 
 #stopButton {
-	left: 10px;
-	bottom: 10px;
+	right: 60px;
+	bottom: 20px;
 	background: red;
 	display: none;
 }
