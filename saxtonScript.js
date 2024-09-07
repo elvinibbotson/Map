@@ -28,6 +28,7 @@
 	var notifications=[];
 	
 	// EVENT HANDLERS
+	/* REVISE ALL THESE
 	id("menuButton").addEventListener("click", function() {
 		console.log("toggle menu");
 		var display=id("menu").style.display;
@@ -63,6 +64,7 @@
 		show('menu',false);
 	});
 	id('diagnostics').addEventListener('click', showNotifications);
+	*/
 	id("actionButton").addEventListener("click", getFix);
 	id("stopButton").addEventListener("click", cease);
 	id("saveButton").addEventListener("click", saver);
