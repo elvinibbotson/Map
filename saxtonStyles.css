@@ -47,8 +47,8 @@ input, label, select {
 
 .round-button {
 	position: fixed;
-	width: 36px;
-	height: 36px;
+	width: 50px;
+	height: 50px;
 	border: 0px solid #222;
 	border-radius: 50%;
 	box-shadow: 0,0,3px,gray;
@@ -60,7 +60,7 @@ input, label, select {
 	display: block;
 	width: 24px;
 	height: 24px;
-	padding:0px;
+	padding:6px;
 }
 
 #plusButton {
@@ -71,7 +71,7 @@ input, label, select {
 }
 
 #minusButton {
-	left: 70px;
+	left: 90px;
 	bottom: 20px;
 	background: #333333;
 	display: none;
@@ -92,30 +92,46 @@ input, label, select {
 }
 
 #stopButton {
-	right: 60px;
+	right: 90px;
 	bottom: 20px;
-	background: red;
+	background: #333333;
 	display: none;
 }
 
+#map {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background-color: silver;
+	display: block;
+}
+
+#menuDiv {
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	display: block;
+}
+
 #menu {
-	position: fixed;
 	top: 0;
 	left: 0;
 	padding-left: 20px;
 	padding-right: 20px;
 	color: white;
 	background-color: #333333;
-	font-size: 1.5em;
-	z-index: 25;
-	display: none;
+	font-size: 1em;
+	z-index: 1000;
+	display: block;
 }
 
 .check {
 	width: 32px;
 	height: 32px;
 }
-
+/*
 #mapScreen {
 	position: fixed;
 	left: 0;
@@ -123,18 +139,9 @@ input, label, select {
 	width: 100%;
 	height: 100%;
 }
+*/
 
-#map {
-	position: absolute;
-	top: 0;
-  left: 0;
-  width: 1000px;
-	height: 2000px;
-  z-index: 1;
-  background-color: silver;
-	display: none;
-}
-
+/*
 #mapOverlay {
   position: absolute;
 	left: 0;
@@ -143,15 +150,13 @@ input, label, select {
 	height: 100%;
   z-index: 2;
 }
-
+*/
 #listScreen {
     position: fixed;
-    
     -webkit-box-flex: 1;
     -webkit-flex: 1;
     -ms-flex: 1;
     flex: 1;
-    
     left: 0;
     top : 0;
     width: 100%;
@@ -209,7 +214,7 @@ input, label, select {
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.24), 0 14px 28px rgba(0, 0, 0, 0.48);
   position: absolute;
   left: 0;
-  top: 32px;
+  top: 0;
   width: 100%;
   margin-top: 10px;
   -webkit-transition: -webkit-transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s;

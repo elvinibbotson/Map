@@ -1,6 +1,7 @@
 // (function () {
 	"use strict";
 	var sw, sh; // usable screen width and height
+	var map; // OSM map
 	var profilesCanvas; // canvas for track altitude & speed profiles
 	var x, y, x0, y0; // horizontal and vertical coordinates/measurements
 	var offset = {};
@@ -68,7 +69,7 @@
 	id('map').addEventListener('click',mapTap);
 	id('plusButton').addEventListener('click',zoomIn);
 	id('minusButton').addEventListener('click',zoomOut);
-	id('menuButton').addEventListener('click',showMenu);
+	// id('menuButton').addEventListener('click',showMenu);
 	id("actionButton").addEventListener("click", getFix);
 	id("stopButton").addEventListener("click", cease);
 	id("saveButton").addEventListener("click", saver);
@@ -86,16 +87,12 @@
 	});
 	loc.lat = 53.2;
 	loc.lon = -1.75;
-	// sw = window.innerWidth;	// sh = window.innerHeight;
 	sw=window.innerWidth;
 	sh=window.innerHeight;
 	console.log("screen size: "+sw+"x"+sh);
-	// id("mapScreen").style.width = sw+'px';
-	// id("mapScreen").style.height = sh+'px';
-	
 	id('map').style.width=sw+'px';
 	id('map').style.height=sh+'px';
-	
+
 	/*
 	mapCanvas=id("mapCanvas").getContext("2d"); // set up drawing canvas
 	id("mapCanvas").width = sw;
@@ -105,7 +102,7 @@
 	profilesCanvas=id("profilesCanvas").getContext("2d"); // set up drawing canvas
 	id("profilesCanvas").width=sw;
 	id("profilesCanvas").height=sh*0.2;
-	show('actionButton',true);
+	// show('actionButton',true);
 	/*
 	for (x = 0; x < 3; x++) { // build map by positioning 10x10 grid of tiles
 		for (var y = 0; y < 3; y++) {
@@ -122,7 +119,7 @@
 	loc.lon=-2;
 	
 	console.log('centre at '+loc.lat+','+loc.lon);
-	var map = L.map('map',{zoomControl: false}).setView([loc.lat, loc.lon], 15); // Derbyshire
+	map = L.map('map',{zoomControl: false}).setView([loc.lat, loc.lon], 15); // Derbyshire
 	/* standard OSM
 	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     	maxZoom: 19,
@@ -189,8 +186,9 @@
 	// tap map
 	function mapTap(e) {
 		console.log('tap on map');
-		if(id('menu').style.display=='block') id('menu').style.display='none';
-		else if(id('plusButton').style.display=='block') {
+		// console.log('menu display: '+id('menu').style.display);
+		// if(id('menu').style.display=='block') hideMenu();
+		if(id('plusButton').style.display=='block') {
 			id('plusButton').style.display='none';
 			id('minusButton').style.display='none';
 			id('menuButton').style.display='none';
@@ -213,22 +211,10 @@
 	function zoomOut() {
 		map.zoomOut();
 	}
-	
-	// SHOW menu
-	function showMenu() {
-		console.log("toggle menu");
-		var display=id("menu").style.display;
-		show('listScreen',false);
-		show('profilesPanel',false);
-		id("menu").style.display = (display=="block")?"none":"block";
-		id('metric').checked=metric;
-		console.log("open menu - metric is "+metric+" - checked is "+id('metric').checked);
-	}
-	
-	
+
 	// LIST TRACKS
 	function listTracks() {
-	    show('menu',false);
+	    // show('menu',false);
 		notify('list '+trackNames.length+' tracks');
 		if(trackNames.length<1) return;
 		id('list').innerHTML="<li class='listItem'><b>TRACKS</b></li>";
@@ -259,7 +245,7 @@
 	
 	// LIST ROUTES
 	function listRoutes() {
-	    show('menu',false);
+	    // show('menu',false);
 		console.log('list '+routeNames.length+' routes');
 		if(routeNames.length<1) return;
 		id('list').innerHTML="<li class='listItem'><b>ROUTES</b></li>";
@@ -680,7 +666,7 @@
 	// SHOW TRACK PROFILES
 	function profiles() {
 		// notify('show track profiles?');
-		show('menu',false);
+		// show('menu',false);
 		if(trackpoints.length<5) return;
 		var n=trackpoints.length;
 		// draw altitude and speed profiles
@@ -927,7 +913,7 @@
 			message+=notifications[i]+"; ";
 		}
 		alert(message);
-		show('menu',false);
+		// show('menu',false);
 	}
 	
 	function id(el) {

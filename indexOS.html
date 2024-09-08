@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  	<title>saxton</title>
+  	<link rel="stylesheet" type="text/css" href="peakStyles.css">
+  	<link rel="manifest" href="manifest.json">
+  	<meta name="application-name" content="saxton">
+</head>
+<body>
+<main class="main">
+	<div id="main" class="content">
+		<div id="mapScreen">
+			<div id="map">
+                <div id="tile00" class="tile"><img id="img00" src="tiles/24.jpg" /></div>
+                <div id="tile01" class="tile"><img id="img01" src="tiles/25.jpg" /></div>
+                <div id="tile02" class="tile"><img id="img02" src="tiles/26.jpg" /></div>
+                <div id="tile10" class="tile"><img id="img10" src="tiles/34.jpg" /></div>
+                <div id="tile11" class="tile"><img id="img11" src="tiles/35.jpg" /></div>
+                <div id="tile12" class="tile"><img id="img12" src="tiles/36.jpg" /></div>
+                <div id="tile20" class="tile"><img id="img20" src="tiles/44.jpg" /></div>
+                <div id="tile21" class="tile"><img id="img21" src="tiles/45.jpg" /></div>
+                <div id="tile22" class="tile"><img id="img22" src="tiles/46.jpg" /></div>
+			</div>
+			<div id="mapOverlay">
+				<canvas id="mapCanvas" width="100" height="100"></canvas>
+			</div>
+		</div>
+	</div>
+</main>
+<button id="menuButton" type="menu" menu="menu" class="menuButton" aria-label="Menu"></button>
+<div id='actionButton' class='round-button'><img src='fixButton24px.svg'/></div>
+<div id='stopButton' class='round-button'><img src='stopButton24px.svg'/></div>
+<menu type="context" id="menu">
+	<p><menuitem id="tracks" label="tracks">tracks</menuitem></p>
+	<p><menuitem id="routes" label="routes">routes</menuitem></p>
+	<p><menuitem id='measure' label='measure'>measure route</menuitem></p>
+	<p><input type='checkbox' class='check' id='metric'>metric units</p>
+	<p><menuitem id='diagnostics'>diagnostics</menuitem></p>
+</menu>
+<div id="listScreen">
+    <div id='closeButton'><img src='closeButton24px.svg'/></div>'
+    <!--div>
+        <span id='listHeader'></span>
+        <div id='closeButton'><img src='closeButton24px.svg'/></div>'
+    </div-->
+    <!--div id="listPanel"-->
+    <ul id='list'></ul>
+    <!--/div-->
+</div>
+<div id="saveDialog" class="dialog-container">
+    <div class="dialog">
+        <div class="dialog-title">Save as</div>
+        <div class="dialog-body"><input type="text" id="saveName" size="30"/></div>
+        <div class="dialog-buttons">
+	        <button id="cancelButton" class="button">Cancel</button>
+            <button id="saveButton" class="button">Save</button>
+        </div>
+    </div>
+</div>
+<div id="dialog"></div>
+<div id='profilesPanel'>
+    <canvas id="profilesCanvas" width="100" height="100"></canvas>
+</div>
+<script src="peakScript.js" async></script>
+</body>
+</html>
