@@ -189,10 +189,19 @@
 	// tap map
 	function mapTap(e) {
 		console.log('tap on map');
-		id('plusButton').style.display='block';
-		id('minusButton').style.display='block';
-		id('menuButton').style.display='block';
-		id('actionButton').style.display='block';
+		if(id('menu').style.display=='block') id('menu').style.display='none';
+		else if(id('plusButton').style.display=='block') {
+			id('plusButton').style.display='none';
+			id('minusButton').style.display='none';
+			id('menuButton').style.display='none';
+			id('actionButton').style.display='none';
+		}
+		else {
+			id('plusButton').style.display='block';
+			id('minusButton').style.display='block';
+			id('menuButton').style.display='block';
+			id('actionButton').style.display='block';
+		}
 	}
 	
 	// ZOOM IN

@@ -78,8 +78,8 @@ input, label, select {
 }
 
 #menuButton {
-    left: 120px;
-    bottom: 20px;
+    left: 20px;
+    top: 20px;
     background: #333333;
     display: none;
 }
