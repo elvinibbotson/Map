@@ -65,6 +65,10 @@
 	});
 	id('diagnostics').addEventListener('click', showNotifications);
 	*/
+	id('map').addEventListener('click',mapTap);
+	id('plusButton').addEventListener('click',zoomIn);
+	id('minusButton').addEventListener('click',zoomOut);
+	id('menuButton').addEventListener('click',showMenu);
 	id("actionButton").addEventListener("click", getFix);
 	id("stopButton").addEventListener("click", cease);
 	id("saveButton").addEventListener("click", saver);
@@ -119,9 +123,16 @@
 	
 	console.log('centre at '+loc.lat+','+loc.lon);
 	var map = L.map('map',{zoomControl: false}).setView([loc.lat, loc.lon], 15); // Derbyshire
+	/* standard OSM
 	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     	maxZoom: 19,
     	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(map);
+	*/
+	// CyclOSM
+	L.tileLayer('https://dev.c.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+    	maxZoom: 20,
+    	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> CyclOSM'
 	}).addTo(map);
 	console.log('should show map - add marker and circle');
 	var marker = L.marker([loc.lat, loc.lon]).addTo(map);
@@ -174,6 +185,37 @@
 		routeNames=json.names;
 		notify(routeNames.length+' routes');
 	}
+	
+	// tap map
+	function mapTap(e) {
+		console.log('tap on map');
+		id('plusButton').style.display='block';
+		id('minusButton').style.display='block';
+		id('menuButton').style.display='block';
+		id('actionButton').style.display='block';
+	}
+	
+	// ZOOM IN
+	function zoomIn() {
+		map.zoomIn();
+	}
+	
+	// ZOOM OUT
+	function zoomOut() {
+		map.zoomOut();
+	}
+	
+	// SHOW menu
+	function showMenu() {
+		console.log("toggle menu");
+		var display=id("menu").style.display;
+		show('listScreen',false);
+		show('profilesPanel',false);
+		id("menu").style.display = (display=="block")?"none":"block";
+		id('metric').checked=metric;
+		console.log("open menu - metric is "+metric+" - checked is "+id('metric').checked);
+	}
+	
 	
 	// LIST TRACKS
 	function listTracks() {

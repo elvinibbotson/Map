@@ -43,22 +43,9 @@ input, label, select {
     font-size: large;
 }
 
- #menuButton {
-    position: fixed;
-    left: 10px;
-    top: 10px;
-    width: 24px;
-    height: 24px;
-    border: none;
-    outline: none;
-    overflow: hidden;
-    opacity: 1;
-    background: url(menuButton24px.svg) center center no-repeat;
-    z-index: 25;
-}
+ 
 
 .round-button {
-	display: block;
 	position: fixed;
 	width: 36px;
 	height: 36px;
@@ -66,27 +53,35 @@ input, label, select {
 	border-radius: 50%;
 	box-shadow: 0,0,3px,gray;
 	z-index: 25;
+	display: none;
 }
 
 .round-button img {
 	display: block;
 	width: 24px;
 	height: 24px;
-	padding: 6px;
+	padding:0px;
 }
 
 #plusButton {
 	left: 20px;
 	bottom: 20px;
 	background: #333333;
-	display: block;
+	display: none;
 }
 
 #minusButton {
-	left: 60px;
+	left: 70px;
 	bottom: 20px;
 	background: #333333;
-	display: block;
+	display: none;
+}
+
+#menuButton {
+    left: 120px;
+    bottom: 20px;
+    background: #333333;
+    display: none;
 }
 
 #actionButton {
