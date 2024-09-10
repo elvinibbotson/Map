@@ -1,11 +1,12 @@
 // (function () {
 	"use strict";
 	var sw, sh; // usable screen width and height
-	var map; // OSM map
+	var map; // CyclOSM map
+	var locus; // marks current location
 	var profilesCanvas; // canvas for track altitude & speed profiles
 	var x, y, x0, y0; // horizontal and vertical coordinates/measurements
 	var offset = {};
-	var status; // location & trip data
+	// var status; // location & trip data
 	var json;
 	var measuring=false;
 	var enroute=false;
@@ -16,9 +17,10 @@
 	var trackpoints = []; // array of track objects - locations, altitudes, timestamps, lengths, durations,...
 	var routeNames=[];
 	var nodes=[]; // array of route node locations
-	var metric=false;
+	var metric=true;
     var geolocator=null;
 	var loc={};
+	var zoom=10;
 	var lastLoc={};
 	var fix;
 	var fixes=[];
@@ -30,15 +32,6 @@
 	
 	// EVENT HANDLERS
 	/* REVISE ALL THESE
-	id("menuButton").addEventListener("click", function() {
-		console.log("toggle menu");
-		var display=id("menu").style.display;
-		show('listScreen',false);
-		show('profilesPanel',false);
-		id("menu").style.display = (display=="block")?"none":"block";
-		id('metric').checked=metric;
-		console.log("open menu - metric is "+metric+" - checked is "+id('metric').checked);
-	});
 	id("tracks").addEventListener("click", listTracks);
 	id("routes").addEventListener("click", listRoutes);
     id("measure").addEventListener("click",function() {
@@ -67,12 +60,15 @@
 	id('diagnostics').addEventListener('click', showNotifications);
 	*/
 	id('map').addEventListener('click',mapTap);
+	
 	id('plusButton').addEventListener('click',zoomIn);
 	id('minusButton').addEventListener('click',zoomOut);
-	// id('menuButton').addEventListener('click',showMenu);
 	id("actionButton").addEventListener("click", getFix);
 	id("stopButton").addEventListener("click", cease);
 	id("saveButton").addEventListener("click", saver);
+	id('moreButton').addEventListener('click',function() {
+		id('more').style.display='block';
+	});
 	id("cancelButton").addEventListener("click", function() {
 	  show('saveDialog',false);
 	  measuring=false;
@@ -85,41 +81,48 @@
 	    show('actionButton',true);
 	    redraw();
 	});
-	loc.lat = 53.2;
-	loc.lon = -1.75;
+	// loc.lat = 53.2;
+	// loc.lon = -1.75;
 	sw=window.innerWidth;
 	sh=window.innerHeight;
 	console.log("screen size: "+sw+"x"+sh);
 	id('map').style.width=sw+'px';
 	id('map').style.height=sh+'px';
-
-	/*
-	mapCanvas=id("mapCanvas").getContext("2d"); // set up drawing canvas
-	id("mapCanvas").width = sw;
-	id("mapCanvas").height = sh;
-	*/
-	
 	profilesCanvas=id("profilesCanvas").getContext("2d"); // set up drawing canvas
 	id("profilesCanvas").width=sw;
 	id("profilesCanvas").height=sh*0.2;
-	// show('actionButton',true);
-	/*
-	for (x = 0; x < 3; x++) { // build map by positioning 10x10 grid of tiles
-		for (var y = 0; y < 3; y++) {
-			var tile=id("tile" + y + x);
-			tile.style.left = (x * 720) +'px';
-			tile.style.top = (y * 800) +'px';
-		}
-	}
-	*/
 	show('map',true);
-	status = window.localStorage.getItem('saxtonLocation'); // recover last location
-	console.log("location status: "+status+" but set location to 53N 2W");
-	loc.lat=53;
-	loc.lon=-2;
-	
-	console.log('centre at '+loc.lat+','+loc.lon);
-	map = L.map('map',{zoomControl: false}).setView([loc.lat, loc.lon], 15); // Derbyshire
+	show('controls',false);
+	show('plusButton',true);
+	show('minusButton',true);
+	show('actionButton',true);
+	show('moreControls',false);
+	show('moreButton',true);
+	show('more',false);
+	show('routeButton',true);
+	show('routesButton',true);
+	show('unitButton',true);
+	show('helpButton',true);
+	// ALSO units and help buttons
+	loc.lat=window.localStorage.getItem('lat');
+	loc.lon=window.localStorage.getItem('lon');
+	console.log('saved location: '+loc.lon+','+loc.lat);
+	if(loc.lon===null || loc.lat===null) {
+		loc.lon=-1.75;
+		loc.lat=53.5;
+	}
+	zoom=window.localStorage.getItem('zoom');
+	console.log('saved zoom: '+zoom);
+	if(zoom===null) zoom=10;
+	// status = window.localStorage.getItem('saxtonLocation'); // recover last location
+	// console.log("location : "+loc.lon+","+loc.lat+" zoom: "+zoom);
+	// loc.lat=53;
+	// loc.lon=-2;
+	console.log('centre at '+loc.lat+','+loc.lon+' - zoom level '+zoom);
+	map=L.map('map',{zoomControl: false}).setView([loc.lat,loc.lon],zoom); // Derbyshire
+	// draw circle at location
+	locus=L.circle([loc.lat,loc.lon], {radius: 500/(2^zoom)}).addTo(map);
+	locus.setStyle({stroke: false, fillColor: 'black', fillOpacity: 0.5});
 	/* standard OSM
 	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     	maxZoom: 19,
@@ -129,19 +132,12 @@
 	// CyclOSM
 	L.tileLayer('https://dev.c.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
     	maxZoom: 20,
-    	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> CyclOSM'
+    	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
 	}).addTo(map);
-	console.log('should show map - add marker and circle');
-	var marker = L.marker([loc.lat, loc.lon]).addTo(map);
-	var circle = L.circle([loc.lat+0.05, -0.11], {
-    	color: 'red',
-    	fillColor: '#f03',
-    	fillOpacity: 0.5,
-    	radius: 500
-	}).addTo(map);
-	
-	map.locate({setView: true, maxZoom: 16});
-	
+	map.on('moveend',saveLoc);
+	map.on('zoom',saveZoom);
+	// map.locate({setView: true, maxZoom: 16}); USED TO GET CURRENT LOCATION
+	/* MAY NEED CODE LIKE THIS WHEN NAVIGATING...
 	function onLocationFound(e) {
 		console.log('location: '+e.latlng.toString());
 		var radius=e.accuracy;
@@ -152,7 +148,7 @@
 		alert(e.message);
 	}
 	map.on('locationerror',onLocationError);
-	
+	*/
 	
 	/*
 	if(status) {
@@ -168,8 +164,8 @@
 	*/
     // ALWAYS START IN IMPERIAL UNITS
 	// metric=window.localStorage.getItem("metric");
-	id('metric').checked=metric;
-	console.log("metric is "+metric+' - checked is '+id('metric').checked)
+	// id('metric').checked=metric;
+	// console.log("metric is "+metric+' - checked is '+id('metric').checked)
 	// get list of saved tracks
 	var json=JSON.parse(window.localStorage.getItem("saxtonTracks"));
 	console.log("routes: "+json);
@@ -183,35 +179,60 @@
 		notify(routeNames.length+' routes');
 	}
 	
-	// tap map
+	// SAVE LOCATION
+	function saveLoc() {
+		var location=map.getCenter();
+		console.log('map location: '+location);
+		
+		// move locus
+		locus.setLatLng(location);
+		locus.setRadius(500/(2^zoom));
+		
+		loc.lat=location.lat;
+		loc.lon=location.lng;
+		window.localStorage.setItem('lat',loc.lat);
+		window.localStorage.setItem('lon',loc.lon);
+		console.log('location saved: '+loc.lon+','+loc.lat);
+	}
+	
+	// SAVE ZOOM
+	function saveZoom() {
+		locus.setRadius(500/(4^zoom));
+		zoom=map.getZoom();
+		console.log('save zoom: '+zoom);
+		window.localStorage.setItem('zoom',zoom);
+	}
+	
+	// TAP MAP
 	function mapTap(e) {
 		console.log('tap on map');
-		// console.log('menu display: '+id('menu').style.display);
-		// if(id('menu').style.display=='block') hideMenu();
-		if(id('plusButton').style.display=='block') {
-			id('plusButton').style.display='none';
-			id('minusButton').style.display='none';
-			id('menuButton').style.display='none';
-			id('actionButton').style.display='none';
+		// id('plusButton').style.display==('none')? 'block':'none';
+		console.log('controls visible? '+id('controls').style.display);
+		
+		if(id('controls').style.display=='block') {
+			show('controls',false);
+			show('moreControls',false);
+			show('more',false);
 		}
 		else {
-			id('plusButton').style.display='block';
-			id('minusButton').style.display='block';
-			id('menuButton').style.display='block';
-			id('actionButton').style.display='block';
+			show('controls',true);
+			show('moreControls',true);
 		}
+		
 	}
 	
 	// ZOOM IN
 	function zoomIn() {
 		map.zoomIn();
+		zoom=map.getZoom();
 	}
 	
 	// ZOOM OUT
 	function zoomOut() {
 		map.zoomOut();
+		zoom=map.getZoom();
 	}
-
+	
 	// LIST TRACKS
 	function listTracks() {
 	    // show('menu',false);
@@ -284,11 +305,15 @@
 	
 	// LOCATION FIX
 	function getFix() { // get fix on current location
+	console.log('get a fix');
+		map.locate({watch: false, setView: true, maxZoom: 20}); // Leaflet method replaces...
+		/*
 		if(navigator.geolocation) {
 			console.log('get a fix');
 			var opt={enableHighAccuracy: true, timeout: 15000, maximumAge: 0};
 			navigator.geolocation.getCurrentPosition(gotoFix,locationError,opt);
 		}
+		*/
 	}
 	
 	function gotoFix(position) {
@@ -659,9 +684,11 @@
 		map.style.top = mapTop+"px";
 		redraw();
 		*/
-		json=JSON.stringify(loc);
-		window.localStorage.setItem('saxtonLocation', json);
+		// json=JSON.stringify(loc);
+		// window.localStorage.setItem('saxtonLocation', json);
+		saveLoc();
 	}
+
 	
 	// SHOW TRACK PROFILES
 	function profiles() {

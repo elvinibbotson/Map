@@ -1,18 +1,17 @@
 {
   "name": "saxton PWA",
   "short_name": "saxton",
-  "version": 1,
+  "version": "1",
   "icons": [
 	{
 		"src": "saxton512.png",
 		"sizes": "512x512",
-		"type": "image/png",
-		"purpose": "any maskable"
+		"type": "image/png"
 	}
   ],
   "start_url": "/saxton/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "green",
-  "theme_color": "green"
+  "background_color": "black",
+  "theme_color": "black"
 }
