@@ -1,4 +1,3 @@
-// (function () {
 	"use strict";
 	var sw, sh; // usable screen width and height
 	var map; // CyclOSM map
@@ -71,6 +70,7 @@
 		show('moreButton',false);
 		id('more').style.display='block';
 	});
+	id('helpButton').addEventListener('click',showNotifications);
 	id("cancelButton").addEventListener("click", function() {
 	  show('saveDialog',false);
 	  measuring=false;
@@ -143,7 +143,7 @@
 	map.on('moveend',saveLoc);
 	map.on('zoom',saveZoom);
 	map.on('locationfound',function(e) {
-		console.log('FIX '+e.latlng);
+		notify('FIX '+e.latlng);
 		loc.coords=e.latlng; // NEW replaces...
 		// loc.lon=e.LatLng.lon;
 		// loc.lat=e.LatLng.lat;
@@ -162,6 +162,7 @@
 				addTP(loc.coords);
 				lastLoc.coords=loc.coords;
 			}
+		}
 			/* OLD CODE
 			dist=measure("distance",loc.lon,loc.lat,lastLoc.lon,lastLoc.lat); // distance since last averaged fix
 			// notify('moved '+Math.round(dist)+"m");
@@ -185,12 +186,11 @@
 				duration=loc.time-trackpoints[0].time;
 			}
 			else speed=0;
-		}
+		// }
 		lastLoc.time=loc.time;
 		lastLoc.lon=loc.lon;
 		lastLoc.lat=loc.lat;
 		*/
-		}
 	});
 	// map.locate({setView: true, maxZoom: 16}); USED TO GET CURRENT LOCATION
 	/* MAY NEED CODE LIKE THIS WHEN NAVIGATING...
@@ -358,7 +358,7 @@
 		// NEW CODE
 		if(trackpoints.length==2) { // on second trackpoint, start drawing track on map
 			track=L.polyline([trackpoints[0].coords,trackpoints[1].coords]);
-			track.setStyle({stroke: true, strokeWeight: 5, color: black, opacity: 0.5, fill: false});
+			track.setStyle({stroke: true, strokeWeight: 5, color: 'black', opacity: 0.5, fill: false});
 		}
 		else if(trackpoints.length>2) track.addLatLng(loc.coords);
 		// OLD CODE redraw();
@@ -375,6 +375,11 @@
 			navigator.geolocation.getCurrentPosition(gotoFix,locationError,opt);
 		}
 		*/
+		id("actionButton").innerHTML='<img src="goButton24px.svg"/>';
+		id("actionButton").removeEventListener("click", getFix);
+		id("actionButton").addEventListener("click", go);
+		ready=true;
+		window.setTimeout(timeUp,15000); // revert to fix button after 15 secs
 	}
 	/*
 	function gotoFix(position) {
@@ -428,7 +433,7 @@
 		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
 		id("actionButton").removeEventListener("click", go);
 		id("actionButton").addEventListener("click", stopStart);
-		show('measure',false);
+		// show('measure',false);
 	}
 	
 	function stopStart() {
@@ -543,8 +548,8 @@
 			id("actionButton").addEventListener("click", getFix);
 		}
 		show('stopButton',false);
-		show('measure',true);
-		redraw();
+		// show('measure',true);
+		// redraw();
 		if(nodes.length>5) { // offer to save route
 			notify("save route?");
 			id('saveName').value="";
