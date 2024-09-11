@@ -543,7 +543,7 @@
 	function cease(event) {
 		notify("CEASE: tracking is "+tracking+"; measuring is "+measuring+"; "+trackpoints.length+" trackpoints");
 		if(tracking) {
-			mp.stopLocate(); // NEW CODE replace...
+			map.stopLocate(); // NEW CODE replace...
 			// OLD CODE navigator.geolocation.clearWatch(geolocator);
 			id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
 			id("actionButton").removeEventListener("click", stopStart);
