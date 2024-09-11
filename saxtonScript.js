@@ -2,7 +2,7 @@
 	"use strict";
 	var sw, sh; // usable screen width and height
 	var map; // CyclOSM map
-	var locus; // marks current location
+	// var locus; // marks current location
 	var profilesCanvas; // canvas for track altitude & speed profiles
 	var x, y, x0, y0; // horizontal and vertical coordinates/measurements
 	var offset = {};
@@ -60,13 +60,13 @@
 	id('diagnostics').addEventListener('click', showNotifications);
 	*/
 	id('map').addEventListener('click',mapTap);
-	
 	id('plusButton').addEventListener('click',zoomIn);
 	id('minusButton').addEventListener('click',zoomOut);
 	id("actionButton").addEventListener("click", getFix);
 	id("stopButton").addEventListener("click", cease);
 	id("saveButton").addEventListener("click", saver);
 	id('moreButton').addEventListener('click',function() {
+		show('moreButton',false);
 		id('more').style.display='block';
 	});
 	id("cancelButton").addEventListener("click", function() {
@@ -91,7 +91,10 @@
 	profilesCanvas=id("profilesCanvas").getContext("2d"); // set up drawing canvas
 	id("profilesCanvas").width=sw;
 	id("profilesCanvas").height=sh*0.2;
+	id('locus').style.left=(sw/2-12)+'px';
+	id('locus').style.top=(sh/2-12)+'px';
 	show('map',true);
+	show('locus',true);
 	show('controls',false);
 	show('plusButton',true);
 	show('minusButton',true);
@@ -121,8 +124,8 @@
 	console.log('centre at '+loc.lat+','+loc.lon+' - zoom level '+zoom);
 	map=L.map('map',{zoomControl: false}).setView([loc.lat,loc.lon],zoom); // Derbyshire
 	// draw circle at location
-	locus=L.circle([loc.lat,loc.lon], {radius: 500/(2^zoom)}).addTo(map);
-	locus.setStyle({stroke: false, fillColor: 'black', fillOpacity: 0.5});
+	// locus=L.circle([loc.lat,loc.lon], {radius: 500/(2^zoom)}).addTo(map);
+	// locus.setStyle({stroke: false, fillColor: 'black', fillOpacity: 0.5});
 	/* standard OSM
 	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     	maxZoom: 19,
@@ -184,10 +187,10 @@
 		var location=map.getCenter();
 		console.log('map location: '+location);
 		
-		// move locus
+		/* move locus
 		locus.setLatLng(location);
 		locus.setRadius(500/(2^zoom));
-		
+		*/
 		loc.lat=location.lat;
 		loc.lon=location.lng;
 		window.localStorage.setItem('lat',loc.lat);
@@ -197,7 +200,7 @@
 	
 	// SAVE ZOOM
 	function saveZoom() {
-		locus.setRadius(500/(4^zoom));
+		// locus.setRadius(500/(4^zoom));
 		zoom=map.getZoom();
 		console.log('save zoom: '+zoom);
 		window.localStorage.setItem('zoom',zoom);
@@ -206,9 +209,6 @@
 	// TAP MAP
 	function mapTap(e) {
 		console.log('tap on map');
-		// id('plusButton').style.display==('none')? 'block':'none';
-		console.log('controls visible? '+id('controls').style.display);
-		
 		if(id('controls').style.display=='block') {
 			show('controls',false);
 			show('moreControls',false);
