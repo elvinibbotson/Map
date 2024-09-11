@@ -158,10 +158,12 @@
 		else {
 			// NEW CODE
 			console.log('lastLoc: '+lastLoc.coords+'; fix at '+loc.coords);
-			if(map.distance(loc.coords,lastLoc.coords)>50) { // trackpoints every 50+m
+			dist=map.distance(loc.coords,lastLoc.coords);
+			notify('distance: '+dist);
+			if(dist>10) { // trackpoints every 10m INCREASE THIS?
 				addTP(loc.coords);
 				lastLoc.coords=loc.coords;
-			}
+			} //
 		}
 			/* OLD CODE
 			dist=measure("distance",loc.lon,loc.lat,lastLoc.lon,lastLoc.lat); // distance since last averaged fix
@@ -987,7 +989,7 @@
 	
 	function notify(note) {
 		notifications.push(note);
-		while(notifications.length>25) notifications.shift();
+		while(notifications.length>50) notifications.shift();
 		console.log(note);
 	}
 	
@@ -997,7 +999,6 @@
 			message+=notifications[i]+"; ";
 		}
 		alert(message);
-		// show('menu',false);
 	}
 	
 	function id(el) {
