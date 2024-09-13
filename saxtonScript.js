@@ -301,8 +301,8 @@
 		if(trackpoints.length<2) return;
 		// NEW CODE
 		if(trackpoints.length==2) { // on second trackpoint, start drawing track on map
-			track=L.polyline([trackpoints[0].coords,trackpoints[1].coords]);
-			track.setStyle({stroke: true, strokeWeight: 5, color: 'black', opacity: 0.5, fill: false});
+			track=L.polyline([trackpoints[0].coords,trackpoints[1].coords],{color:'red'}).addTo(map);
+			// track.setStyle({stroke: true, strokeWeight: 5, color: 'black', opacity: 0.5, fill: false});
 		}
 		else if(trackpoints.length>2) track.addLatLng(tp.coords);
 		// OLD CODE redraw();
@@ -370,87 +370,27 @@
 	}
 	
 	function stopStart() {
-		console.log("stopStart");
+		notify("stopStart");
 		if(tracking) pause();
 		else resume();
 	}
 	
 	function pause() { // pause location tracking
-		console.log("PAUSE");
+		notify("PAUSE");
 		addTP(); // add trackpoint on pause
-		tracking = false;
+		tracking=false;
 		map.stopLocate(); // NEW CODE
-		// OLD CODE navigator.geolocation.clearWatch(geolocator);
 		show('stopButton',true);
 		id("actionButton").innerHTML='<img src="goButton24px.svg"/>';
 	}
 	
 	function resume() { // restart tracking after pausing
-		console.log("RESUME");
+		notify("RESUME");
 		show('stopButton',false);
 		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
 		tracking = true;
-		map.locate({watch:true}); // NEW CODE
-		/* OLD CODE
-		var opt={enableHighAccuracy: true, timeout: 15000, maximumAge: 0};
-		geolocator=navigator.geolocation.watchPosition(sampleLocation, locationError, opt);
-		*/
+		map.locate({watch:true});
 	}
-	
-	/* OLD CODE
-	function sampleLocation(position) {
-		console.log('sample location');
-		if(position.coords.accuracy>50) return; // skip inaccurate fixes
-		fixes[fix]={};
-		fixes[fix].lon=position.coords.longitude;
-		fixes[fix].lat=position.coords.latitude;
-		fixes[fix].alt=position.coords.altitude;
-		fix++;
-		if(fix<3) return;
-		fix=0; // reset to get next three sample fixes
-		var now=new Date();
-		loc.time=Math.round(now.getTime()/1000); // whole seconds
-		loc.lon=(fixes[0].lon+fixes[1].lon+fixes[2].lon)/3; // average location data
-		loc.lat=(fixes[0].lat+fixes[1].lat+fixes[2].lat)/3;
-		loc.alt=Math.round((fixes[0].alt+fixes[1].alt+fixes[2].alt)/3);
-		if((trackpoints.length<1)&&(loc.alt>0)) {
-			addTP(); // ...add first trackpoint
-		}
-		else {
-			dist=measure("distance",loc.lon,loc.lat,lastLoc.lon,lastLoc.lat); // distance since last averaged fix
-			// notify('moved '+Math.round(dist)+"m");
-			if((loc.time-lastLoc.time)>60) { // resample 3 readings after waking up
-				lastLoc.time=loc.time;
-				fix=0;
-				return;
-			}
-			else if(dist>3) { // if moving adjust distance, duration, speed, heading
-				moving+=(loc.time-lastLoc.time);
-				var t=trackpoints.length-1; // most recent trackpoint
-				dist=measure("distance",loc.lon,loc.lat,trackpoints[t].lon,trackpoints[t].lat); // distance since last trackpoint
-				var interval=loc.time-trackpoints[t].time;
-				if(dist>0) speed=dist/interval; // current speed m/s
-				var direction=measure("heading",trackpoints[t].lon,trackpoints[t].lat,loc.lon,loc.lat); // heading since last trackpoint
-				var turn=Math.abs(direction-heading);
-				if(turn>180) turn=360-turn;
-				// notify('dist: '+dist+' moving:'+moving+' direction:'+direction);
-				lastLoc.lon=loc.lon;
-				duration=loc.time-trackpoints[0].time;
-			}
-			else speed=0;
-		}
-		lastLoc.time = loc.time;
-		lastLoc.lon=loc.lon;
-		lastLoc.lat = loc.lat;
-		if((dist>100)||(turn>30)) { // add trackpoint after 100m or when direction changes > 30*
-			distance+=dist;
-			heading=Math.round(direction);
-			addTP();
-			dist=0;
-		}
-		centreMap();
-	}
-	*/
 	
 	function locationError(error) {
 		var message="";
@@ -472,17 +412,14 @@
 	
 	// STOP TRACKING
 	function cease(event) {
-		notify("CEASE: tracking is "+tracking+"; measuring is "+measuring+"; "+trackpoints.length+" trackpoints");
+		notify("CEASE: tracking is "+tracking+" - "+trackpoints.length+" trackpoints");
 		if(tracking) {
 			map.stopLocate(); // NEW CODE replace...
-			// OLD CODE navigator.geolocation.clearWatch(geolocator);
 			id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
 			id("actionButton").removeEventListener("click", stopStart);
 			id("actionButton").addEventListener("click", getFix);
 		}
 		show('stopButton',false);
-		// show('measure',true);
-		// redraw();
 		if(nodes.length>5) { // offer to save route
 			notify("save route?");
 			id('saveName').value="";
