@@ -127,10 +127,10 @@
     	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
 	}).addTo(map);
 	
-	// TEST POLYLINE
+	/* TEST POLYLINE
 	var testTrack
 	var latlngs=[];
-	
+	*/
 	map.on('moveend',saveLoc);
 	map.on('zoom',saveZoom);
 	map.on('click',mapTap); // NEW
@@ -197,17 +197,14 @@
 	// TAP MAP
 	function mapTap(e) {
 		console.log('tap on map at '+e.latlng);
-		console.log('layerPoint: '+e.layerPoint);
-		console.log('containerPoint: '+e.containerPoint);
-		
-		// TEST POLYLINES
+		/* TEST POLYLINES
 		latlngs.push(e.latlng);
 		if(latlngs.length==2) {
 			console.log('polyline: '+latlngs);
 			testTrack=L.polyline(latlngs, {color: 'yellow'}).addTo(map);
 		}
 		if(latlngs.length>1) testTrack.setLatLngs(latlngs);
-		
+		*/
 		if(id('controls').style.display=='block') {
 			show('controls',false);
 			show('moreControls',false);
@@ -299,13 +296,11 @@
 		tp.time=loc.time;
 		trackpoints.push(tp);
 		if(trackpoints.length<2) return;
-		// NEW CODE
 		if(trackpoints.length==2) { // on second trackpoint, start drawing track on map
 			track=L.polyline([trackpoints[0].coords,trackpoints[1].coords],{color:'red'}).addTo(map);
 			// track.setStyle({stroke: true, strokeWeight: 5, color: 'black', opacity: 0.5, fill: false});
 		}
 		else if(trackpoints.length>2) track.addLatLng(tp.coords);
-		// OLD CODE redraw();
 	}
 	
 	// LOCATION FIX
