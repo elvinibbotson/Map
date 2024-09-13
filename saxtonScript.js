@@ -58,8 +58,16 @@
 	id('diagnostics').addEventListener('click', showNotifications);
 	*/
 	// OLD id('map').addEventListener('click',mapTap);
-	id('plusButton').addEventListener('click',zoomIn);
-	id('minusButton').addEventListener('click',zoomOut);
+	id('plusButton').addEventListener('click',function() {
+		map.zoomIn();
+		zoom=map.getZoom();
+		window.localStorage.setItem('zoom',zoom);
+	});
+	id('minusButton').addEventListener('click',function() {
+		map.zoomOut();
+		zoom=map.getZoom();
+		window.localStorage.setItem('zoom',zoom);
+	});
 	id("actionButton").addEventListener("click", getFix);
 	id("stopButton").addEventListener("click", cease);
 	id("saveButton").addEventListener("click", saver);
@@ -126,20 +134,22 @@
     	maxZoom: 20,
     	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
 	}).addTo(map);
-	
 	/* TEST POLYLINE
 	var testTrack
 	var latlngs=[];
 	*/
 	map.on('moveend',saveLoc);
-	map.on('zoom',saveZoom);
+	map.on('zoom',function(){
+		zoom=map.getZoom();
+		// console.log('save zoom: '+zoom);
+		window.localStorage.setItem('zoom',zoom);
+	});
 	map.on('click',mapTap); // NEW
 	map.on('locationfound',function(e) {
 		loc.coords=e.latlng;
 		centreMap();
 		console.log('centred at '+loc.coords+'; tracking is '+tracking);
 		if(!tracking) return;
-		loc.coords=e.latlng; // NEW replaces...
 		loc.alt=Math.round(e.altitude);
 		loc.time=e.timestamp;
 		console.log('location is '+loc.coords+' altitude: '+loc.alt+' time: '+loc.time);
@@ -186,14 +196,6 @@
 		console.log('location saved: '+lon+','+lat );
 	}
 	
-	// SAVE ZOOM
-	function saveZoom() {
-		// locus.setRadius(500/(4^zoom));
-		zoom=map.getZoom();
-		console.log('save zoom: '+zoom);
-		window.localStorage.setItem('zoom',zoom);
-	}
-	
 	// TAP MAP
 	function mapTap(e) {
 		console.log('tap on map at '+e.latlng);
@@ -216,18 +218,6 @@
 			show('moreButton',true);
 		}
 		
-	}
-	
-	// ZOOM IN
-	function zoomIn() {
-		map.zoomIn();
-		zoom=map.getZoom();
-	}
-	
-	// ZOOM OUT
-	function zoomOut() {
-		map.zoomOut();
-		zoom=map.getZoom();
 	}
 	
 	// LIST TRACKS
@@ -297,7 +287,7 @@
 		trackpoints.push(tp);
 		if(trackpoints.length<2) return;
 		if(trackpoints.length==2) { // on second trackpoint, start drawing track on map
-			track=L.polyline([trackpoints[0].coords,trackpoints[1].coords],{color:'red'}).addTo(map);
+			track=L.polyline([trackpoints[0].coords,trackpoints[1].coords],{color:'green'}).addTo(map);
 			// track.setStyle({stroke: true, strokeWeight: 5, color: 'black', opacity: 0.5, fill: false});
 		}
 		else if(trackpoints.length>2) track.addLatLng(tp.coords);
@@ -306,14 +296,7 @@
 	// LOCATION FIX
 	function getFix() { // get fix on current location
 	console.log('get a fix');
-		map.locate({watch: false, setView: true, maxZoom: 20}); // Leaflet method replaces...
-		/* OLD CODE
-		if(navigator.geolocation) {
-			console.log('get a fix');
-			var opt={enableHighAccuracy: true, timeout: 15000, maximumAge: 0};
-			navigator.geolocation.getCurrentPosition(gotoFix,locationError,opt);
-		}
-		*/
+		map.locate({watch: false, setView: false, enableHighAccuracy: true});
 		id("actionButton").innerHTML='<img src="goButton24px.svg"/>';
 		id("actionButton").removeEventListener("click", getFix);
 		id("actionButton").addEventListener("click", go);
@@ -357,7 +340,7 @@
 		heading=0;
 		speed=0;
 		notify("start tracking");
-		map.locate({watch:true, setView: true, maxZoom: 20})
+		map.locate({watch:true, setView: false, enableHighAccuracy: true})
 		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
 		id("actionButton").removeEventListener("click", go);
 		id("actionButton").addEventListener("click", stopStart);
@@ -409,7 +392,7 @@
 	function cease(event) {
 		notify("CEASE: tracking is "+tracking+" - "+trackpoints.length+" trackpoints");
 		if(tracking) {
-			map.stopLocate(); // NEW CODE replace...
+			map.stopLocate();
 			id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
 			id("actionButton").removeEventListener("click", stopStart);
 			id("actionButton").addEventListener("click", getFix);
@@ -435,183 +418,16 @@
 			show('saveDialog',true);
 		}
 	}
-
-    /* REDRAW MAP OVERLAY
-	function redraw() {
-		var i, p, x, y, r, d, t;
-		console.log("redraw - tracking is "+tracking);
-		mapCanvas.clearRect(0,0,sw,sh);
-		mapCanvas.lineWidth=5;
-		var gradient=mapCanvas.createLinearGradient(0,0,0,100);
-		gradient.addColorStop(0,'#333333');
-		gradient.addColorStop(1,'#33333300');
-		mapCanvas.fillStyle=gradient;
-		mapCanvas.fillRect(0,0,sw,100);
-		mapCanvas.fill();
-		mapCanvas.textBaseline='top';
-		mapCanvas.textAlign='left';
-		mapCanvas.fillStyle = 'white';
-		mapCanvas.font = '16px Sans-Serif';
-		var string=dm(loc.lat, true);
-		mapCanvas.fillText(string,45,5);
-		string=dm(loc.lon, false);
-		mapCanvas.fillText(string,45,25);
-		mapCanvas.textAlign='right';
-		if(loc.alt!=null) {
-			// string=(metric)?loc.alt+"m":Math.round(3.281*loc.alt)+"ft";
-			// mapCanvas.fillText(string,sw/2,5);
-			mapCanvas.fillText(loc.alt+"m",sw/2,5); // elevation in m
-		}
-		// draw current route as green line
-		mapCanvas.beginPath();
-	    mapCanvas.strokeStyle = 'rgba(0,255,0,0.5)';
-	    if(nodes.length>1) {
-			// notify("draw route - "+nodes.length+" nodes");
-	    	p=nodes[0];
-	    	// x = (p.lon - loc.lon) * 14400 + sw / 2;
-	    	// x=mapLeft-(mapW-p.lon)*14400;
-	    	x=sw/2+(p.lon-loc.lon)*14400;
-	    	// y = (loc.lat - p.lat) * 24000 + sh / 2;
-	    	// y=mapTop-(p.lat-mapN)*24000;
-	    	y=sh/2+(loc.lat-p.lat)*24000;
-	    	mapCanvas.moveTo(x, y);
-	    	for(i=1;i<nodes.length;i++) {
-	    		p=nodes[i];
-	       		// x = (p.lon - loc.lon) * 14400 + sw / 2;
-	       		// x=mapLeft-(mapW-p.lon)*14400;
-	       		x=sw/2+(p.lon-loc.lon)*14400;
-	       		// y = (loc.lat - p.lat) * 24000 + sh / 2;
-	       		// y=mapTop-(p.lat-mapN)*24000;
-	       		y=sh/2+(loc.lat-p.lat)*24000;
-	       		mapCanvas.lineTo(x, y);
-	    	}
-	    	mapCanvas.stroke();
-		}
-		// draw current track as blue line
-		mapCanvas.beginPath();
-		mapCanvas.strokeStyle = 'rgba(0,0,255,0.5)';
-	    if(trackpoints.length>1) {
-			// notify("draw track - "+trackpoints.length+" trackpoints");
-	    	p=trackpoints[0];
-	    	// x=mapLeft-(mapW-p.lon)*14400;
-	    	x=sw/2+(p.lon-loc.lon)*14400;
-	    	// y=mapTop-(p.lat-mapN)*24000;
-	    	y=sh/2+(loc.lat-p.lat)*24000;
-	    	mapCanvas.moveTo(x, y);
-	    	for(i=1;i<trackpoints.length;i++) {
-	    		p=trackpoints[i];
-	       		// x=mapLeft-(mapW-p.lon)*14400;
-	       		x=sw/2+(p.lon-loc.lon)*14400;
-	       		// y=mapTop-(p.lat-mapN)*24000;
-	       		y=sh/2+(loc.lat-p.lat)*24000;
-	       		mapCanvas.lineTo(x, y);
-	    	}
-			if(tracking) mapCanvas.lineTo(sw/2,sh/2);
-		}
-		mapCanvas.rect(sw/2-8,sh/2-8,16,16);	 // blue square at current location
-		mapCanvas.stroke();
-		if(distance>0) {
-			mapCanvas.font='Bold 16px Sans-Serif';
-			// mapCanvas.textAlign = 'left';
-			d=distance+dist;
-			if(metric) { // metric units
-				d=Math.round(d);
-				if(d<1000) mapCanvas.fillText('m',0.75*sw,35);
-				else {
-					mapCanvas.fillText('km',0.75*sw,35);
-					d=decimal(d/1000);
-				}
-			}
-			else { // miles & yards
-				d=Math.round(d*1.093613); // nearest yard to latest trackpoint
-				if(d<1760) mapCanvas.fillText('yds',0.75*sw,35);
-				else {
-					mapCanvas.fillText('miles',0.75*sw,35);
-					d=decimal(d/1760);
-				}
-			}
-			// draw duration if tracking or track loaded
-			if((duration>0)&&(trackpoints.length>0)) {
-			// if(tracking && trackpoints.length>0) {
-				mapCanvas.textAlign='right';
-				t=Math.floor(moving/60);
-				mapCanvas.font='Bold 24px Sans-Serif';
-				var text=Math.floor(t/60)+":";
-				t%=60;
-				if(t<10) text+="0";
-				text+=t;
-				mapCanvas.fillText(text, sw-10, 5);
-				text="+";
-				t=Math.floor((duration-moving)/60);
-				text+=(Math.floor(t/60)+":");
-				t%=60;
-				if(t<10) text+= "0";
-				text+=t;
-				mapCanvas.fillText(text, sw-10, 30);
-			}
-			mapCanvas.font = 'Bold 36px Sans-Serif';
-			mapCanvas.fillText(d,0.75*sw,2);
-			mapCanvas.font = 'Bold 16px Sans-Serif';
-			mapCanvas.textAlign='right';
-		}
-		if(tracking && speed>0) { // show current speed and direction
-			gradient=mapCanvas.createLinearGradient(0,sh-150,0,sh);
-			gradient.addColorStop(0,'#00000000');
-			gradient.addColorStop(1,'black');
-			mapCanvas.fillStyle = gradient;
-			mapCanvas.fillRect(0,sh-150,sw,sh);
-			mapCanvas.fillStyle='white';
-			mapCanvas.textBaseline='alphabetic';
-			mapCanvas.textAlign='left';
-			// mapCanvas.font='Bold 36px Sans-Serif';
-			mapCanvas.font='Bold 36px Sans-Serif';
-			d=Math.round((heading+11.25)/22.5); // 16 compass directions: N, NNE, NE,...
-			d=compass.substr(d*3,3)+" "; // compass point eg. NNE
-			d+=Math.round(((metric)?3.6:2.237)*speed);
-			// notify('d: '+d);
-			d+=(metric)?"kph":"mph";
-			mapCanvas.fillText(d,10,sh-10);
-		}
-	}
-	*/
 	
 	// POSITION MAP
 	function centreMap() { // move map to current location
 		// notify("centre map at N"+loc.lat+" E"+loc.lon);
 		console.log('centreMap at '+loc.coords);
-		map.setView(loc.coords);
+		map.setView(loc.coords,zoom);
 		var i, x, y;
-		// new code for 3x3 tiles
-		/*
-		var row=Math.floor((mapN-loc.lat)*30); // centre tile
-		var col=Math.floor((loc.lon-mapW)*20);
-		row--; // top/left tile of 3x3 grid
-		col--;
-		// notify("row "+row+"; col "+col);
-		for(x=0;x<3;x++) { // populate 3x3 tile grid
-			for(y=0;y<3;y++) {
-				if(((row+y)<0)||((row+y>9))||((col+x)<0)||((col+x)>9))
-					id("img"+y+x).src="tiles/blank.jpg";
-				else id("img"+y+x).src="tiles/"+(row+y)+(col+x)+".jpg";
-			}
-		}
-		var N=mapN-row/30;
-		var W=mapW+col/20;
-		// notify("N: "+N+"; W:"+W);
-		mapLeft=(W-loc.lon)*14400+sw/2;
-		mapTop=(loc.lat-N)*24000+sh/2;
-		console.log("map position: "+mapLeft+", "+mapTop);
-		var map=id("map");
-		map.style.left = mapLeft+"px";
-		map.style.top = mapTop+"px";
-		redraw();
-		*/
-		// json=JSON.stringify(loc);
-		// window.localStorage.setItem('saxtonLocation', json);
 		saveLoc();
 	}
 
-	
 	// SHOW TRACK PROFILES
 	function profiles() {
 		// notify('show track profiles?');
@@ -852,7 +668,7 @@
 	
 	function notify(note) {
 		notifications.push(note);
-		while(notifications.length>50) notifications.shift();
+		while(notifications.length>30) notifications.shift();
 		console.log(note);
 	}
 	
