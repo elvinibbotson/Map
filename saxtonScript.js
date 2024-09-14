@@ -1,9 +1,7 @@
 	"use strict";
-	var sw, sh; // usable screen width and height
 	var map; // CyclOSM map
-	var profilesCanvas; // canvas for track altitude & speed profiles
+	var profilesCanvas; // canvas for track altitude profiles
 	var x, y, x0, y0; // horizontal and vertical coordinates/measurements
-	var offset = {};
 	var json;
 	var measuring=false;
 	var enroute=false;
@@ -15,14 +13,12 @@
 	var trackpoints=[]; // array of track objects - locations, altitudes, timestamps, lengths, durations,...
 	var routeNames=[];
 	var nodes=[]; // array of route node locations
-	var metric=true;
-    var geolocator=null;
-	var loc={};
+	var unit='km';
 	var zoom=10;
+	var loc={};
 	var lastLoc={};
 	var fix;
-	var fixes=[];
-	var lon, lat, dist, distance, heading, speed, duration, moving; // fix & track data
+	var lng, lat, dist, distance, duration, moving; // fix & track data
 	var deg = "&#176;";
 	var compass="N  NNENE ENEE  ESESE SSES  SSWSW WSWW  WNWNW NNWN  ";
 	var months="JanFebMarAprMayJunJulAugSepOctNovDec";
@@ -39,10 +35,10 @@
 		climb=null;
 		nodes=[];
 		var node={};
-		node.lon=loc.lon;
+		node.lng=loc.lng;
 		node.lat=loc.lat;
 		nodes.push(node);
-		lastLoc.lon=loc.lon;
+		lastLoc.lng=loc.lng;
 		lastLoc.lat=loc.lat;
 		notify("measuring");
 		show('stopButton',true);
@@ -51,7 +47,7 @@
 	});
 	id("metric").addEventListener("change", function() {
 		metric=this.checked;
-		window.localStorage.setItem('metric',metric);
+		window.localStorage.setItem('unit',metric);
 		console.log("metric is "+metric);
 		show('menu',false);
 	});
@@ -62,11 +58,13 @@
 		map.zoomIn();
 		zoom=map.getZoom();
 		window.localStorage.setItem('zoom',zoom);
+		console.log('zoom in to '+zoom);
 	});
 	id('minusButton').addEventListener('click',function() {
 		map.zoomOut();
 		zoom=map.getZoom();
 		window.localStorage.setItem('zoom',zoom);
+		console.log('zoom out to '+zoom);
 	});
 	id("actionButton").addEventListener("click", getFix);
 	id("stopButton").addEventListener("click", cease);
@@ -86,10 +84,10 @@
 	    trackpoints=[];
 	    nodes=[];
 	    show('actionButton',true);
-	    redraw();
+	    // redraw();
 	});
-	sw=window.innerWidth;
-	sh=window.innerHeight;
+	var sw=window.innerWidth;
+	var sh=window.innerHeight;
 	console.log("screen size: "+sw+"x"+sh);
 	id('map').style.width=sw+'px';
 	id('map').style.height=sh+'px';
@@ -112,17 +110,19 @@
 	show('unitButton',true);
 	show('helpButton',true);
 	lat=window.localStorage.getItem('lat');
-	lon=window.localStorage.getItem('lon');
-	console.log('saved location: '+lon+','+lat);
-	if(lon===null || lat===null) {
-		lon=-1.75;
+	lng=window.localStorage.getItem('lng');
+	console.log('saved location: '+lng+','+lat);
+	if(lng===null || lat===null) {
+		lng=-1.75;
 		lat=53.5;
 	}
-	loc.coords=[lat,lon]; // WAS L.LatLng(lat,lon); // NEW use LatLng format
+	loc.coords=[lat,lng];
 	zoom=window.localStorage.getItem('zoom');
 	console.log('saved zoom: '+zoom);
 	if(zoom===null) zoom=10;
-	map=L.map('map',{zoomControl: false}).setView([lat,lon],zoom); // default location in Derbyshire
+	unit=window.localStorage.getItem('unit');
+	console.log('unit: '+unit);
+	map=L.map('map',{zoomControl: false}).setView([lat,lng],zoom); // default location in Derbyshire
 	/* standard OSM
 	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     	maxZoom: 19,
@@ -153,7 +153,6 @@
 		loc.alt=Math.round(e.altitude);
 		loc.time=e.timestamp;
 		console.log('location is '+loc.coords+' altitude: '+loc.alt+' time: '+loc.time);
-		speed=e.speed;
 		if(trackpoints.length<1) {
 			addTP(loc.coords); // ...add first trackpoint
 			lastLoc.coords=loc.coords;
@@ -166,7 +165,9 @@
 				addTP(loc.coords);
 				lastLoc.coords=loc.coords;
 			}
+			// DISPLAY DISTANCE, SPEED FROM e.speed, AND DURATION;
 		}
+		
 	});
 	map.on('locationerror',onLocationError);
 	function onLocationError(e) {
@@ -190,10 +191,10 @@
 		var location=map.getCenter();
 		console.log('map location: '+location);
 		lat=location.lat;
-		lon=location.lng;
+		lng=location.lng;
 		window.localStorage.setItem('lat',lat);
-		window.localStorage.setItem('lon',lon);
-		console.log('location saved: '+lon+','+lat );
+		window.localStorage.setItem('lng',lng);
+		console.log('location saved: '+lng+','+lat );
 	}
 	
 	// TAP MAP
@@ -287,7 +288,7 @@
 		trackpoints.push(tp);
 		if(trackpoints.length<2) return;
 		if(trackpoints.length==2) { // on second trackpoint, start drawing track on map
-			track=L.polyline([trackpoints[0].coords,trackpoints[1].coords],{color:'green'}).addTo(map);
+			track=L.polyline([trackpoints[0].coords,trackpoints[1].coords],{color:'black',strokeWeight:3,opacity:0.5}).addTo(map);
 			// track.setStyle({stroke: true, strokeWeight: 5, color: 'black', opacity: 0.5, fill: false});
 		}
 		else if(trackpoints.length>2) track.addLatLng(tp.coords);
@@ -306,11 +307,11 @@
 	/*
 	function gotoFix(position) {
 		console.log("go to Fix");
-		loc.lon=position.coords.longitude;
+		loc.lng=position.coords.longitude;
 		loc.lat=position.coords.latitude;
 		loc.alt=position.coords.altitude;
 		if(loc.alt!=null) loc.alt=Math.round(loc.alt);
-		notify("fix at "+loc.lon+","+loc.lat+","+loc.alt);
+		notify("fix at "+loc.lng+","+loc.lat+","+loc.alt);
 		centreMap();
 		id("actionButton").innerHTML='<img src="goButton24px.svg"/>';
 		id("actionButton").removeEventListener("click", getFix);
@@ -337,8 +338,7 @@
 		lastLoc={};
 		distance=0;
 		duration=moving=0;
-		heading=0;
-		speed=0;
+		// speed=0;
 		notify("start tracking");
 		map.locate({watch:true, setView: false, enableHighAccuracy: true})
 		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
@@ -391,12 +391,10 @@
 	// STOP TRACKING
 	function cease(event) {
 		notify("CEASE: tracking is "+tracking+" - "+trackpoints.length+" trackpoints");
-		if(tracking) {
-			map.stopLocate();
-			id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
-			id("actionButton").removeEventListener("click", stopStart);
-			id("actionButton").addEventListener("click", getFix);
-		}
+		map.stopLocate();
+		id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
+		id("actionButton").removeEventListener("click", stopStart);
+		id("actionButton").addEventListener("click", getFix);
 		show('stopButton',false);
 		if(nodes.length>5) { // offer to save route
 			notify("save route?");
@@ -421,7 +419,7 @@
 	
 	// POSITION MAP
 	function centreMap() { // move map to current location
-		// notify("centre map at N"+loc.lat+" E"+loc.lon);
+		// notify("centre map at N"+loc.lat+" E"+loc.lng);
 		console.log('centreMap at '+loc.coords);
 		map.setView(loc.coords,zoom);
 		var i, x, y;
@@ -454,7 +452,7 @@
 		var t=0; // time (sec)
 		var s=0; // compute maximium speed (km/hr)
 		for (i=1;i<n;i++) { // for each trackpoint
-			d=measure('distance',trackpoints[i-1].lon,trackpoints[i-1].lat,trackpoints[i].lon,trackpoints[i].lat);
+			d=measure('distance',trackpoints[i-1].lng,trackpoints[i-1].lat,trackpoints[i].lng,trackpoints[i].lat);
 			// x+=d;
 			t=trackpoints[i].time-trackpoints[i-1].time;
 			s=3.6*d/t; // km/hr
@@ -471,7 +469,7 @@
 			t=trackpoints[i];
 			if(t.alt<minAlt) minAlt=t.alt;
 			if(t.alt>maxAlt) maxAlt=t.alt;
-			if(i>0) d+=measure('distance',t.lon,t.lat,trackpoints[i-1].lon,trackpoints[i-1].lat);
+			if(i>0) d+=measure('distance',t.lng,t.lat,trackpoints[i-1].lng,trackpoints[i-1].lat);
 			// notify('i:'+i+' d:'+d);
 			x=w*d/distance;
 			y=0.8*h-h*t.alt*20/distance;
@@ -485,9 +483,9 @@
 		profilesCanvas.font='16px Sans-Serif';
 		profilesCanvas.textBaseline='alphabetic';
 		profilesCanvas.fillStyle='white';
-		maxSpeed=Math.round((metric)?maxSpeed:maxSpeed*0.62137);
-		avSpeed=Math.round((metric)?avSpeed:avSpeed*0.62137);
-		profilesCanvas.fillText(minAlt+'-'+maxAlt+'m ;'+maxSpeed+' max '+avSpeed+' average '+((metric)?'kph':'mph'),10,h-5);
+		// maxSpeed=Math.round((metric)?maxSpeed:maxSpeed*0.62137);
+		// avSpeed=Math.round((metric)?avSpeed:avSpeed*0.62137);
+		profilesCanvas.fillText(minAlt+'-'+maxAlt+'m',10,h-5);
 		// notify("show profiles");
 		show('profilesPanel',true);
 	}
@@ -552,8 +550,6 @@
 		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"sec; "+moving+"seconds moving");
 		show('listScreen',false);
 		loc.coords=trackpoints[0].coords; // NEW
-		// loc.lon=trackpoints[0].lon; // move to start of track
-		// loc.lat=trackpoints[0].lat;
 		centreMap();
 		// REPLACE WITH track POLYLINE redraw();
 		show('actionButton',false);
@@ -594,8 +590,6 @@
 		notify("load route with "+nodes.length+" nodes; length: "+distance+"m");
 		show('listScreen',false);
 		loc.coords=nodes[0].coords; // NEW
-		// loc.lon=nodes[0].lon; // move to start of route
-		// loc.lat=nodes[0].lat;
 		centreMap();
 		// redraw();
 	}
@@ -640,6 +634,7 @@
 	    return ddmm;
 	}
 	
+	/*
 	function measure(type,x0,y0,x,y) {
 		var dx = x - x0;
 	    var dy = y - y0;
@@ -657,6 +652,7 @@
         }
         return h;
 	}
+	*/
 	
 	function decimal(n) {
 	    return Math.floor(n * 10 + 0.5) / 10;

@@ -52,9 +52,9 @@ input, label, select {
 	position: fixed;
 	width: 50px;
 	height: 50px;
-	border: 0px solid #222;
-	border-radius: 15px;
-	background: #333333AA;
+	border: 2px solid white;
+	border-radius: 10px;
+	background: gray;
 	z-index: 25;
 	display: none;
 }
