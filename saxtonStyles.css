@@ -46,7 +46,7 @@ input, label, select {
 .heavy {
       font: bold 30px sans-serif;
       fill: #FFFFFF;
-    } 
+    }
 
 .round-button {
 	position: fixed;
@@ -161,6 +161,25 @@ input, label, select {
 	width: 100%;
 	height: 70px;
 	display: none;
+	
+}
+
+#duration {
+	position:  fixed;
+	left: 20px;
+	bottom: 20px;
+}
+
+#distance {
+	position:  fixed;
+	left: 40%;
+	bottom: 20px;
+}
+
+#speed {
+	position:  fixed;
+	right: 20px;
+	bottom: 20px;
 }
 
 #map {
