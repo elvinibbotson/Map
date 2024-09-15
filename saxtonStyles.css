@@ -174,12 +174,43 @@ input, label, select {
 	z-index: 25;
 }
 
+#dist {
+	position: absolute;
+	left: 40%;
+	top: 10px;
+	width: 25%;
+	height: 30px;
+	font-size: 16px;
+	color: silver;
+}
+
+#perhour {
+	position: absolute;
+	right: 20px;
+	top: 10px;
+	width: 25%;
+	height: 30px;
+	font-size: 16px;
+	color: silver;
+}
+
+#duration {
+	left: 20px;
+}
+#distance {
+	left: 33%;
+}
+#speed {
+	right: 20px;
+}
+
 .gauge {
 	position: absolute;
 	width: 33%;
+	top: 20px;
 	height: 100%;
 	font-weight: bold;
-	font-size: 50px;
+	font-size: 32px;
 	color: white;
 }
 

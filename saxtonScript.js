@@ -121,6 +121,14 @@
 	console.log('saved zoom: '+zoom);
 	if(zoom===null) zoom=10;
 	unit=window.localStorage.getItem('unit');
+	if(unit=='km') {
+		id('dist').innerText='km';
+		id('perhour').innerText='kph';
+	}
+	else {
+		id('dist').innerText='mi';
+		id('perhour').innertext='mph';
+	}
 	console.log('unit: '+unit);
 	map=L.map('map',{zoomControl: false}).setView([lat,lng],zoom); // default location in Derbyshire
 	/* standard OSM
@@ -141,7 +149,6 @@
 	map.on('moveend',saveLoc);
 	map.on('zoom',function(){
 		zoom=map.getZoom();
-		// console.log('save zoom: '+zoom);
 		window.localStorage.setItem('zoom',zoom);
 	});
 	map.on('click',mapTap); // NEW
@@ -166,6 +173,25 @@
 				lastLoc.coords=loc.coords;
 			}
 			// DISPLAY DISTANCE, SPEED FROM e.speed, AND DURATION;
+			var txt='';
+			var duration=(loc.time-trackpoints[0].time)/3600000; // hours
+			txt=Math.floor(duration)+':'; // whole hours
+			duration%=60; // minutes
+			if(duration<10) txt+='0';
+			txt+=duration;
+			id('duration').innertext=txt; // H:MM
+			dist=distance/1000; // km
+			if(unit=='mi') dist*0.621371192; // miles
+			txt=Math.floor(dist)+'.'; // whole km/mi
+			dist%=1;
+			dist=Math.round(dist*10)/10; // tenths
+			txt+=dist+unit;
+			id('distance').innerText=Math.round(dist*10)/10;
+			var speed=e.speed*3.6; // kph
+			console.log('e.speed: '+e.speed);
+			if(!speed) speed=0;
+			if(unit=='mi') speed*=0.621371192; // mph
+			id('speed').innerText=Math.round(speed);
 		}
 		
 	});
@@ -342,7 +368,9 @@
 		show('moreControls', false);
 		
 		// TESTING
-		id('distance').innerText='5.3km';
+		id('duration').innerText='0:00';
+		id('distance').innerText='0';
+		id('speed').innerText='0';
 		// speed=0;
 		notify("start tracking");
 		map.locate({watch:true, setView: false, enableHighAccuracy: true})
