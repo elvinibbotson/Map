@@ -46,7 +46,7 @@ input, label, select {
 .heavy {
       font: bold 30px sans-serif;
       fill: #FFFFFF;
-    }
+    } 
 
 .round-button {
 	position: fixed;
@@ -59,7 +59,17 @@ input, label, select {
 	display: none;
 }
 
-.round-button img {
+.clear-button {
+	position: fixed;
+	width: 50px;
+	height: 50px;
+	border: 0px solid black;
+	background: none;
+	z-index: 25;
+	display: none;
+}
+
+.round-button .clear-button img {
 	display: block;
 	width: 24px;
 	height: 24px;
@@ -127,7 +137,7 @@ input, label, select {
 	height: 50px;
 	border: 0px solid 0;
 	border-radius: 15px;
-	background-color: #333333AA;
+	background-color: gray;
 	z-index: 25;
 	display: none;
 	font-size: 1em;
@@ -137,49 +147,40 @@ input, label, select {
 #routeButton {
 	top: 20px;
 	left: 20px;
-	background: none;
 }
 #routesButton {
 	top: 20px;
 	left: 90px;
-	background: none;
 }
 #unitButton {
 	top: 20px;
 	left: 160px;
-	background: none;
 }
 #helpButton {
 	top: 20px;
 	left: 230px;
-	background: none;
 }
 
 #dash {
-	left: 0;
+	position: fixed;
 	top: 0;
+	left: 0;
 	width: 100%;
 	height: 70px;
+	border: 0px solid 0;
+	background-color: #00000088;
+	z-index: 25;
 	display: none;
-	
+	z-index: 25;
 }
 
-#duration {
-	position:  fixed;
-	left: 20px;
-	bottom: 20px;
-}
-
-#distance {
-	position:  fixed;
-	left: 40%;
-	bottom: 20px;
-}
-
-#speed {
-	position:  fixed;
-	right: 20px;
-	bottom: 20px;
+.gauge {
+	position: absolute;
+	width: 33%;
+	height: 100%;
+	font-weight: bold;
+	font-size: 50px;
+	color: white;
 }
 
 #map {

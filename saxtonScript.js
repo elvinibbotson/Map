@@ -160,20 +160,12 @@
 		else {
 			console.log('lastLoc: '+lastLoc.coords+'; fix at '+loc.coords);
 			dist=Math.round(map.distance(loc.coords,lastLoc.coords));
-			console.log('fix - distance: '+dist+'m');
+			notify('fix - distance: '+dist+'m');
 			if(dist>10) { // trackpoints every 10m INCREASE THIS?
 				addTP(loc.coords);
 				lastLoc.coords=loc.coords;
 			}
 			// DISPLAY DISTANCE, SPEED FROM e.speed, AND DURATION;
-			var duration=(loc.time-trackpoints[0].time)/3600000; // hours
-			id('duration').innertext=Math.floor(duration)+':'+Math.floor(duration%60);
-			dist=distance/1000; // km
-			if(unit=='mi') dist*0.621371192; // miles
-			id('distance').innerText=Math.round(dist*10)/10+unit;
-			var speed=e.speed*3.6; // kph
-			if(unit=='mi') speed*=0.621371192; // mph
-			id('speed').innerText=Math.round(e.speed)+unit+'/hr';
 		}
 		
 	});
@@ -296,7 +288,7 @@
 		trackpoints.push(tp);
 		if(trackpoints.length<2) return;
 		if(trackpoints.length==2) { // on second trackpoint, start drawing track on map
-			track=L.polyline([trackpoints[0].coords,trackpoints[1].coords],{color:'black',strokeWeight:5,opacity:0.25}).addTo(map);
+			track=L.polyline([trackpoints[0].coords,trackpoints[1].coords],{color:'black',strokeWeight:3,opacity:0.5}).addTo(map);
 			// track.setStyle({stroke: true, strokeWeight: 5, color: 'black', opacity: 0.5, fill: false});
 		}
 		else if(trackpoints.length>2) track.addLatLng(tp.coords);
@@ -345,7 +337,12 @@
 		loc={};
 		lastLoc={};
 		distance=0;
-		duration=moving=0;
+		// duration=moving=0;
+		show('dash',true);
+		show('moreControls', false);
+		
+		// TESTING
+		id('distance').innerText='5.3km';
 		// speed=0;
 		notify("start tracking");
 		map.locate({watch:true, setView: false, enableHighAccuracy: true})
@@ -400,6 +397,8 @@
 	function cease(event) {
 		notify("CEASE: tracking is "+tracking+" - "+trackpoints.length+" trackpoints");
 		map.stopLocate();
+		show('dash',false);
+		show('moreControls', true);
 		id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
 		id("actionButton").removeEventListener("click", stopStart);
 		id("actionButton").addEventListener("click", getFix);
@@ -667,6 +666,7 @@
 	}
 	
 	function show(element,visible) {
+//		console.log('show '+element+' - '+visible);
 	    id(element).style.display=(visible)?'block':'none';
 	}
 	
