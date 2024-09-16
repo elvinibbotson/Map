@@ -18,7 +18,7 @@
 	var loc={};
 	var lastLoc={};
 	var fix;
-	var lng, lat, dist, distance, duration, moving; // fix & track data
+	var lng, lat, dist, distance, moving; // fix & track data
 	var deg = "&#176;";
 	var compass="N  NNENE ENEE  ESESE SSES  SSWSW WSWW  WNWNW NNWN  ";
 	var months="JanFebMarAprMayJunJulAugSepOctNovDec";
@@ -171,10 +171,10 @@
 		loc.latlng=e.latlng;
 		centreMap();
 		console.log('centred at '+loc.latlng+'; tracking is '+tracking);
-		if(!tracking) return;
 		loc.alt=Math.round(e.altitude);
 		loc.time=e.timestamp;
 		console.log('location is '+loc.latlng+' altitude: '+loc.alt+' time: '+loc.time);
+		if(!tracking) return;
 		if(trackpoints.length<1) {
 			addTP(loc.latlng); // ...add first trackpoint
 			lastLoc.latlng=loc.latlng;
@@ -186,24 +186,24 @@
 			if(dist>10) { // trackpoints every 10m INCREASE THIS?
 				addTP(loc.latlng);
 				lastLoc.latlng=loc.latlng;
+				distance+=dist;
 			}
-			// DISPLAY DISTANCE, SPEED FROM e.speed, AND DURATION;
 			var txt='';
-			var duration=(loc.time-trackpoints[0].time)/3600000; // hours
-			txt=Math.floor(duration)+':'; // whole hours
+			var duration=Math.floor(loc.time-trackpoints[0].time)/60000; // minutes
+			txt=Math.floor(duration/60)+':'; // HH:
+			console.log('hours: '+txt);
 			duration%=60; // minutes
+			duration=Math.floor(duration);
 			if(duration<10) txt+='0';
-			txt+=duration;
-			id('duration').innertext=txt; // H:MM
-			dist=distance/1000; // km
-			if(unit=='mi') dist*0.621371192; // miles
-			txt=Math.floor(dist)+'.'; // whole km/mi
-			dist%=1;
-			dist=Math.round(dist*10)/10; // tenths
-			txt+=dist+unit;
-			id('distance').innerText=Math.round(dist*10)/10;
+			txt+=duration; // HH:MM
+			console.log('duration: '+txt);
+			id('duration').innerText=txt;
+			dist=distance/1000; // km 
+			if(unit=='mi') dist*=0.621371192; // miles
+			console.log('distance: '+dist);
+			id('distance').innerText=Math.floor(dist*10)/10; // 1 decimal
 			var speed=e.speed*3.6; // kph
-			console.log('e.speed: '+e.speed);
+			console.log('speed: '+speed);
 			if(!speed) speed=0;
 			if(unit=='mi') speed*=0.621371192; // mph
 			id('speed').innerText=Math.round(speed);
@@ -384,7 +384,6 @@
 		loc={};
 		lastLoc={};
 		distance=0;
-		// duration=moving=0;
 		show('dash',true);
 		show('moreControls', false);
 		
