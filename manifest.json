@@ -1,6 +1,6 @@
 {
   "short_name": "saxton",
-  "version": 2,
+  "version": "2",
   "icons": [{
 		"src": "saxton192.png",
 		"sizes": "192x192",

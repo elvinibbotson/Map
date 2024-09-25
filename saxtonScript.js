@@ -18,89 +18,88 @@
 	var loc={};
 	var lastLoc={};
 	var fix;
-	var lng, lat, dist, distance, moving; // fix & track data
+	var lng,lat,dist,distance; // fix & track data
 	var deg = "&#176;";
 	var compass="N  NNENE ENEE  ESESE SSES  SSWSW WSWW  WNWNW NNWN  ";
 	var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 	var notifications=[];
 	
 	// EVENT HANDLERS
-	/* REVISE ALL THESE
-	id("tracks").addEventListener("click", listTracks);
-	id("routes").addEventListener("click", listRoutes);
-    id("measure").addEventListener("click",function() {
-		routing=true;
-		distance=0;
-		dist=0;
-		nodes=[];
-		var node={};
-		node.lng=loc.lng;
-		node.lat=loc.lat;
-		nodes.push(node);
-		lastLoc.lng=loc.lng;
-		lastLoc.lat=loc.lat;
-		notify("routing");
-		show('stopButton',true);
-		show('actionButton',false);
-		show('menu',false);
-	});
-	id("metric").addEventListener("change", function() {
-		metric=this.checked;
-		window.localStorage.setItem('unit',metric);
-		console.log("metric is "+metric);
-		show('menu',false);
-	});
-	id('diagnostics').addEventListener('click', showNotifications);
-	*/
-	// OLD id('map').addEventListener('click',mapTap);
-	id('plusButton').addEventListener('click',function() {
+	id('plusButton').addEventListener('click',function(){
 		map.zoomIn();
 		zoom=map.getZoom();
 		window.localStorage.setItem('zoom',zoom);
 		console.log('zoom in to '+zoom);
 	});
-	id('minusButton').addEventListener('click',function() {
+	id('minusButton').addEventListener('click',function(){
 		map.zoomOut();
 		zoom=map.getZoom();
 		window.localStorage.setItem('zoom',zoom);
 		console.log('zoom out to '+zoom);
 	});
-	id("actionButton").addEventListener("click", getFix);
-	id("stopButton").addEventListener("click", cease);
-	id("saveButton").addEventListener("click", saver);
-	id('moreButton').addEventListener('click',function() {
+	id("actionButton").addEventListener("click",getFix);
+	id("stopButton").addEventListener("click",cease);
+	id("saveButton").addEventListener("click",saver);
+	id('moreButton').addEventListener('click',function(){
 		show('moreButton',false);
 		id('more').style.display='block';
 	});
-	id('routeButton').addEventListener('click',function() {
+	id('routeButton').addEventListener('click',function(){
 		routing=true;
 		distance=0;
 		dist=0;
+		lastLoc={};
 		nodes=[];
 		var node={};
-		// node.lng=loc.lng;
-		// node.lat=loc.lat;
-		// nodes.push(node);
-		// lastLoc.lng=loc.lng;
-		// lastLoc.lat=loc.lat;
 		notify("routing");
-		show('stopButton',true);
+		show('stopButton',false);
 		show('actionButton',false);
 		show('moreControls',false);
+		// show('routeLength',true);
+		show('dash',true);
+		// show('duration',false);
+		id('duration').innerText='route';
+		show('speed',false);
+		show('finish',true);
+		if(track!==null) track.remove(); // remove any earlier route
 	});
-	id('helpButton').addEventListener('click',showNotifications);
-	id("cancelButton").addEventListener("click", function() {
-	  show('saveDialog',false);
-	  routing=false;
-	  nodes=[];
-	});
-	id('closeButton').addEventListener('click', function() {
+	id('finish').addEventListener('click',function(){
+		notify("stop routing with "+nodes.length+" nodes");
+		routing=false;
+		show('duration',true);
+		show('speed',true);
+		show('dash',false);
+		show('actionButton',true);
+		if(nodes.length>5) { // offer to save route
+			notify("save route?");
+			id('saveName').value="";
+			show('saveDialog',true);
+		}
+		else track.remove(); // do not retain routes <5 nodes
+	})
+	id('routesButton').addEventListener('click',listRoutes);
+	id('closeButton').addEventListener('click',function(){
 	    show('listScreen',false);
 	    trackpoints=[];
 	    nodes=[];
 	    show('actionButton',true);
 	    // redraw();
 	});
+	id('loadButton').addEventListener('click',loadRoute);
+	// ADD EVENTS FOR renameButton, refineButton and removeButton
+	id('unitButton').addEventListener('click',function(){
+		if(unit=='km') unit='mi';
+		else unit='km'; // toggle distance unit
+		id('unitButton').innerText=unit;
+		window.localStorage.setItem('unit',unit);
+	});
+	id('helpButton').addEventListener('click',showNotifications);
+	id("cancelButton").addEventListener("click", function(){
+	  show('saveDialog',false);
+	  routing=false;
+	  nodes=[];
+	});
+	
 	var sw=window.innerWidth;
 	var sh=window.innerHeight;
 	console.log("screen size: "+sw+"x"+sh);
@@ -136,15 +135,8 @@
 	console.log('saved zoom: '+zoom);
 	if(zoom===null) zoom=10;
 	unit=window.localStorage.getItem('unit');
-	if(unit=='km') {
-		id('dist').innerText='km';
-		id('perhour').innerText='kph';
-	}
-	else {
-		id('dist').innerText='mi';
-		id('perhour').innertext='mph';
-	}
 	console.log('unit: '+unit);
+	id('unitButton').innerText=unit;
 	map=L.map('map',{zoomControl: false}).setView([lat,lng],zoom); // default location in Derbyshire
 	/* standard OSM
 	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -201,12 +193,18 @@
 			dist=distance/1000; // km 
 			if(unit=='mi') dist*=0.621371192; // miles
 			console.log('distance: '+dist);
-			id('distance').innerText=Math.floor(dist*10)/10; // 1 decimal
+			txt=Math.floor(dist*10)/10;
+			if(unit=='km') txt+=' kph';
+			else txt+=' mph';
+			id('distance').innerText=txt; // 1 decimal
 			var speed=e.speed*3.6; // kph
 			console.log('speed: '+speed);
 			if(!speed) speed=0;
 			if(unit=='mi') speed*=0.621371192; // mph
-			id('speed').innerText=Math.round(speed);
+			txt=Math.round(speed);
+			if(unit=='km') txt+=' kph';
+			else txt+=' mph';
+			id('speed').innerText=txt;
 		}
 		
 	});
@@ -245,9 +243,18 @@
 			var node={};
 			node.latlng=e.latlng;
 			nodes.push(node);
-			if(nodes.length<2) return;
-			if(nodes.length==2) track=L.polyline([nodes[0].latlng,nodes[1].latlng],{color:'black',weight:9,opacity:0.25}).addTo(map);
+			if(nodes.length<2) {
+				lastLoc.latlng=e.latlng;
+				return;
+			}
+			dist=Math.round(map.distance(e.latlng,lastLoc.latlng));
+			lastLoc.latlng=e.latlng;
+			distance+=dist;
+			if(nodes.length==2) track=L.polyline([nodes[0].latlng,nodes[1].latlng],{color:'green',weight:9,opacity:0.25}).addTo(map);
 			else if(nodes.length>2) track.addLatLng(node.latlng);
+			dist=distance/1000; // km
+			if(unit=='mi') dist*=0.621371192; // miles
+			id('distance').innerText=Math.round(dist*10)/10+unit;
 			console.log(nodes.length+' nodes in route');
 		}
 		/* TEST POLYLINES
@@ -271,7 +278,7 @@
 		
 	}
 	
-	// LIST TRACKS
+	/* LIST TRACKS
 	function listTracks() {
 	    // show('menu',false);
 		notify('list '+trackNames.length+' tracks');
@@ -301,15 +308,19 @@
   		show('listScreen',true);
 		notify('track list populated with '+trackNames.length+' tracks');
 	}
-	
+	*/
 	// LIST ROUTES
 	function listRoutes() {
-	    // show('menu',false);
 		console.log('list '+routeNames.length+' routes');
 		if(routeNames.length<1) return;
-		id('list').innerHTML="<li class='listItem'><b>ROUTES</b></li>";
+		id('list').innerHTML='';
 		for(var i=0; i<routeNames.length; i++) {
   			var listItem = document.createElement('li');
+  			// NEW CODE...
+  			listItem.index=i;
+  			listItem.innerText=routeNames[i];
+  			listItem.addEventListener('click',function(){listIndex=this.index; showRouteDetail();}); // select a route
+  			/* OLD CODE
   			listItem.classList.add('listItem');
 			var itemName = document.createElement('span');
 			itemName.index=i;
@@ -322,10 +333,13 @@
 			delButton.addEventListener('click', function() {listIndex=this.index; deleteRoute();});
 			listItem.appendChild(itemName);
 			listItem.appendChild(delButton);
+			*/
 			id('list').appendChild(listItem);
   		}
   		// id('list').innerHTML+='<li onclick="clear()">CLEAR</li>';
 		show('listScreen',true);
+		show('controls',false);
+		show('moreControls',false);
 	}
 	
 	// ADD TRACKPOINT
@@ -441,35 +455,46 @@
 		alert(message);
 	}
 	
-	// STOP TRACKING
+	// STOP TRACKING/ROUTING
 	function cease(event) {
-		notify("CEASE: tracking is "+tracking+" - "+trackpoints.length+" trackpoints");
+		/*
+		if(routing) { // STOP only tpped to stop routing or tracking
+			notify("stop routing with "+nodes.length+" nodes");
+			routing=false;
+			show('duration',true);
+			show('speed',true);
+			show('dash',false);
+			if(nodes.length>5) { // offer to save route
+				notify("save route?");
+				id('saveName').value="";
+				show('saveDialog',true);
+			}
+		}
+		*/
+		// else { // if not routing must be tracking
+		notify("stop tracking with "+trackpoints.length+" trackpoints");
 		map.stopLocate();
 		show('dash',false);
-		show('moreControls', true);
+		if(trackpoints.length>5) { // offer to save track
+				name='';
+				var now = new Date();
+				var name = now.getYear()%100 + months.substr(now.getMonth()*3,3) + now.getDate() + '.'; // YYmonDD
+				var t =now.getHours();
+				if(t<10) name+="0";
+				name+=(t+":");
+				t=now.getMinutes();
+				if(t<10) name+="0";
+				name+=t; // YYmonDD.HH:MM
+				notify("track name: "+name);
+				id("saveName").value=name;
+				show('saveDialog',true);
+			}
+		// }
 		id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
 		id("actionButton").removeEventListener("click", stopStart);
 		id("actionButton").addEventListener("click", getFix);
 		show('stopButton',false);
-		if(nodes.length>5) { // offer to save route
-			notify("save route?");
-			id('saveName').value="";
-			show('saveDialog',true);
-		}
-		if(trackpoints.length>5) { // offer to save track
-			name='';
-			var now = new Date();
-			var name = now.getYear()%100 + months.substr(now.getMonth()*3,3) + now.getDate() + '.'; // YYmonDD
-			var t =now.getHours();
-			if(t<10) name+="0";
-			name+=(t+":");
-			t=now.getMinutes();
-			if(t<10) name+="0";
-			name+=t; // YYmonDD.HH:MM
-			notify("track name: "+name);
-			id("saveName").value=name;
-			show('saveDialog',true);
-		}
+		// show('routeLength',false);
 	}
 	
 	// POSITION MAP
@@ -493,8 +518,8 @@
 		var minAlt=1000;
 		var maxAlt=0;
 		var maxSpeed=0;
-		var avSpeed=distance*3.6/moving; // kph
-		notify('distance:'+distance+' moving:'+moving+' average speed:'+avSpeed+'kph');
+		// var avSpeed=distance*3.6/moving; // kph
+		notify('distance:'+distance+' average speed:'+avSpeed+'kph');
 		notify(n+" trackpoints");
 		// first create dark background
 		profilesCanvas.clearRect(0,0,w,h);
@@ -549,50 +574,33 @@
 	function saver() {
 		var name=id("saveName").value;
 		notify("save track/route as "+name);
-		// DEAL WITH SAVING ROUTE
-		if(routing) { // save as route?
-			if((routeNames.indexOf(name)>=0)||(trackNames.indexOf(name)>=0)) {
-				alert(name+" already in use");
-				return;
-			}
-			var route={};
-			route.distance=distance;
-			route.nodes=nodes;
-			json=JSON.stringify(route);
-			window.localStorage.setItem(name, json);
-			routeNames.push(name);
-			var routes={};
-			routes.names=routeNames;
-			notify("save routenames: "+routes.names);
-			var json=JSON.stringify(routes);
-			window.localStorage.setItem("saxtonRoutes",json);
-			routing=false;
-			distance=0;
+		if((routeNames.indexOf(name)>=0)) {
+			alert(name+" already in use");
+			return;
 		}
-		else { // save track?
-			if(trackNames.indexOf(name)>=0) {
-				alert(name+"already in use");
-				return;
+		var route={};
+		route.distance=distance;
+		if(nodes.length>0) route.nodes=nodes; // save new route
+		else { // save track as route
+			route.nodes=[];
+			for(var i=0;i<trackpoints.length();i++) {
+				route.nodes[i].latlng=trackpoints[i].latlng;
+				// route.nodes[i].alt=trackpoints[i].alt; // forget trackpoint.time
 			}
-			var track={};
-			track.distance=distance;
-			track.time=trackpoints[trackpoints.length-1].time-trackpoints[0].time;
-			track.duration=duration;
-			track.moving=moving;
-			track.trackpoints=trackpoints;
-			json=JSON.stringify(track);
-			window.localStorage.setItem(name, json);
-			trackNames.push(name);
-			var tracks={};
-			tracks.names=trackNames;
-			notify("save tracknames: "+tracks.names);
-			json=JSON.stringify(tracks);
-			window.localStorage.setItem("saxtonTracks",json);
 		}
+		json=JSON.stringify(route);
+		window.localStorage.setItem(name,json);
+		routeNames.push(name);
+		var routes={};
+		routes.names=routeNames;
+		notify("save routenames: "+routes.names);
+		var json=JSON.stringify(routes);
+		window.localStorage.setItem("saxtonRoutes",json);
+		distance=0;
 		show('saveDialog',false);
 	}
 	
-	// LOAD TRACK
+	/* LOAD TRACK
 	function loadTrack() {
 		notify('load track '+listIndex+": "+trackNames[listIndex]);
 		var json=window.localStorage.getItem(trackNames[listIndex]);
@@ -602,7 +610,7 @@
 		moving=parseInt(track.moving);
 		trackpoints=track.trackpoints;
 		dist=0;
-		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"sec; "+moving+"seconds moving");
+		notify("load track with "+trackpoints.length+" trackpoints; length: "+distance+"m; duration: "+duration+"sec");
 		show('listScreen',false);
 		loc.latlng=trackpoints[0].latlng; // NEW
 		centreMap();
@@ -610,17 +618,17 @@
 		show('actionButton',false);
 		profiles();
 	}
-	
+	*/
 	// CLEAR TRACK/ROUTE
 	function clear() {
 	    notify('clear track/route');
 	    trackpoints=[];
 	    nodes=[];
 	    show('actionButton',true);
-	    redraw();
+	    // redraw();
 	}
 	
-	// DELETE TRACK
+	/* DELETE TRACK
 	function deleteTrack() {
 		var name=trackNames[listIndex];
 		alert('delete track '+listIndex+": "+name);
@@ -633,7 +641,19 @@
 		notify(name+" deleted");
 		show('listScreen',false);
 	}
-	
+	*/
+	// SHOW ROUTE DETAIL
+	function showRouteDetail() {
+		notify('show detail for route '+listIndex+' - '+routeNames[listIndex]);
+		var json=window.localStorage.getItem(routeNames[listIndex]);
+		var route=JSON.parse(json);
+		distance=parseInt(route.distance)/1000; // km
+		if(unit=='mi') distance*=0.621371192;
+		distance=Math.floor(distance*10)/10;
+		id('routeName').value=routeNames[listIndex];
+		id('routeLength').innerText=distance+unit;
+		show('routeDetail',true);
+	}
 	// LOAD ROUTE
 	function loadRoute() {
 		notify('load route '+listIndex+": "+routeNames[listIndex]);
@@ -646,7 +666,12 @@
 		show('listScreen',false);
 		loc.latlng=nodes[0].latlng; // NEW
 		centreMap();
-		// redraw();
+		var points=[];
+		for(var i=0;i<nodes.length;i++) {
+			points[i]=nodes[i].latlng;
+		}
+		console.log(points.length+' points: '+points);
+		track=L.polyline(points,{color:'green',weight:9,opacity:0.25}).addTo(map);
 	}
 	
 	// DELETE ROUTE
