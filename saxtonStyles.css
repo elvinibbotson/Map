@@ -50,6 +50,10 @@ button {
 	font-size: 16px;
 }
 
+li {
+  height: 30px;
+}
+
 .heavy {
       font: bold 30px sans-serif;
       fill: #FFFFFF;
@@ -62,7 +66,7 @@ button {
 	border: 2px solid white;
 	border-radius: 10px;
 	background: gray;
-	z-index: 25;
+	z-index: 5;
 	display: none;
 }
 
@@ -75,7 +79,7 @@ button {
 	font-size: 24px;
 	font-weight: bold;
 	color: white;
-	z-index: 25;
+	z-index: 10;
 	display: none;
 }
 
@@ -83,8 +87,26 @@ button {
 	display: block;
 	width: 24px;
 	height: 24px;
-	/*padding:6px;*/
 	margin: auto;
+}
+
+.gauge {
+	position: absolute;
+	width: 33%;
+	top: 20px;
+	height: 100%;
+	font-weight: bold;
+	font-size: 24px;
+	color: white;
+}
+
+.nameBox {
+	width: 40%;
+
+	border-width: 1px;
+	border-color: white;
+	color: white;
+	background-color: black;
 }
 
 #locus {
@@ -93,7 +115,7 @@ button {
 	height: 24px;
 	left: 100px;
 	top: 100px;
-	z-index: 500;
+	z-index: 5;
 	display: 'block';
 }
 
@@ -102,7 +124,7 @@ button {
 	bottom: 0;
 	width: 100%;
 	height: 70px;
-	z-index: 100;
+	z-index: 5;
 	display: block;
 }
 
@@ -148,10 +170,9 @@ button {
 	border: 0px solid 0;
 	border-radius: 15px;
 	background-color: gray;
-	z-index: 25;
-	display: none;
 	font-size: 1em;
-	z-index: 25;
+	z-index: 5;
+	display: none;
 }
 
 #routeButton {
@@ -179,31 +200,10 @@ button {
 	height: 50px;
 	border: 0px solid 0;
 	background-color: #00000088;
-	z-index: 25;
+	z-index: 5;
 	display: none;
-	z-index: 25;
-}
-/*
-#dist {
-	position: absolute;
-	left: 40%;
-	top: 10px;
-	width: 25%;
-	height: 30px;
-	font-size: 16px;
-	color: white;
 }
 
-#perhour {
-	position: absolute;
-	left: 70%;
-	top: 10px;
-	width: 20%;
-	height: 30px;
-	font-size: 16px;
-	color: white;
-}
-*/
 #duration {
 	left: 20px;
 }
@@ -217,68 +217,17 @@ button {
 	right: 20px;
 	width: 20%;
 }
-/*
-#routeLength {
-	position: fixed;
-	right: 15px;
-	bottom: 22px;
-	width: 60px;
-	height: 25px;
-	border-radius: 10px;
-	padding: 5px;
-	background: gray;
-	color: white;
-	font-weight: bold;
-	font-size: 20px;
-	z-index: 25;
-	display: none;
-}
-*/
-
-.gauge {
-	position: absolute;
-	width: 33%;
-	top: 20px;
-	height: 100%;
-	font-weight: bold;
-	font-size: 24px;
-	color: white;
-}
 
 #map {
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	z-index: 1;
 	background-color: silver;
+	z-index: 1;
 	display: block;
 }
 
-.check {
-	width: 32px;
-	height: 32px;
-}
-/*
-#mapScreen {
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-}
-*/
-
-/*
-#mapOverlay {
-  position: absolute;
-	left: 0;
-	top: 0;
-  width: 100%;
-	height: 100%;
-  z-index: 2;
-}
-*/
 #listScreen {
     position: fixed;
     -webkit-box-flex: 1;
@@ -290,9 +239,9 @@ button {
     width: 100%;
     height: 100%;
     color: white;
-    background-color: gray;
+    background-color: #333333;
 	display: none;
-    z-index: 30;
+    z-index: 5;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -302,13 +251,14 @@ button {
     position: fixed;
     top: 0;
     right: 0;
+    padding: 8px;
 }
 
 #list {
+	position: fixed;
+	top: 30px;
 	margin-top: 30px;
     list-style-type: none;
-    color: white;
-    background-color: gray;
     display: flex;
     flex-direction: column;
 }
@@ -324,10 +274,6 @@ button {
 	color: white;
 }
 
-li {
-  height: 30px;
-}
-
 #routeDetail {
 	position: fixed;
 	top: 0;
@@ -337,75 +283,19 @@ li {
 	padding: 10px;
 	background-color: black;
 	color: white;
-	z-index: 50;
+	z-index: 10;
 	display: none;
 }
-#routeName {
-	width: 40%;
-	background-color: black;
+
+#saveDialog {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 24px;
+	padding: 10px;
 	color: white;
+	background-color: black;
+	z-index: 10;
+	display: none;
 }
-/*
-.deleteButton {
-  width: 16px;
-  height: 16px;
-  float: right;
-  border: none;
-  outline: none;
-  background: url(deleteButton16px.svg) center center no-repeat;
-}
-*/
-.dialog-container {
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  z-index: 10;
-}
-
-.dialog {
-  background: #DDD;
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.24), 0 14px 28px rgba(0, 0, 0, 0.48);
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  margin-top: 10px;
-  -webkit-transition: -webkit-transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s;
-  transition: -webkit-transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s;
-  transition: transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s;
-  transition: transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s, -webkit-transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s; }
-
-.dialog > div {
-  padding-left: 24px;
-  padding-right: 24px; }
-
-.dialog-title {
-  padding-top: 20px;
-  font-size: 1em;
-  font-weight: bold;}
-  
-.dialog-body {
-  padding-top: 20px;
-  padding-bottom: 24px; }
-  .dialog-body select {
-    width: 100%;
-}
-.dialog-buttons {
-  padding: 8px !important;
-  float: right;
-}
-
-#profilesPanel {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 20%;
-  z-index: 50;
-  display: none;
-}
-

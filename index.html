@@ -19,7 +19,6 @@
 <body>
 <main class="main">
 	<div id="map"></div>
-	<!--div id='locus'><img src='locus24px.svg'/></div-->
 </main>
 
 <div id='controls'>
@@ -41,7 +40,7 @@
 	<div id='duration' class='gauge'></div>;
 	<div id='distance' class='gauge'></div>;
 	<div id='speed' class='gauge'></div>;
-	<div id='finish'class='gauge'>finish</div>
+	<div id='finish' class='gauge'>finish</div>
 </div>
 <div id='locus'><img src='locus24px.svg'/></div>
 
@@ -49,41 +48,28 @@
 	<div id='listHeader'>
 		<b>ROUTES</b>
 		<button id='closeButton' class='clearButton'><img src='closeButton24px.svg'/></button>
-		<!--button id='loadButton'>load</button>
-		<button id='renameButton'>rename</button>
-		<button id='refineButton'>refine</button>
-		<button id='removeButton'>remove</button-->
 	</div>
-    <!-- OLD CODE div id='closeButton'><img src='closeButton24px.svg'/></div-->'
-    <!--div>
-        <span id='listHeader'></span>
-        <div id='closeButton'><img src='closeButton24px.svg'/></div>'
-    </div-->
-    <!--div id="listPanel"-->
     <ul id='list'></ul>
     <div id='routeDetail'>
-    	<input type='text' id='routeName'>
+    	<input type='text' id='routeName' class='nameBox'>
     	<span id='routeLength'></span>
     	<button id='loadButton'> load </button>
-    	<!--button id='renameButton'>rename</button-->
     	<button id='deleteButton'>delete</button>
     </div>
-    <!--/div-->
 </div>
-<div id="saveDialog" class="dialog-container">
+<div id='saveDialog'>Save as: <input type="text" id="saveName" class='nameBox'/>
+	<button id="cancelButton">cancel</button>
+	<button id="saveButton"> save </button>
+</div>
+<!--div id="deleteDialog" class="dialog-container">
     <div class="dialog">
-        <div class="dialog-title">Save as</div>
-        <div class="dialog-body"><input type="text" id="saveName" size="20"/></div>
+        <div class="dialog-title">Delete</div>
+        <div class="dialog-body"><input type="text" id="deleteName" size="20"/></div>
         <div class="dialog-buttons">
-	        <button id="cancelButton" class="button">Cancel</button>
-            <button id="saveButton" class="button">Save</button>
+	        <button id="cancelDeleteButton" class="button">Cancel</button>
+            <button id="confirmDeleteButton" class="button">Save</button>
         </div>
     </div>
-</div>
-<div id="dialog"></div>
-<div id='profilesPanel'>
-    <canvas id="profilesCanvas" width="100" height="100"></canvas>
-</div>
-<!--script src="saxtonScript.js" async></script-->
+</div-->
 </body>
 </html>
