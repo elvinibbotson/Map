@@ -9,6 +9,7 @@
 	var listIndex=0;
 	var track; // track polyline on map
 	var trackpoints=[]; // array of track objects - locations, altitudes, timestamps, lengths, durations,...
+	var route;
 	var routeNames=[];
 	var nodes=[]; // array of route node locations
 	var unit='km';
@@ -43,6 +44,7 @@
 	});
 	id('routeButton').addEventListener('click',function(){
 		routing=true;
+		// route={};
 		distance=0;
 		dist=0;
 		lastLoc={};
@@ -60,20 +62,72 @@
 		show('finish',true);
 		if(track!==null) track.remove(); // remove any earlier route
 	});
-	id('finish').addEventListener('click',function(){
+	id('finish').addEventListener('click',finishRoute);
+	/*
 		notify("stop routing with "+nodes.length+" nodes");
 		routing=false;
 		show('duration',true);
 		show('speed',true);
 		show('dash',false);
 		show('actionButton',true);
-		if(nodes.length>5) { // offer to save route
-			notify("save route?");
-			id('saveName').value="";
-			show('saveDialog',true);
+		
+		// TEST CODE FOR OPEN ROUTE SERVICE
+		var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
+		var request= new XMLHttpRequest();
+		request.open('POST','https://api.openrouteservice.org/v2/directions/cycling-electric/geojson');
+		request.setRequestHeader('Accept','application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
+		request.setRequestHeader('Content-type','application/json');
+		request.setRequestHeader('Authorization',KEY);
+		request.onreadystatechange=function() {
+			if(this.readyState===4) {
+				console.log('status',this.status);
+				console.log('body',this.responseText);
+				json=JSON.parse(this.responseText);
+				console.log(json.features.length+' features');
+				distance=json.features[0].properties.summary.distance;
+				// var ascent=json.features[0].properties.ascent;
+				var coords=json.features[0].geometry.coordinates;
+				var coord;
+				nodes=[]; // redo nodes for refined route
+				var node;
+				for(var i=0;i<coords.length;i++) {
+					node={};
+					coord=coords[i];
+					node.latlng=L.latLng(coord[1],coord[0]);
+					node.alt=coord[2];
+					nodes.push(node);
+				}
+				console.log('route length: '+distance+'; '+nodes.length+'nodes; node[0]: '+nodes[0].latlng+'; alt: '+nodes[0].alt);
+				coords=[];
+				for(i=0;i<nodes.length;i++) {coords.push(nodes[i].latlng)}
+				console.log('new route: '+coords);
+				track=L.polyline(coords,{color:'red',weight:9,opacity:0.25}).addTo(map);
+				notify("save route?");
+				id('saveName').value="";
+				show('saveDialog',true);
+				// track.setLatLngs(coords);
+				// track.redraw();
+				// console.log('track: '+track.getLatLngs());
+			}
+			else {
+				alert('routing failed');
+				if(nodes.length>5) { // offer to save route
+					notify("save route?");
+					id('saveName').value="";
+					show('saveDialog',true);
+				}
+			}
+		};
+		var body='{"coordinates":[['+nodes[0].latlng.lng+','+nodes[0].latlng.lat+']';
+		console.log('body: '+body);
+		for(var i=1;i<nodes.length;i++) {
+			body+=',['+nodes[i].latlng.lng+','+nodes[i].latlng.lat+']';
 		}
-		else track.remove(); // do not retain routes <5 nodes
-	})
+		body+='],"elevation":"true","geometry_simplify":"true"}';
+		console.log('body: '+body);
+		request.send(body);
+	});
+	*/
 	id('routesButton').addEventListener('click',listRoutes);
 	id('closeButton').addEventListener('click',function(){
 	    show('listScreen',false);
@@ -228,6 +282,7 @@
 		if(routing) {
 			var node={};
 			node.latlng=e.latlng;
+			node.alt=0;
 			nodes.push(node);
 			if(nodes.length<2) {
 				lastLoc.latlng=e.latlng;
@@ -236,7 +291,7 @@
 			dist=Math.round(map.distance(e.latlng,lastLoc.latlng));
 			lastLoc.latlng=e.latlng;
 			distance+=dist;
-			if(nodes.length==2) track=L.polyline([nodes[0].latlng,nodes[1].latlng],{color:'green',weight:9,opacity:0.25}).addTo(map);
+			if(nodes.length==2) track=L.polyline([nodes[0].latlng,nodes[1].latlng],{color:'red',weight:9,opacity:0.25}).addTo(map);
 			else if(nodes.length>2) track.addLatLng(node.latlng);
 			dist=distance/1000; // km
 			if(unit=='mi') dist*=0.621371192; // miles
@@ -353,7 +408,7 @@
 		}
 		alert(message);
 	}
-	// STOP TRACKING/ROUTING
+	// STOP TRACKING
 	function cease(event) {
 		/*
 		if(routing) { // STOP only tpped to stop routing or tracking
@@ -401,6 +456,70 @@
 		map.setView(loc.latlng,zoom);
 		var i, x, y;
 		saveLoc();
+	}
+	// FINISH ROUTING
+	function finishRoute() {
+		notify("stop routing with "+nodes.length+" nodes");
+		routing=false;
+		show('duration',true);
+		show('speed',true);
+		show('dash',false);
+		show('actionButton',true);
+		// OPEN ROUTE SERVICE
+		var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
+		var request= new XMLHttpRequest();
+		request.open('POST','https://api.openrouteservice.org/v2/directions/cycling-electric/geojson');
+		request.setRequestHeader('Accept','application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
+		request.setRequestHeader('Content-type','application/json');
+		request.setRequestHeader('Authorization',KEY);
+		request.onreadystatechange=function() {
+			if(this.readyState===4) {
+				console.log('status',this.status);
+				console.log('body',this.responseText);
+				json=JSON.parse(this.responseText);
+				console.log(json.features.length+' features');
+				distance=json.features[0].properties.summary.distance;
+				// var ascent=json.features[0].properties.ascent;
+				var coords=json.features[0].geometry.coordinates;
+				var coord;
+				nodes=[];
+				var node;
+				for(var i=0;i<coords.length;i++) {
+					node={};
+					coord=coords[i];
+					node.latlng=L.latLng(coord[1],coord[0]);
+					node.alt=coord[2];
+					nodes.push(node);
+				}
+				console.log('route length: '+distance+'; '+nodes.length+'nodes; node[0]: '+nodes[0].latlng+'; alt: '+nodes[0].alt);
+				coords=[];
+				for(i=0;i<nodes.length;i++) {coords.push(nodes[i].latlng)}
+				console.log('new route: '+coords);
+				track.remove(); // replace old route with new one
+				track=L.polyline(coords,{color:'red',weight:9,opacity:0.25}).addTo(map);
+				notify("save route?");
+				id('saveName').value="";
+				show('saveDialog',true);
+			}
+			/*
+			else {
+				alert('routing failed');
+				if(nodes.length>5) { // offer to save route
+					notify("save route?");
+					id('saveName').value="";
+					show('saveDialog',true);
+				}
+			}
+			*/
+		};
+		var body='{"coordinates":[['+nodes[0].latlng.lng+','+nodes[0].latlng.lat+']';
+		console.log('body: '+body);
+		for(var i=1;i<nodes.length;i++) {
+			body+=',['+nodes[i].latlng.lng+','+nodes[i].latlng.lat+']';
+		}
+		body+='],"elevation":"true","geometry_simplify":"true"}';
+		console.log('body: '+body);
+		request.send(body);
 	}
 	// SAVE TRACK/ROUTE
 	function saveRoute() {
@@ -471,6 +590,7 @@
 		distance=Math.floor(distance*10)/10;
 		id('routeName').value=routeNames[listIndex];
 		id('routeLength').innerText=distance+unit;
+		// SHOW ROUTE PROFILE FITTED TO SCREEN WIDTH AND CANVAS HEIGHT TO SUIT ALTITUDE RANGE
 		show('routeDetail',true);
 	}
 	// RENAME ROUTE
@@ -504,8 +624,8 @@
 		for(var i=0;i<nodes.length;i++) {
 			points[i]=nodes[i].latlng;
 		}
-		console.log(points.length+' points: '+points);
-		track=L.polyline(points,{color:'green',weight:9,opacity:0.25}).addTo(map);
+		// console.log(points.length+' points: '+points);
+		track=L.polyline(points,{color:'red',weight:9,opacity:0.25}).addTo(map);
 	}
 	// DELETE ROUTE
 	function deleteRoute() {
