@@ -52,14 +52,24 @@
     <ul id='list'></ul>
     <div id='routeDetail'>
     	<input type='text' id='routeName' class='nameBox'>
-    	<span id='routeLength'></span>
-    	<button id='loadButton'> load </button>
-    	<button id='deleteButton'>delete</button>
+    	<div id='routeInfo'>
+    		<span id='routeLength'></span> ascent: <span id='routeAscent'></span>
+    	</div>
+    	<div id='routeButtons'>
+    		<button id='loadButton'> load </button>
+    		<button id='deleteButton'>delete</button>
+    	</div>
     </div>
 </div>
 <div id='saveDialog'>Save as: <input type="text" id="saveName" class='nameBox'/>
-	<button id="cancelButton">cancel</button>
-	<button id="saveButton"> save </button>
+	<div id=saveInfo>
+		<span id='saveDistance'></span> ascent: <span id='saveAscent'></span>
+	</div>
+	<div id='saveButtons'>
+		<button id="cancelButton">cancel</button>
+		<button id="saveButton"> save </button>
+	</div>
+	
 </div>
 <!--div id="deleteDialog" class="dialog-container">
     <div class="dialog">

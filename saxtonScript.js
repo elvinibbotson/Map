@@ -1,6 +1,6 @@
 	"use strict";
 	var map; // CyclOSM map
-	var x,y; // horizontal and vertical coordinates/measurements
+	var x,y,z; 
 	var json;
 	var routing=false;
 	var ready=false;
@@ -17,11 +17,12 @@
 	var loc={};
 	var lastLoc={};
 	var fix;
-	var lng,lat,dist,distance; // fix & track data
+	var lng,lat,dist,distance,ascent; // fix & track data
 	var deg = "&#176;";
 	var compass="N  NNENE ENEE  ESESE SSES  SSWSW WSWW  WNWNW NNWN  ";
 	var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 	var notifications=[];
+	var tiles=[];
 	// EVENT HANDLERS
 	id('plusButton').addEventListener('click',function(){
 		map.zoomIn();
@@ -47,6 +48,7 @@
 		// route={};
 		distance=0;
 		dist=0;
+		ascent=0;
 		lastLoc={};
 		nodes=[];
 		var node={};
@@ -146,7 +148,7 @@
 		id('unitButton').innerText=unit;
 		window.localStorage.setItem('unit',unit);
 	});
-	id('helpButton').addEventListener('click',showNotifications);
+	id('helpButton').addEventListener('click',downloadTiles);
 	id("cancelButton").addEventListener("click", function(){
 	  show('saveDialog',false);
 	  routing=false;
@@ -322,11 +324,13 @@
 	function addTP() {
 		var tp={};
 		tp.latlng=loc.latlng;
-		// tp.alt=loc.alt;
-		notify('trackpoint '+trackpoints.length+' at '+tp.latlng);
+		tp.alt=loc.alt;
+		notify('trackpoint '+trackpoints.length+' at '+tp.latlng+' alt: '+tp.alt+'m');
 		tp.time=loc.time;
 		trackpoints.push(tp);
 		if(trackpoints.length<2) return;
+		var climb=(tp.alt-trackpoints[trackpoints.length-2].alt);
+		if(climb>0) ascent+=climb;
 		if(trackpoints.length==2) track=L.polyline([trackpoints[0].latlng,trackpoints[1].latlng],{color:'black',weight:9,opacity:0.25}).addTo(map);
 		else if(trackpoints.length>2) track.addLatLng(tp.latlng);
 	}
@@ -356,6 +360,7 @@
 		loc={};
 		lastLoc={};
 		distance=0;
+		ascent=0;
 		show('dash',true);
 		show('moreControls', false);
 		
@@ -440,6 +445,8 @@
 				name+=t; // YYmonDD.HH:MM
 				notify("track name: "+name);
 				id("saveName").value=name;
+				id('saveDistance').value=((unit='mi')? distance*0.621371:distance)+unit;
+				id('saveAscent').value=ascent+'m';
 				show('saveDialog',true);
 			}
 		// }
@@ -484,12 +491,15 @@
 				var coord;
 				nodes=[];
 				var node;
+				var climb;
 				for(var i=0;i<coords.length;i++) {
 					node={};
 					coord=coords[i];
 					node.latlng=L.latLng(coord[1],coord[0]);
 					node.alt=coord[2];
 					nodes.push(node);
+					if(i>0) climb=(node.alt-nodes[nodes.length-2].alt);
+					if(climb>0) ascent+=climb;
 				}
 				console.log('route length: '+distance+'; '+nodes.length+'nodes; node[0]: '+nodes[0].latlng+'; alt: '+nodes[0].alt);
 				coords=[];
@@ -499,6 +509,12 @@
 				track=L.polyline(coords,{color:'red',weight:9,opacity:0.25}).addTo(map);
 				notify("save route?");
 				id('saveName').value="";
+				dist=distance/1000; // km
+				if(unit=='mi') dist*=0.621371; // miles
+				dist=Math.round(dist*10)/10;
+				id('saveDistance').innerText=dist+unit;
+				id('saveAscent').innerText=Math.round(ascent)+'m';
+				console.log()
 				show('saveDialog',true);
 			}
 			/*
@@ -531,11 +547,13 @@
 		}
 		var route={};
 		route.distance=distance;
+		route.ascent=ascent;
 		if(nodes.length>0) route.nodes=nodes; // save new route
 		else { // save track as route
 			route.nodes=[];
 			for(var i=0;i<trackpoints.length();i++) {
 				route.nodes[i].latlng=trackpoints[i].latlng;
+				route.nodes[i].alt=trackpoints[i].alt;
 			}
 		}
 		json=JSON.stringify(route);
@@ -590,6 +608,7 @@
 		distance=Math.floor(distance*10)/10;
 		id('routeName').value=routeNames[listIndex];
 		id('routeLength').innerText=distance+unit;
+		id('routeAscent').innerText=Math.round(route.ascent)+'m';
 		// SHOW ROUTE PROFILE FITTED TO SCREEN WIDTH AND CANVAS HEIGHT TO SUIT ALTITUDE RANGE
 		show('routeDetail',true);
 	}
@@ -687,6 +706,110 @@
 	}
 	function id(el) {
 	    return document.getElementById(el);
+	}
+	
+	function downloadTiles() {
+		console.log('download tiles')
+		z=11;
+		x=1013;
+		var n=4;
+		
+		for(var i=0; i<n;i++) {
+			tiles.push(665*(z-10)+i);
+		}
+		console.log('at z '+z+' x '+x+' tile list is '+tiles);
+		nextTile();
+		/*
+		var tileName;
+		var fileName;
+		// var ready=true;
+		var z=11;
+		console.log('2**5 is '+(2**5));
+		var n=2**(z-9);
+		var x=1013*(z-10);
+		var y=665*(z-10);
+		console.log('download '+n+'x'+n+' tiles starting with 11/'+x+'/'+y);
+		var j=0;
+		while(j<4) {
+			tileName='https://a.tile-cyclosm.openstreetmap.fr/cyclosm/'+z+'/'+x+'/'+(y+j)+'.png';
+			fileName=z+'-'+x+'-'+(y+j)+'.png';
+			var ready=downloadTile(tileName,fileName);
+		}
+		// for(var i=0;i<n;i++) {
+			for(var j=0;j<n;j++) {
+				tileName='https://a.tile-cyclosm.openstreetmap.fr/cyclosm/'+z+'/'+x+'/'+(y+j)+'.png';
+				fileName=z+'-'+(x+i)+'-'+(y+j)+'.png';
+				downloadTile(tileName,fileName);
+			}
+        }
+        */
+    }
+    
+    function nextTile() {
+    	if(tiles.length>0) {
+    		var y=tiles.shift();
+    		var tileName='https://a.tile-cyclosm.openstreetmap.fr/cyclosm/'+z+'/'+x+'/'+y+'.png';
+    		var fileName=z+'-'+x+'-'+y+'.png';
+    		downloadTile(tileName,fileName);
+    	}
+    	else console.log('done');
+    }
+    
+	async function downloadTile(tile,file) {
+		// var tile='https://a.tile-cyclosm.openstreetmap.fr/cyclosm/11/1013/665.png';
+		// var fileName='11/1013/665.png'
+		console.log('download '+tile+' and save as '+file);
+		var response=await fetch(tile);
+			var blob=response;
+			var arrayBuffer; 
+        		var fileReader = new FileReader(); 
+        		fileReader.onloadend = function(evt) 
+        		{
+            		if (evt.target.readyState == FileReader.DONE)
+            		{
+            			var a=document.createElement('a');
+						a.style.display='none';
+    					var url=window.URL.createObjectURL(blob);
+						console.log("data ready to save: "+blob.size+" bytes");
+   						a.href=url;
+   						a.download=file;
+    					document.body.appendChild(a);
+    					a.click();
+    					nextTile();
+            		}
+        		};
+        		fileReader.readAsArrayBuffer(blob);
+		
+		/*
+		var xhr = new XMLHttpRequest();
+    	xhr.responseType = "blob";
+    	xhr.onreadystatechange = function () {
+        	if (xhr.readyState == 4 && xhr.status == 200)
+        	{
+        		var blob = xhr.response;
+        		var arrayBuffer; 
+        		var fileReader = new FileReader(); 
+        		fileReader.onloadend = function(evt) 
+        		{
+            		if (evt.target.readyState == FileReader.DONE)
+            		{
+            			var a=document.createElement('a');
+						a.style.display='none';
+    					var url=window.URL.createObjectURL(blob);
+						console.log("data ready to save: "+blob.size+" bytes");
+   						a.href=url;
+   						a.download=file;
+    					document.body.appendChild(a);
+    					a.click();
+    					nextTile();
+            		}
+        		};
+        		fileReader.readAsArrayBuffer(blob);
+        	}
+    	}; 
+    	xhr.open("GET",tile,true); 
+    	xhr.send();
+    	*/
 	}
 
 // implement service worker if browser is PWA friendly
