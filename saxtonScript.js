@@ -80,7 +80,8 @@
 		id('unitButton').innerText=unit;
 		window.localStorage.setItem('unit',unit);
 	});
-	id('helpButton').addEventListener('click',showNotifications);
+	id('helpButton').addEventListener('click',function(){show('helpScreen',true)});
+	id('closeHelpButton').addEventListener('click',function(){show('helpScreen',false)});
 	id("cancelButton").addEventListener("click", function(){
 	  show('saveDialog',false);
 	  routing=false;
@@ -283,12 +284,9 @@
 		ascent=0;
 		show('dash',true);
 		show('moreControls', false);
-		
-		// TESTING
 		id('duration').innerText='0:00';
 		id('distance').innerText='0';
 		id('speed').innerText='0';
-		// speed=0;
 		notify("start tracking");
 		map.locate({watch:true, setView: false, enableHighAccuracy: true})
 		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
@@ -375,6 +373,7 @@
 		show('duration',true);
 		show('speed',true);
 		show('dash',false);
+		show('finish',false);
 		show('actionButton',true);
 		// OPEN ROUTE SERVICE
 		var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
