@@ -1,13 +1,13 @@
 	"use strict";
 	var map; // CyclOSM map
-	var x,y,z; 
+	var x,y; 
 	var json;
 	var routing=false;
 	var ready=false;
 	var tracking=false;
-	var trackNames=[];
 	var listIndex=0;
-	var track; // track polyline on map
+	var track; // route polyline on map
+	var trace; // track polyline on map
 	var trackpoints=[]; // array of track objects - locations, altitudes, timestamps, lengths, durations,...
 	var route;
 	var routeNames=[];
@@ -22,7 +22,6 @@
 	var compass="N  NNENE ENEE  ESESE SSES  SSWSW WSWW  WNWNW NNWN  ";
 	var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 	var notifications=[];
-	var tiles=[];
 	// EVENT HANDLERS
 	id('plusButton').addEventListener('click',function(){
 		map.zoomIn();
@@ -65,90 +64,23 @@
 		if(track!==null) track.remove(); // remove any earlier route
 	});
 	id('finish').addEventListener('click',finishRoute);
-	/*
-		notify("stop routing with "+nodes.length+" nodes");
-		routing=false;
-		show('duration',true);
-		show('speed',true);
-		show('dash',false);
-		show('actionButton',true);
-		
-		// TEST CODE FOR OPEN ROUTE SERVICE
-		var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
-		var request= new XMLHttpRequest();
-		request.open('POST','https://api.openrouteservice.org/v2/directions/cycling-electric/geojson');
-		request.setRequestHeader('Accept','application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
-		request.setRequestHeader('Content-type','application/json');
-		request.setRequestHeader('Authorization',KEY);
-		request.onreadystatechange=function() {
-			if(this.readyState===4) {
-				console.log('status',this.status);
-				console.log('body',this.responseText);
-				json=JSON.parse(this.responseText);
-				console.log(json.features.length+' features');
-				distance=json.features[0].properties.summary.distance;
-				// var ascent=json.features[0].properties.ascent;
-				var coords=json.features[0].geometry.coordinates;
-				var coord;
-				nodes=[]; // redo nodes for refined route
-				var node;
-				for(var i=0;i<coords.length;i++) {
-					node={};
-					coord=coords[i];
-					node.latlng=L.latLng(coord[1],coord[0]);
-					node.alt=coord[2];
-					nodes.push(node);
-				}
-				console.log('route length: '+distance+'; '+nodes.length+'nodes; node[0]: '+nodes[0].latlng+'; alt: '+nodes[0].alt);
-				coords=[];
-				for(i=0;i<nodes.length;i++) {coords.push(nodes[i].latlng)}
-				console.log('new route: '+coords);
-				track=L.polyline(coords,{color:'red',weight:9,opacity:0.25}).addTo(map);
-				notify("save route?");
-				id('saveName').value="";
-				show('saveDialog',true);
-				// track.setLatLngs(coords);
-				// track.redraw();
-				// console.log('track: '+track.getLatLngs());
-			}
-			else {
-				alert('routing failed');
-				if(nodes.length>5) { // offer to save route
-					notify("save route?");
-					id('saveName').value="";
-					show('saveDialog',true);
-				}
-			}
-		};
-		var body='{"coordinates":[['+nodes[0].latlng.lng+','+nodes[0].latlng.lat+']';
-		console.log('body: '+body);
-		for(var i=1;i<nodes.length;i++) {
-			body+=',['+nodes[i].latlng.lng+','+nodes[i].latlng.lat+']';
-		}
-		body+='],"elevation":"true","geometry_simplify":"true"}';
-		console.log('body: '+body);
-		request.send(body);
-	});
-	*/
 	id('routesButton').addEventListener('click',listRoutes);
 	id('closeButton').addEventListener('click',function(){
 	    show('listScreen',false);
 	    trackpoints=[];
 	    nodes=[];
 	    show('actionButton',true);
-	    // redraw();
 	});
 	id('routeName').addEventListener('change',renameRoute);
 	id('loadButton').addEventListener('click',loadRoute);
 	id('deleteButton').addEventListener('click',deleteRoute);
-	// ADD EVENTS FOR renameButton, refineButton and removeButton
 	id('unitButton').addEventListener('click',function(){
 		if(unit=='km') unit='mi';
 		else unit='km'; // toggle distance unit
 		id('unitButton').innerText=unit;
 		window.localStorage.setItem('unit',unit);
 	});
-	id('helpButton').addEventListener('click',downloadTiles);
+	id('helpButton').addEventListener('click',showNotifications);
 	id("cancelButton").addEventListener("click", function(){
 	  show('saveDialog',false);
 	  routing=false;
@@ -205,10 +137,6 @@
     	maxZoom: 20,
     	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
 	}).addTo(map);
-	/* TEST POLYLINE
-	var testTrack
-	var latlngs=[];
-	*/
 	map.on('moveend',saveLoc);
 	map.on('zoom',function(){
 		zoom=map.getZoom();
@@ -248,10 +176,11 @@
 			id('duration').innerText=txt;
 			dist=distance/1000; // km 
 			if(unit=='mi') dist*=0.621371192; // miles
-			console.log('distance: '+dist);
-			txt=Math.floor(dist*10)/10;
-			if(unit=='km') txt+=' kph';
-			else txt+=' mph';
+			console.log('distance: '+dist)
+			txt=decimal(dist)+unit;
+			// txt=Math.floor(dist*10)/10;
+			// if(unit=='km') txt+=' kph';
+			// else txt+=' mph';
 			id('distance').innerText=txt; // 1 decimal
 			var speed=e.speed*3.6; // kph
 			console.log('speed: '+speed);
@@ -262,7 +191,6 @@
 			else txt+=' mph';
 			id('speed').innerText=txt;
 		}
-		
 	});
 	map.on('locationerror',onLocationError);
 	function onLocationError(e) {
@@ -297,17 +225,10 @@
 			else if(nodes.length>2) track.addLatLng(node.latlng);
 			dist=distance/1000; // km
 			if(unit=='mi') dist*=0.621371192; // miles
-			id('distance').innerText=Math.round(dist*10)/10+unit;
+			id('distance').innerText=decimal(dist)+unit;
+			// id('distance').innerText=Math.round(dist*10)/10+unit;
 			console.log(nodes.length+' nodes in route');
 		}
-		/* TEST POLYLINES
-		latlngs.push(e.latlng);
-		if(latlngs.length==2) {
-			console.log('polyline: '+latlngs);
-			testTrack=L.polyline(latlngs, {color: 'yellow'}).addTo(map);
-		}
-		if(latlngs.length>1) testTrack.setLatLngs(latlngs);
-		*/
 		else if(id('controls').style.display=='block') {
 			show('controls',false);
 			show('moreControls',false);
@@ -318,7 +239,6 @@
 			show('moreControls',true);
 			show('moreButton',true);
 		}
-		
 	}
 	// ADD TRACKPOINT
 	function addTP() {
@@ -331,8 +251,8 @@
 		if(trackpoints.length<2) return;
 		var climb=(tp.alt-trackpoints[trackpoints.length-2].alt);
 		if(climb>0) ascent+=climb;
-		if(trackpoints.length==2) track=L.polyline([trackpoints[0].latlng,trackpoints[1].latlng],{color:'black',weight:9,opacity:0.25}).addTo(map);
-		else if(trackpoints.length>2) track.addLatLng(tp.latlng);
+		if(trackpoints.length==2) trace=L.polyline([trackpoints[0].latlng,trackpoints[1].latlng],{color:'black',weight:9,opacity:0.25}).addTo(map);
+		else if(trackpoints.length>2) trace.addLatLng(tp.latlng);
 	}
 	// LOCATION FIX
 	function getFix() { // get fix on current location
@@ -415,21 +335,6 @@
 	}
 	// STOP TRACKING
 	function cease(event) {
-		/*
-		if(routing) { // STOP only tpped to stop routing or tracking
-			notify("stop routing with "+nodes.length+" nodes");
-			routing=false;
-			show('duration',true);
-			show('speed',true);
-			show('dash',false);
-			if(nodes.length>5) { // offer to save route
-				notify("save route?");
-				id('saveName').value="";
-				show('saveDialog',true);
-			}
-		}
-		*/
-		// else { // if not routing must be tracking
 		notify("stop tracking with "+trackpoints.length+" trackpoints");
 		map.stopLocate();
 		show('dash',false);
@@ -454,7 +359,6 @@
 		id("actionButton").removeEventListener("click", stopStart);
 		id("actionButton").addEventListener("click", getFix);
 		show('stopButton',false);
-		// show('routeLength',false);
 	}
 	// POSITION MAP
 	function centreMap() { // move map to current location
@@ -511,22 +415,13 @@
 				id('saveName').value="";
 				dist=distance/1000; // km
 				if(unit=='mi') dist*=0.621371; // miles
-				dist=Math.round(dist*10)/10;
+				dist=decimal(dist);
+				// dist=Math.round(dist*10)/10;
 				id('saveDistance').innerText=dist+unit;
 				id('saveAscent').innerText=Math.round(ascent)+'m';
 				console.log()
 				show('saveDialog',true);
 			}
-			/*
-			else {
-				alert('routing failed');
-				if(nodes.length>5) { // offer to save route
-					notify("save route?");
-					id('saveName').value="";
-					show('saveDialog',true);
-				}
-			}
-			*/
 		};
 		var body='{"coordinates":[['+nodes[0].latlng.lng+','+nodes[0].latlng.lat+']';
 		console.log('body: '+body);
@@ -578,20 +473,6 @@
   			listItem.index=i;
   			listItem.innerText=routeNames[i];
   			listItem.addEventListener('click',function(){listIndex=this.index; showRouteDetail();}); // select a route
-  			/* OLD CODE
-  			listItem.classList.add('listItem');
-			var itemName = document.createElement('span');
-			itemName.index=i;
-			itemName.classList.add('itemName');
-			itemName.innerHTML = routeNames[i];
-			itemName.addEventListener('click', function(){listIndex=this.index; loadRoute();});
-			var delButton = document.createElement('button');
-			delButton.index=i;
-			delButton.classList.add('deleteButton');
-			delButton.addEventListener('click', function() {listIndex=this.index; deleteRoute();});
-			listItem.appendChild(itemName);
-			listItem.appendChild(delButton);
-			*/
 			id('list').appendChild(listItem);
   		}
 		show('listScreen',true);
@@ -605,11 +486,11 @@
 		var route=JSON.parse(json);
 		distance=parseInt(route.distance)/1000; // km
 		if(unit=='mi') distance*=0.621371192;
-		distance=Math.floor(distance*10)/10;
+		distance=decimal(distance);
+		// distance=Math.floor(distance*10)/10;
 		id('routeName').value=routeNames[listIndex];
 		id('routeLength').innerText=distance+unit;
 		id('routeAscent').innerText=Math.round(route.ascent)+'m';
-		// SHOW ROUTE PROFILE FITTED TO SCREEN WIDTH AND CANVAS HEIGHT TO SUIT ALTITUDE RANGE
 		show('routeDetail',true);
 	}
 	// RENAME ROUTE
@@ -643,7 +524,6 @@
 		for(var i=0;i<nodes.length;i++) {
 			points[i]=nodes[i].latlng;
 		}
-		// console.log(points.length+' points: '+points);
 		track=L.polyline(points,{color:'red',weight:9,opacity:0.25}).addTo(map);
 	}
 	// DELETE ROUTE
@@ -662,34 +542,10 @@
 		show('listScreen',false);
 	}
     // UTILITY FUNCTIONS
-	function dm(degrees, lat) {
-	    var ddmm;
-	    var negative = false;
-	    var n;
-	    if (degrees<0) {
-	        negative=true;
-	        degrees=degrees*-1;
-	    }
-	    if(negative) {
-	    	if(lat) ddmm="S";
-	        else ddmm="W";
-	    }
-	    else {
-	    	if(lat) ddmm="N";
-	    	else ddmm="E";
-	    }
-	    n=Math.floor(degrees); // whole degs
-	    ddmm+=" "+n+":"; 
-	    n=(degrees-n)*60; // minutes
-	    // if(n<10) ddmm+="0";
-	    ddmm+=decimal(n);
-	    return ddmm;
-	}
 	function decimal(n) {
 	    return Math.floor(n * 10 + 0.5) / 10;
 	}
 	function show(element,visible) {
-//		console.log('show '+element+' - '+visible);
 	    id(element).style.display=(visible)?'block':'none';
 	}
 	function notify(note) {
@@ -707,111 +563,6 @@
 	function id(el) {
 	    return document.getElementById(el);
 	}
-	
-	function downloadTiles() {
-		console.log('download tiles')
-		z=11;
-		x=1013;
-		var n=4;
-		
-		for(var i=0; i<n;i++) {
-			tiles.push(665*(z-10)+i);
-		}
-		console.log('at z '+z+' x '+x+' tile list is '+tiles);
-		nextTile();
-		/*
-		var tileName;
-		var fileName;
-		// var ready=true;
-		var z=11;
-		console.log('2**5 is '+(2**5));
-		var n=2**(z-9);
-		var x=1013*(z-10);
-		var y=665*(z-10);
-		console.log('download '+n+'x'+n+' tiles starting with 11/'+x+'/'+y);
-		var j=0;
-		while(j<4) {
-			tileName='https://a.tile-cyclosm.openstreetmap.fr/cyclosm/'+z+'/'+x+'/'+(y+j)+'.png';
-			fileName=z+'-'+x+'-'+(y+j)+'.png';
-			var ready=downloadTile(tileName,fileName);
-		}
-		// for(var i=0;i<n;i++) {
-			for(var j=0;j<n;j++) {
-				tileName='https://a.tile-cyclosm.openstreetmap.fr/cyclosm/'+z+'/'+x+'/'+(y+j)+'.png';
-				fileName=z+'-'+(x+i)+'-'+(y+j)+'.png';
-				downloadTile(tileName,fileName);
-			}
-        }
-        */
-    }
-    
-    function nextTile() {
-    	if(tiles.length>0) {
-    		var y=tiles.shift();
-    		var tileName='https://a.tile-cyclosm.openstreetmap.fr/cyclosm/'+z+'/'+x+'/'+y+'.png';
-    		var fileName=z+'-'+x+'-'+y+'.png';
-    		downloadTile(tileName,fileName);
-    	}
-    	else console.log('done');
-    }
-    
-	async function downloadTile(tile,file) {
-		// var tile='https://a.tile-cyclosm.openstreetmap.fr/cyclosm/11/1013/665.png';
-		// var fileName='11/1013/665.png'
-		console.log('download '+tile+' and save as '+file);
-		var response=await fetch(tile);
-			var blob=response;
-			var arrayBuffer; 
-        		var fileReader = new FileReader(); 
-        		fileReader.onloadend = function(evt) 
-        		{
-            		if (evt.target.readyState == FileReader.DONE)
-            		{
-            			var a=document.createElement('a');
-						a.style.display='none';
-    					var url=window.URL.createObjectURL(blob);
-						console.log("data ready to save: "+blob.size+" bytes");
-   						a.href=url;
-   						a.download=file;
-    					document.body.appendChild(a);
-    					a.click();
-    					nextTile();
-            		}
-        		};
-        		fileReader.readAsArrayBuffer(blob);
-		
-		/*
-		var xhr = new XMLHttpRequest();
-    	xhr.responseType = "blob";
-    	xhr.onreadystatechange = function () {
-        	if (xhr.readyState == 4 && xhr.status == 200)
-        	{
-        		var blob = xhr.response;
-        		var arrayBuffer; 
-        		var fileReader = new FileReader(); 
-        		fileReader.onloadend = function(evt) 
-        		{
-            		if (evt.target.readyState == FileReader.DONE)
-            		{
-            			var a=document.createElement('a');
-						a.style.display='none';
-    					var url=window.URL.createObjectURL(blob);
-						console.log("data ready to save: "+blob.size+" bytes");
-   						a.href=url;
-   						a.download=file;
-    					document.body.appendChild(a);
-    					a.click();
-    					nextTile();
-            		}
-        		};
-        		fileReader.readAsArrayBuffer(blob);
-        	}
-    	}; 
-    	xhr.open("GET",tile,true); 
-    	xhr.send();
-    	*/
-	}
-
 // implement service worker if browser is PWA friendly
 	if (navigator.serviceWorker.controller) {
 		console.log('Active service worker found, no need to register')
