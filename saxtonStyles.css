@@ -215,6 +215,7 @@ li {
 #finish {
 	right: 20px;
 	width: 20%;
+	display: none;
 }
 
 #map {

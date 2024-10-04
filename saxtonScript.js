@@ -248,10 +248,10 @@
 		tp.alt=loc.alt;
 		notify('trackpoint '+trackpoints.length+' at '+tp.latlng+' alt: '+tp.alt+'m');
 		tp.time=loc.time;
+		var climb=(tp.alt-trackpoints[trackpoints.length-1].alt);
+		if(climb>0) ascent+=climb;
 		trackpoints.push(tp);
 		if(trackpoints.length<2) return;
-		var climb=(tp.alt-trackpoints[trackpoints.length-2].alt);
-		if(climb>0) ascent+=climb;
 		if(trackpoints.length==2) trace=L.polyline([trackpoints[0].latlng,trackpoints[1].latlng],{color:'black',weight:9,opacity:0.25}).addTo(map);
 		else if(trackpoints.length>2) trace.addLatLng(tp.latlng);
 	}
@@ -282,6 +282,7 @@
 		lastLoc={};
 		distance=0;
 		ascent=0;
+		show('finish',false);
 		show('dash',true);
 		show('moreControls', false);
 		id('duration').innerText='0:00';
@@ -442,14 +443,16 @@
 		var route={};
 		route.distance=distance;
 		route.ascent=ascent;
-		if(nodes.length>0) route.nodes=nodes; // save new route
-		else { // save track as route
+		if(trackpoints.length>0) { // end tracking - save as route
+		notify('save track with '+trackpoints.length+' trackpoints');
 			route.nodes=[];
 			for(var i=0;i<trackpoints.length();i++) {
 				route.nodes[i].latlng=trackpoints[i].latlng;
 				route.nodes[i].alt=trackpoints[i].alt;
 			}
 		}
+		else if(nodes.length>0) route.nodes=nodes; // save new route
+		notify('save route with '+nodes.length+' nodes');
 		json=JSON.stringify(route);
 		window.localStorage.setItem(name,json);
 		routeNames.push(name);
@@ -515,6 +518,7 @@
 		distance=parseInt(route.distance);
 		nodes=route.nodes;
 		dist=0;
+		ascent=0;
 		notify("load route with "+nodes.length+" nodes; length: "+distance+"m");
 		show('listScreen',false);
 		loc.latlng=nodes[0].latlng; // NEW
