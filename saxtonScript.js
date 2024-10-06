@@ -252,6 +252,7 @@
 		if(trackpoints.length<2) return;
 		var climb=(tp.alt-trackpoints[trackpoints.length-2].alt);
 		if(climb>0) ascent+=climb;
+		notify('climb: '+climb+'; ascent: '+ascent);
 		if(trackpoints.length==2) trace=L.polyline([trackpoints[0].latlng,trackpoints[1].latlng],{color:'black',weight:9,opacity:0.25}).addTo(map);
 		else if(trackpoints.length>2) trace.addLatLng(tp.latlng);
 	}
@@ -349,8 +350,13 @@
 				name+=t; // YYmonDD.HH:MM
 				notify("track name: "+name);
 				id("saveName").value=name;
-				id('saveDistance').value=((unit='mi')? distance*0.621371:distance)+unit;
-				id('saveAscent').value=ascent+'m';
+				dist=distance/1000; // km
+				if(unit=='mi') dist*=0.621371;
+				dist=decimal(dist); // one decimal place
+				ascent=Math.round(ascent); // whole m
+				notify('save track length: '+dist+'; '+ascent+'m ascent');
+				id('saveDistance').innerText=dist+unit;
+				id('saveAscent').innerText=ascent+'m';
 				show('saveDialog',true);
 			}
 		// }
