@@ -279,6 +279,7 @@
 		ready=false;
 		tracking=true;
 		trackpoints=[];
+		if(trace!==null) trace.remove();
 		loc={};
 		lastLoc={};
 		distance=0;
@@ -454,7 +455,7 @@
 		route.ascent=ascent;
 		if(trackpoints.length>0) { // stop tracking - save track as route
 			route.nodes=[];
-			for(var i=0;i<trackpoints.length();i++) {
+			for(var i=0;i<trackpoints.length;i++) {
 				route.nodes[i].latlng=trackpoints[i].latlng;
 				route.nodes[i].alt=trackpoints[i].alt;
 			}
