@@ -132,7 +132,7 @@
     	maxZoom: 19,
     	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(map);
-	*/
+	*/https://vtiles.openhistoricalmap.org/maps/osm/{z}/{x}/{y}.pbf
 	// CyclOSM
 	L.tileLayer('https://dev.c.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
     	maxZoom: 20,
@@ -341,13 +341,16 @@
 		if(trackpoints.length>5) { // offer to save track
 				name='';
 				var now = new Date();
-				var name = now.getYear()%100 + months.substr(now.getMonth()*3,3) + now.getDate() + '.'; // YYmonDD
+				var name = now.getYear()%100 + months.substr(now.getMonth()*3,3);
+				var n=now.getDate();
+				if(n<10) name+='0';
+				name+=(n+'-'); // YYmonDD-
 				var t =now.getHours();
 				if(t<10) name+="0";
-				name+=(t+":");
+				name+=(t+"-");
 				t=now.getMinutes();
 				if(t<10) name+="0";
-				name+=t; // YYmonDD.HH:MM
+				name+=t; // YYmonDD-HH-mm
 				notify("track name: "+name);
 				id("saveName").value=name;
 				dist=distance/1000; // km
@@ -441,7 +444,7 @@
 	// SAVE TRACK/ROUTE
 	function saveRoute() {
 		var name=id("saveName").value;
-		notify("save track/route as "+name);
+		notify("save track/route as "+name+' - '+trackpoints.length+' trackpoints, '+nodes.length+' nodes');
 		if((routeNames.indexOf(name)>=0)) {
 			alert(name+" already in use");
 			return;
@@ -455,16 +458,19 @@
 				route.nodes[i].latlng=trackpoints[i].latlng;
 				route.nodes[i].alt=trackpoints[i].alt;
 			}
+			notify('track ready to save - length: '+route.distance+', ascent: '+route.ascent+', '+route.nodes.length+' nodes');
 		}
 		else if(nodes.length>0) route.nodes=nodes; // save new route
 		json=JSON.stringify(route);
 		window.localStorage.setItem(name,json);
+		notify('route saved');
 		routeNames.push(name);
 		var routes={};
 		routes.names=routeNames;
 		notify("save routenames: "+routes.names);
 		var json=JSON.stringify(routes);
 		window.localStorage.setItem("saxtonRoutes",json);
+		notify('route names saved');
 		distance=0;
 		show('saveDialog',false);
 	}
