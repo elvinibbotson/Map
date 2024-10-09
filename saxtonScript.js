@@ -159,7 +159,7 @@
 		else {
 			console.log('lastLoc: '+lastLoc.latlng+'; fix at '+loc.latlng);
 			dist=Math.round(map.distance(loc.latlng,lastLoc.latlng));
-			notify('fix - distance: '+dist+'m');
+			console.log('fix - distance: '+dist+'m');
 			if(dist>10) { // trackpoints every 10m INCREASE THIS?
 				addTP(loc.latlng);
 				lastLoc.latlng=loc.latlng;
@@ -345,12 +345,12 @@
 				var n=now.getDate();
 				if(n<10) name+='0';
 				name+=(n+'-'); // YYmonDD-
-				var t =now.getHours();
-				if(t<10) name+="0";
-				name+=(t+"-");
-				t=now.getMinutes();
-				if(t<10) name+="0";
-				name+=t; // YYmonDD-HH-mm
+				n =now.getHours();
+				if(n<10) name+="0";
+				name+=(n+"-");
+				n=now.getMinutes();
+				if(n<10) name+="0";
+				name+=n; // YYmonDD-HH-mm
 				notify("track name: "+name);
 				id("saveName").value=name;
 				dist=distance/1000; // km
@@ -562,7 +562,7 @@
 	}
 	function notify(note) {
 		notifications.push(note);
-		while(notifications.length>30) notifications.shift();
+		while(notifications.length>20) notifications.shift();
 		console.log(note);
 	}
 	function showNotifications() {
