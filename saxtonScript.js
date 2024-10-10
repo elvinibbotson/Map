@@ -178,7 +178,7 @@
 			dist=distance/1000; // km 
 			if(unit=='mi') dist*=0.621371192; // miles
 			console.log('distance: '+dist)
-			txt=decimal(dist)+unit;
+			txt=decimal(dist)+' '+unit;
 			// txt=Math.floor(dist*10)/10;
 			// if(unit=='km') txt+=' kph';
 			// else txt+=' mph';
@@ -279,7 +279,6 @@
 		ready=false;
 		tracking=true;
 		trackpoints=[];
-		if(trace!==null) trace.remove();
 		loc={};
 		lastLoc={};
 		distance=0;
@@ -288,8 +287,11 @@
 		show('finish',false);
 		show('moreControls', false);
 		id('duration').innerText='0:00';
-		id('distance').innerText='0'+unit;
-		id('speed').innerText='0'+(unit=='km')?'kph':'mph';
+		id('distance').innerText='0 '+unit;
+		var txt='0 ';
+		if(unit=='km') txt+=' kph';
+		else txt+='mph';
+		id('speed').innerText=txt;
 		notify("start tracking");
 		map.locate({watch:true, setView: false, enableHighAccuracy: true})
 		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
