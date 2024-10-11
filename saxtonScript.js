@@ -456,8 +456,10 @@
 		route.distance=distance;
 		route.ascent=ascent;
 		if(trackpoints.length>0) { // stop tracking - save track as route
+			notify('saving track as route - length: '+route.distance);
 			route.nodes=[];
 			for(var i=0;i<trackpoints.length;i++) {
+				route.nodes[i]={};
 				route.nodes[i].latlng=trackpoints[i].latlng;
 				route.nodes[i].alt=trackpoints[i].alt;
 			}
