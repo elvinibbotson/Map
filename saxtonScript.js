@@ -61,7 +61,7 @@
 		id('duration').innerText='route';
 		show('speed',false);
 		show('finish',true);
-		if(track!==null) track.remove(); // remove any earlier route
+		if(track) track.remove(); // remove any earlier route
 	});
 	id('finish').addEventListener('click',finishRoute);
 	id('routesButton').addEventListener('click',listRoutes);
@@ -293,6 +293,7 @@
 		else txt+='mph';
 		id('speed').innerText=txt;
 		notify("start tracking");
+		if(trace) trace.remove();
 		map.locate({watch:true, setView: false, enableHighAccuracy: true})
 		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
 		id("actionButton").removeEventListener("click", go);
@@ -464,7 +465,7 @@
 				route.nodes[i].alt=trackpoints[i].alt;
 			}
 			notify('track ready to save - length: '+route.distance+', ascent: '+route.ascent+', '+route.nodes.length+' nodes');
-			trace.remove(); // remove track from map
+			// trace.remove(); // remove track from map
 		}
 		else if(nodes.length>0) route.nodes=nodes; // save new route
 		json=JSON.stringify(route);
@@ -542,7 +543,7 @@
 		for(var i=0;i<nodes.length;i++) {
 			points[i]=nodes[i].latlng;
 		}
-		if(track!==null) track.remove(); // remove any earlier route
+		if(track) track.remove(); // remove any earlier route
 		track=L.polyline(points,{color:'red',weight:9,opacity:0.25}).addTo(map);
 	}
 	// DELETE ROUTE
