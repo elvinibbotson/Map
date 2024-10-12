@@ -5,6 +5,7 @@
 	var routing=false;
 	var ready=false;
 	var tracking=false;
+	var viewing=false;
 	var listIndex=0;
 	var track; // route polyline on map
 	var trace; // track polyline on map
@@ -146,7 +147,7 @@
 	map.on('click',mapTap); // NEW
 	map.on('locationfound',function(e) {
 		loc.latlng=e.latlng;
-		centreMap();
+		if(!viewing) centreMap(); // map follows location unless viewing
 		console.log('centred at '+loc.latlng+'; tracking is '+tracking);
 		loc.alt=Math.round(e.altitude);
 		loc.time=e.timestamp;
@@ -206,6 +207,17 @@
 		window.localStorage.setItem('lat',lat);
 		window.localStorage.setItem('lng',lng);
 		console.log('location saved: '+lng+','+lat );
+		// NEW CODE TO  ALLOW VIEWING MAP WHILE TRACKING
+		if(tracking) {
+			viewing=true;
+			window.setTimeout(stopViewing,30000);
+			notify('allow map viewing');
+		}
+	}
+	// STOP VIEWING AFTER 30 SECONDS AND CONTINUE TRACKING
+	function stopViewing() {
+		notify('end map viewing');
+		viewing=false;
 	}
 	// TAP MAP
 	function mapTap(e) {
@@ -278,6 +290,7 @@
 	function go() { // start tracking location
 		ready=false;
 		tracking=true;
+		viewing=false;
 		trackpoints=[];
 		loc={};
 		lastLoc={};
@@ -294,14 +307,14 @@
 		id('speed').innerText=txt;
 		notify("start tracking");
 		if(trace) trace.remove();
-		map.locate({watch:true, setView: false, enableHighAccuracy: true})
+		map.locate({watch:true, setView: false, enableHighAccuracy: true});
 		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
 		id("actionButton").removeEventListener("click", go);
 		id("actionButton").addEventListener("click", stopStart);
 		// show('measure',false);
 	}
 	function stopStart() {
-		notify("stopStart");
+		notify("stopStart - "+(tracking)?'pause':'resume'+' tracking');
 		if(tracking) pause();
 		else resume();
 	}
@@ -317,8 +330,9 @@
 		notify("RESUME");
 		show('stopButton',false);
 		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
-		tracking = true;
-		map.locate({watch:true});
+		tracking=true;
+		map.locate({watch:true, setView: false, enableHighAccuracy: true});
+		notify('tracking resumed');
 	}
 	function locationError(error) {
 		var message="";
