@@ -365,7 +365,6 @@
 				id('saveAscent').innerText=ascent+'m';
 				show('saveDialog',true);
 			}
-		// }
 		id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
 		id("actionButton").removeEventListener("click", stopStart);
 		id("actionButton").addEventListener("click", getFix);
@@ -408,6 +407,7 @@
 				nodes=[];
 				var node;
 				var climb;
+				ascent=0;
 				for(var i=0;i<coords.length;i++) {
 					node={};
 					coord=coords[i];
@@ -464,6 +464,7 @@
 				route.nodes[i].alt=trackpoints[i].alt;
 			}
 			notify('track ready to save - length: '+route.distance+', ascent: '+route.ascent+', '+route.nodes.length+' nodes');
+			trace.remove(); // remove track from map
 		}
 		else if(nodes.length>0) route.nodes=nodes; // save new route
 		json=JSON.stringify(route);
@@ -541,6 +542,7 @@
 		for(var i=0;i<nodes.length;i++) {
 			points[i]=nodes[i].latlng;
 		}
+		if(track!==null) track.remove(); // remove any earlier route
 		track=L.polyline(points,{color:'red',weight:9,opacity:0.25}).addTo(map);
 	}
 	// DELETE ROUTE
