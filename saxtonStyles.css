@@ -129,11 +129,11 @@ li {
 
 #plusButton {
 	left: 20px;
-	bottom: 20px;
+	bottom: 70px;
 }
 
 #minusButton {
-	left: 90px;
+	left: 20px;
 	bottom: 20px;
 }
 
@@ -141,12 +141,12 @@ li {
 	right: 20px;
 	bottom: 20px;
 }
-
+/*
 #stopButton {
 	right: 90px;
 	bottom: 20px;
 }
-
+*/
 #moreControls {
 	left: 0;
 	top: 0;
@@ -190,7 +190,6 @@ li {
 	top: 20px;
 	left: 230px;
 }
-
 #dash {
 	position: fixed;
 	top: 0;
@@ -202,7 +201,6 @@ li {
 	z-index: 5;
 	display: none;
 }
-
 #duration {
 	left: 20px;
 }
@@ -217,7 +215,6 @@ li {
 	width: 20%;
 	display: none;
 }
-
 #map {
 	top: 0;
 	left: 0;
@@ -227,7 +224,6 @@ li {
 	z-index: 1;
 	display: block;
 }
-
 #listScreen {
     position: fixed;
     -webkit-box-flex: 1;
@@ -246,7 +242,6 @@ li {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
-
 #closeButton {
     position: fixed;
     top: 0;
@@ -254,7 +249,6 @@ li {
     padding: 8px
     z-index: 50;
 }
-
 #list {
 	position: fixed;
 	top: 60px;
@@ -262,7 +256,6 @@ li {
     display: flex;
     flex-direction: column;
 }
-
 #listHeader {
 	position: fixed;
 	top: 0;
@@ -273,7 +266,6 @@ li {
 	background-color: black;
 	color: white;
 }
-
 #routeDetail {
 	position: fixed;
 	top: 0;
@@ -286,18 +278,15 @@ li {
 	z-index: 10;
 	display: none;
 }
-
 #routeInfo {
 	position: absolute;
 	bottom: 8px;
 }
-
 #routeButtons {
 	position: absolute;
 	bottom: 8px;
 	right: 8px;
 }
-
 #saveDialog {
 	position: fixed;
 	left: 0;
@@ -310,18 +299,15 @@ li {
 	z-index: 10;
 	display: none;
 }
-
 #saveInfo {
 	position: absolute;
 	bottom: 8px;
 }
-
 #saveButtons {
 	position: absolute;
 	bottom: 8px;
 	right: 24px;
 }
-
 #helpScreen {
     position: fixed;
     -webkit-box-flex: 1;
@@ -339,7 +325,6 @@ li {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
-
 #helpHeader {
 	position: fixed;
 	left: 0;
@@ -351,12 +336,9 @@ li {
 	font-weight: bold;
 	background: black;
 }
-
 #closeHelpButton {
 	float: right;
 }
-
 #key {
 	margin-top: 32px;
 }
-

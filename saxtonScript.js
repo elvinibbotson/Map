@@ -2,14 +2,15 @@
 	var map; // CyclOSM map
 	var x,y; 
 	var json;
-	var routing=false;
+	var routing=false; // creating new route
 	var ready=false;
-	var tracking=false;
-	var viewing=false;
+	var tracking=false; // tracking movement
+	var viewing=false; // viewing mmap while tracking
+	var paused=false; // paused tracking
 	var listIndex=0;
 	var track; // route polyline on map
 	var trace; // track polyline on map
-	var trackpoints=[]; // array of track objects - locations, altitudes, timestamps, lengths, durations,...
+	var trackpoints=[]; // array of track objects - locations, altitudes, timestamps
 	var route;
 	var routeNames=[];
 	var nodes=[]; // array of route node locations
@@ -18,7 +19,7 @@
 	var loc={};
 	var lastLoc={};
 	var fix;
-	var lng,lat,dist,distance,ascent; // fix & track data
+	var lng,lat,dist,distance,ascent,duration; // fix & track data
 	var deg = "&#176;";
 	var compass="N  NNENE ENEE  ESESE SSES  SSWSW WSWW  WNWNW NNWN  ";
 	var months="JanFebMarAprMayJunJulAugSepOctNovDec";
@@ -37,7 +38,7 @@
 		console.log('zoom out to '+zoom);
 	});
 	id("actionButton").addEventListener("click",getFix);
-	id("stopButton").addEventListener("click",cease);
+	// id("stopButton").addEventListener("click",cease);
 	id("saveButton").addEventListener("click",saveRoute);
 	id('moreButton').addEventListener('click',function(){
 		show('moreButton',false);
@@ -156,6 +157,8 @@
 		if(trackpoints.length<1) {
 			addTP(loc.latlng); // ...add first trackpoint
 			lastLoc.latlng=loc.latlng;
+			lastLoc.time=loc.time;
+			duration=0;
 		}
 		else {
 			console.log('lastLoc: '+lastLoc.latlng+'; fix at '+loc.latlng);
@@ -164,10 +167,12 @@
 			if(dist>10) { // trackpoints every 10m INCREASE THIS?
 				addTP(loc.latlng);
 				lastLoc.latlng=loc.latlng;
+				duration+=(loc.time-lastLoc.time); // only log trip duration while moving - no need for PAUSE
+				lastLoc.time=loc.time;
 				distance+=dist;
 			}
 			var txt='';
-			var duration=Math.floor(loc.time-trackpoints[0].time)/60000; // minutes
+			// var duration=Math.floor(loc.time-trackpoints[0].time)/60000; // minutes - OLD CODE
 			txt=Math.floor(duration/60)+':'; // HH:
 			console.log('hours: '+txt);
 			duration%=60; // minutes
@@ -270,13 +275,13 @@
 	}
 	// LOCATION FIX
 	function getFix() { // get fix on current location
-	console.log('get a fix');
+		console.log('get a fix');
 		map.locate({watch: false, setView: false, enableHighAccuracy: true});
 		id("actionButton").innerHTML='<img src="goButton24px.svg"/>';
-		id("actionButton").removeEventListener("click", getFix);
-		id("actionButton").addEventListener("click", go);
+		id("actionButton").removeEventListener("click",getFix);
+		id("actionButton").addEventListener("click",go);
 		ready=true;
-		window.setTimeout(timeUp,15000); // revert to fix button after 15 secs
+		window.setTimeout(timeUp,10000); // revert to fix button after 10 secs
 	}
 	function timeUp() {
 		if(tracking) return;
@@ -295,6 +300,7 @@
 		loc={};
 		lastLoc={};
 		distance=0;
+		duration=0;
 		ascent=0;
 		show('dash',true);
 		show('finish',false);
@@ -308,11 +314,14 @@
 		notify("start tracking");
 		if(trace) trace.remove();
 		map.locate({watch:true, setView: false, enableHighAccuracy: true});
-		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
-		id("actionButton").removeEventListener("click", go);
-		id("actionButton").addEventListener("click", stopStart);
+		// id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
+		id("actionButton").innerHTML='<img src="stopButton24px.svg"/>';
+		id("actionButton").removeEventListener("click",go);
+		// id("actionButton").addEventListener("click", stopStart);
+		id("actionButton").addEventListener("click", cease);
 		// show('measure',false);
 	}
+	/*
 	function stopStart() {
 		notify("stopStart - "+(tracking)?'pause':'resume'+' tracking');
 		if(tracking) pause();
@@ -334,6 +343,7 @@
 		map.locate({watch:true, setView: false, enableHighAccuracy: true});
 		notify('tracking resumed');
 	}
+	*/
 	function locationError(error) {
 		var message="";
 		switch (error.code) {
@@ -381,9 +391,10 @@
 				show('saveDialog',true);
 			}
 		id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
-		id("actionButton").removeEventListener("click", stopStart);
-		id("actionButton").addEventListener("click", getFix);
-		show('stopButton',false);
+		// id("actionButton").removeEventListener("click", stopStart);
+		id("actionButton").removeEventListener("click",cease);
+		id("actionButton").addEventListener("click",getFix);
+		// show('stopButton',false);
 	}
 	// POSITION MAP
 	function centreMap() { // move map to current location
