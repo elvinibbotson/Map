@@ -92,8 +92,9 @@
 	var sw=window.innerWidth;
 	var sh=window.innerHeight;
 	console.log("screen size: "+sw+"x"+sh);
-	// id('map').style.width=sw+'px';
-	// id('map').style.height=sh+'px';
+	id('map').style.width=sw+'px';
+	id('map').style.height=sh+20+'px';
+	console.log('MAP SIZE: '+id('map').style.width+'x'+id('map').style.height);
 	id('locus').style.left=(sw/2-12)+'px';
 	id('locus').style.top=(sh/2-12)+'px';
 	show('map',true);
