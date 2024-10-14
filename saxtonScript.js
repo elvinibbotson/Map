@@ -275,7 +275,7 @@
 		tp.time=loc.time;
 		trackpoints.push(tp);
 		if(trackpoints.length<2) return;
-		var climb=(tp.alt-trackpoints[trackpoints.length-2].alt);
+		var climb=tp.alt-lastLoc.alt; // WAS (tp.alt-trackpoints[trackpoints.length-2].alt);
 		if(climb>0) ascent+=climb;
 		notify('climb: '+climb+'; ascent: '+ascent);
 		if(trackpoints.length==2) trace=L.polyline([trackpoints[0].latlng,trackpoints[1].latlng],{color:'black',weight:9,opacity:0.25}).addTo(map);
