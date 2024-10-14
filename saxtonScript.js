@@ -92,8 +92,8 @@
 	var sw=window.innerWidth;
 	var sh=window.innerHeight;
 	console.log("screen size: "+sw+"x"+sh);
-	id('map').style.width=sw+'px';
-	id('map').style.height=sh+'px';
+	// id('map').style.width=sw+'px';
+	// id('map').style.height=sh+'px';
 	id('locus').style.left=(sw/2-12)+'px';
 	id('locus').style.top=(sh/2-12)+'px';
 	show('map',true);
@@ -158,6 +158,7 @@
 			addTP(loc.latlng); // ...add first trackpoint
 			lastLoc.latlng=loc.latlng;
 			lastLoc.time=loc.time;
+			lastLoc.alt=loc.alt;
 			duration=0;
 		}
 		else {
@@ -167,19 +168,25 @@
 			if(dist>10) { // trackpoints every 10m INCREASE THIS?
 				addTP(loc.latlng);
 				lastLoc.latlng=loc.latlng;
-				duration+=(loc.time-lastLoc.time); // only log trip duration while moving - no need for PAUSE
+				duration+=(loc.time-lastLoc.time);
 				lastLoc.time=loc.time;
 				distance+=dist;
 			}
+			else { // check if pausing
+				if((loc.time-lastLoc.time)>60000) { // moved <10m in 1 minute
+					lastLoc.time=loc.time; // ensure pause not added to duration
+				}
+			}
 			var txt='';
 			// var duration=Math.floor(loc.time-trackpoints[0].time)/60000; // minutes - OLD CODE
-			txt=Math.floor(duration/60)+':'; // HH:
+			var elapsed=duration/60000; // minutes
+			txt=Math.floor(elapsed/60)+':'; // HH:
 			console.log('hours: '+txt);
-			duration%=60; // minutes
-			duration=Math.floor(duration);
-			if(duration<10) txt+='0';
-			txt+=duration; // HH:MM
-			console.log('duration: '+txt);
+			elapsed%=60; // minutes
+			elapsed=Math.floor(elapsed);
+			if(elapsed<10) txt+='0';
+			txt+=elapsed; // HH:MM
+			console.log('elapsed time: '+txt);
 			id('duration').innerText=txt;
 			dist=distance/1000; // km 
 			if(unit=='mi') dist*=0.621371192; // miles
@@ -368,14 +375,14 @@
 		show('dash',false);
 		if(trackpoints.length>5) { // offer to save track
 				name='';
-				var now = new Date();
-				var name = now.getYear()%100 + months.substr(now.getMonth()*3,3);
+				var now=new Date();
+				var name=now.getYear()+months.substr(now.getMonth()*3,3);
 				var n=now.getDate();
 				if(n<10) name+='0';
-				name+=(n+'-'); // YYmonDD-
+				name+=(n+'-'); // YYYYmonDD-
 				n =now.getHours();
 				if(n<10) name+="0";
-				name+=(n+"-");
+				name+=(n+":");
 				n=now.getMinutes();
 				if(n<10) name+="0";
 				name+=n; // YYmonDD-HH-mm
