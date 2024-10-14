@@ -89,12 +89,11 @@
 	  routing=false;
 	  nodes=[];
 	});
-	var sw=window.innerWidth;
-	var sh=window.innerHeight;
+	var sw=screen.width; // WAS window.innerWidth;
+	var sh=screen.height; // WAS window.innerHeight;
 	console.log("screen size: "+sw+"x"+sh);
 	id('map').style.width=sw+'px';
-	id('map').style.height=sh+20+'px';
-	console.log('MAP SIZE: '+id('map').style.width+'x'+id('map').style.height);
+	id('map').style.height=sh+'px';
 	id('locus').style.left=(sw/2-12)+'px';
 	id('locus').style.top=(sh/2-12)+'px';
 	show('map',true);
@@ -377,7 +376,7 @@
 		if(trackpoints.length>5) { // offer to save track
 				name='';
 				var now=new Date();
-				var name=now.getYear()+months.substr(now.getMonth()*3,3);
+				var name=now.getFullYear()+months.substr(now.getMonth()*3,3);
 				var n=now.getDate();
 				if(n<10) name+='0';
 				name+=(n+'-'); // YYYYmonDD-
