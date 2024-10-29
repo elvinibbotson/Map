@@ -46,7 +46,6 @@
 	});
 	id('routeButton').addEventListener('click',function(){
 		routing=true;
-		// route={};
 		distance=0;
 		dist=0;
 		ascent=0;
@@ -54,12 +53,9 @@
 		nodes=[];
 		var node={};
 		notify("routing");
-		show('stopButton',false);
 		show('actionButton',false);
 		show('moreControls',false);
-		// show('routeLength',true);
 		show('dash',true);
-		// show('duration',false);
 		id('duration').innerText='route';
 		show('speed',false);
 		show('finish',true);
@@ -521,7 +517,6 @@
 		id('list').innerHTML='';
 		for(var i=0; i<routeNames.length; i++) {
   			var listItem = document.createElement('li');
-  			// NEW CODE...
   			listItem.index=i;
   			listItem.innerText=routeNames[i];
   			listItem.addEventListener('click',function(){listIndex=this.index; showRouteDetail();}); // select a route
@@ -529,6 +524,7 @@
   		}
 		show('listScreen',true);
 		show('controls',false);
+		// show('listHeader',true);
 		show('more',false);
 	}
 	// SHOW ROUTE DETAIL
