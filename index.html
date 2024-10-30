@@ -40,7 +40,7 @@
 	<div id='duration' class='gauge'></div>
 	<div id='distance' class='gauge'></div>
 	<div id='speed' class='gauge'></div>
-	<div id='finish' class='gauge'>finish</div>
+	<div id='finish' class='gauge'><button class='textButton'>finish</button></div>
 </div>
 <div id='locus'><img src='locus24px.svg'/></div>
 
@@ -61,13 +61,14 @@
     	</div>
     </div>
 </div>
-<div id='saveDialog' class='dialog'>Save as: <input type="text" id="saveName" class='nameBox'/>
+<div id='saveDialog' class='dialog'>
+	<div> Save as: <input type="text" id="saveName" class='nameBox'/></div>
 	<div id=saveInfo>
 		<span id='saveDistance'></span> ascent: <span id='saveAscent'></span>
 	</div>
 	<div id='saveButtons'>
-		<button id="cancelButton">cancel</button>
-		<button id="saveButton"> save </button>
+		<button id="cancelButton" class='textButton'>cancel</button>
+		<button id="saveButton" class='textButton'> save </button>
 	</div>
 </div>
 <div id='helpScreen'>
