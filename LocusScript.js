@@ -132,10 +132,17 @@
 	}).addTo(map);
 	*/https://vtiles.openhistoricalmap.org/maps/osm/{z}/{x}/{y}.pbf
 	// CyclOSM
+	/* THIS USED TO WORK
 	L.tileLayer('https://dev.c.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
     	maxZoom: 20,
     	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
 	}).addTo(map);
+	*/
+	L.tileLayer('https://a.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+    	maxZoom: 24,
+    	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
+	}).addTo(map);
+	
 	map.on('moveend',saveLoc);
 	map.on('zoom',function(){
 		zoom=map.getZoom();
