@@ -160,6 +160,19 @@ li {
 	height: 70px;
 	display: none;
 }
+#modeButton {
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: 25%;
+	height: 35px;
+	padding: 12px;
+	background: none;
+	color: black;
+	font-size: 16px;
+	z-index: 10;
+	display: block;
+}
 #moreButton {
     left: 20px;
     top: 20px;

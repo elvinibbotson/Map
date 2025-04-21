@@ -1,4 +1,5 @@
 	"use strict";
+	var mode=null;
 	var map; // CyclOSM map
 	var x,y; 
 	var json;
@@ -25,6 +26,11 @@
 	var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 	var notifications=[];
 	// EVENT HANDLERS
+	id('modeButton').addEventListener('click', function(){
+		if(mode=='walk') mode='bike';
+		else mode='walk';
+		setMode();
+	});
 	id('plusButton').addEventListener('click',function(){
 		map.zoomIn();
 		zoom=map.getZoom();
@@ -105,6 +111,9 @@
 	show('routesButton',true);
 	show('unitButton',true);
 	show('helpButton',true);
+	mode=window.localStorage.getItem('mode');
+	console.log('mode: '+mode);
+	if(!mode) mode='walk';
 	lat=window.localStorage.getItem('lat');
 	lng=window.localStorage.getItem('lng');
 	console.log('saved location: '+lng+','+lat);
@@ -124,24 +133,11 @@
 	}
 	console.log('unit: '+unit);
 	id('unitButton').innerText=unit;
+	
 	map=L.map('map',{zoomControl: false}).setView([lat,lng],zoom); // default location in Derbyshire
-	/* standard OSM
-	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    	maxZoom: 19,
-    	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-	}).addTo(map);
-	*/
-	// CyclOSM
-	L.tileLayer('https://dev.c.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
-    	maxZoom: 20,
-    	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
-	}).addTo(map);
-	/* ALTERNATIVE...
-	L.tileLayer('https://a.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
-    	maxZoom: 24,
-    	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
-	}).addTo(map);
-	*/
+	
+	setMode();
+	
 	map.on('moveend',saveLoc);
 	map.on('zoom',function(){
 		zoom=map.getZoom();
@@ -211,6 +207,24 @@
 	map.on('locationerror',onLocationError);
 	function onLocationError(e) {
 		alert(e.message);
+	}
+	// SET MODE
+	function setMode() {
+		if(mode=='walk') L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    		maxZoom: 19,
+    		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		}).addTo(map); // CyclOSM
+		else L.tileLayer('https://dev.c.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+    		maxZoom: 20,
+    		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
+		}).addTo(map); // basic OSM
+		/* ALTERNATIVE CyclOSM...
+		L.tileLayer('https://a.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+    		maxZoom: 24,
+    		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
+		}).addTo(map);
+		*/
+		id('modeButton').innerText=mode;
 	}
 	// SAVE LOCATION
 	function saveLoc() {
@@ -423,7 +437,8 @@
 		show('dash',false);
 		show('finish',false);
 		show('actionButton',true);
-		// OPEN ROUTE SERVICE
+		if(mode=='walk') return; // simple routes for walking
+		// for bike mode use OPEN ROUTE SERVICE
 		var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
 		var request= new XMLHttpRequest();
 		request.open('POST','https://api.openrouteservice.org/v2/directions/cycling-electric/geojson');
