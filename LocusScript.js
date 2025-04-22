@@ -133,11 +133,8 @@
 	}
 	console.log('unit: '+unit);
 	id('unitButton').innerText=unit;
-	
 	map=L.map('map',{zoomControl: false}).setView([lat,lng],zoom); // default location in Derbyshire
-	
 	setMode();
-	
 	map.on('moveend',saveLoc);
 	map.on('zoom',function(){
 		zoom=map.getZoom();
@@ -437,11 +434,11 @@
 		show('dash',false);
 		show('finish',false);
 		show('actionButton',true);
-		if(mode=='walk') return; // simple routes for walking
-		// for bike mode use OPEN ROUTE SERVICE
 		var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
 		var request= new XMLHttpRequest();
-		request.open('POST','https://api.openrouteservice.org/v2/directions/cycling-electric/geojson');
+		if(mode=='walk') request.open('POST','https://api.openrouteservice.org/v2/directions/foot-walking/geojson');
+		else request.open('POST','https://api.openrouteservice.org/v2/directions/cycling-regular/geojson');
+		// request.open('POST','https://api.openrouteservice.org/v2/directions/cycling-electric/geojson');
 		request.setRequestHeader('Accept','application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
 		request.setRequestHeader('Content-type','application/json');
 		request.setRequestHeader('Authorization',KEY);
