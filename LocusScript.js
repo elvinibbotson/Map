@@ -543,7 +543,7 @@
 		show('listScreen',true);
 		show('controls',false);
 		// show('listHeader',true);
-		show('more',false);
+		show('moreControls',false);
 	}
 	// SHOW ROUTE DETAIL
 	function showRouteDetail() {

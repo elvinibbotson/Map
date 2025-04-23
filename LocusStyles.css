@@ -3,7 +3,8 @@ html, body {
   margin: 0;
   height: 100%;
   width: 100%;
-  font-family: 'Helvetica', 'Verdana', sans-serif;
+  /* font-family: 'Helvetica', 'Verdana', sans-serif;*/
+  font-family: 'Courier', monospace;
   font-weight: 400;
   font-display: optional;
   color: #444;
@@ -41,11 +42,20 @@ body {
 }
 input, label, select {
     font-size: large;
+    font-family: 'Courier', monospace;
+}
+input {
+	height: 20px;
+	padding: 0;
+	color: white;
+	background-color: dimgray;
+	border: none;
 }
 button {
 	border: none;
 	background: none;
 	color: white;
+	font-family: 'Courier', monospace;
 	font-size: 16px;
 	font-weight: bold;
 }
@@ -53,7 +63,7 @@ li {
 	height: 30px;
 }
 .heavy {
-    font: bold 30px sans-serif;
+    font: bold 30px monospace;
     fill: #FFFFFF;
 }
 .round-button {
@@ -169,6 +179,7 @@ li {
 	padding: 12px;
 	background: none;
 	color: gray;
+	font-family: 'Courier', monospace;
 	font-size: 16px;
 	z-index: 10;
 	display: block;
@@ -272,6 +283,7 @@ li {
 	width: 100%;
 	padding: 10px;
 	background-color: #333333;
+	font-family: 'Courier', monospace;
 	color: white;
 }
 #routeDetail {
