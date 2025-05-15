@@ -475,6 +475,7 @@
 		show('listScreen',true);
 		show('controls',false);
 		show('moreControls',false);
+		show('more',false);
 	}
 	// CENTRE MAP AT PLACE
 	function goToPlace() {
