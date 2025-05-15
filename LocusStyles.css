@@ -60,7 +60,8 @@ button {
 	font-weight: bold;
 }
 li {
-	height: 30px;
+	height: 40px;
+	font-size: 0.75em;
 }
 .heavy {
     font: bold 30px monospace;
@@ -129,10 +130,16 @@ li {
 	border-radius: 10px;
 	margin: 5px;
 	padding: 5px;
+	float: right;
 	font-size:16px;
 	font-weight: bold;
 	color: white;
 	background-color:gray;
+}
+.elevIcon {
+	font-size: 0.75em;
+	background-color: #FFFFFF88;
+	color: red;
 }
 #locus {
 	position: fixed;
@@ -170,52 +177,37 @@ li {
 	height: 70px;
 	display: none;
 }
-#modeButton {
-	position: fixed;
-	right: 0;
-	top: 0;
-	width: 25%;
-	height: 35px;
-	padding: 12px;
-	background: none;
-	color: gray;
-	font-family: 'Courier', monospace;
-	font-size: 16px;
-	z-index: 10;
-	display: block;
-}
 #moreButton {
     left: 20px;
     top: 20px;
 }
 #more {
-	position: fixed;
-	top: 20px;
-	left: 20px;
-	width: 260px;
-	height: 50px;
+
+	padding: 10px;
 	border: 0px solid 0;
 	border-radius: 15px;
+	color: white;
 	background-color: gray;
 	font-size: 1em;
 	z-index: 5;
 	display: none;
 }
+#buttonsGroup {
+	width: 100%;
+	top: 40px;
+}
 #routeButton {
-	top: 20px;
-	left: 20px;
+	position: absolute;
+	bottom: 5px;
+	left: 5%;
 }
 #routesButton {
-	top: 20px;
-	left: 90px;
+	position: absolute;
+	bottom: 5px;
+	left: 20%;
 }
-#unitButton {
-	top: 20px;
-	left: 160px;
-}
-#helpButton {
-	top: 20px;
-	left: 230px;
+#findText {
+	height: 30px;
 }
 #dash {
 	height: 40px;
@@ -244,68 +236,44 @@ li {
 	display: block;
 }
 #listScreen {
-    position: fixed;
     -webkit-box-flex: 1;
     -webkit-flex: 1;
     -ms-flex: 1;
     flex: 1;
     left: 0;
     top : 0;
-    width: 100%;
-    height: 100%;
     color: white;
-    background-color: #333333;
+    background-color: gray;
 	display: none;
     z-index: 5;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
-#closeButton {
-    position: fixed;
-    top: 0;
-    right: 0;
-    padding: 8px
-    z-index: 50;
-}
 #list {
-	position: fixed;
-	top: 60px;
+	top: 100px;
+	height: 100%;
     list-style-type: none;
     display: flex;
     flex-direction: column;
-}
-#listHeader {
-	display='block';
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	padding: 10px;
-	background-color: #333333;
-	font-family: 'Courier', monospace;
-	color: white;
 }
 #routeDetail {
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 80%;
-	height: 48px;
 	padding: 10px;
-	background-color: black;
+	background-color: gray;
 	color: white;
 	z-index: 10;
 	display: none;
 }
 #routeInfo {
 	position: absolute;
-	bottom: 8px;
+	/* bottom: 8px; */
 }
 #routeButtons {
-	position: absolute;
-	bottom: 8px;
-	right: 8px;
+	width: 100%;
+	top: 50px;
 }
 #saveDialog {
 	height: 80px;
@@ -318,38 +286,4 @@ li {
 	position: absolute;
 	bottom: 10px;
 	right: 10px;
-}
-#helpScreen {
-    position: fixed;
-    -webkit-box-flex: 1;
-    -webkit-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    left: 0;
-    top : 0;
-    width: 100%;
-    height: 100%;
-    color: black;
-	display: none;
-    z-index: 5;
-    overflow-x: hidden;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-#helpHeader {
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 32px;
-	color: white;
-	font-size: 24px;
-	font-weight: bold;
-	background: black;
-}
-#closeHelpButton {
-	float: right;
-}
-#key {
-	margin-top: 32px;
 }

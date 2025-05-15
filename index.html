@@ -9,8 +9,7 @@
   	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     	integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     	crossorigin=""/>
-  	<link rel="manifest" href="manifest.json">
-  	
+    <link rel="manifest" href="manifest.json">
   	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     	integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     	crossorigin=""></script>
@@ -28,13 +27,17 @@
 </div>
 <div id='moreControls'>
 	<button id="moreButton" class="round-button"><img src='moreButton24px.svg'/></button>
-	<div id='more'>
-		<button id='routeButton' class='clear-button'><img src='routeButton24px.svg'/></button>
-		<button id='routesButton' class='clear-button'><img src='routesButton24px.svg'/></button>
-		<button id='unitButton' class='clear-button'><img src='unitButton24px.svg'/></button>
-		<button id='helpButton' class='clear-button'><img src='helpButton24px.svg'/></button>
+	<div id='more' class='dialog'>
+		<div id='findGroup'>
+			find: <input type="text" id="findText"/>
+		</div>
+		<div id='buttonsGroup'>
+			<button id='routeButton' class='clear-button'><img src='routeButton24px.svg'/></button>
+			<button id='routesButton' class='clear-button'><img src='routesButton24px.svg'/></button>
+			<button id='unitButton' class='textButton'>km</button>
+			<button id='modeButton' class='textButton'>mode</button>
+		</div>
 	</div>
-	<button id='modeButton'>mode</button>
 </div>
 <div id='dash' class='dialog'>
 	<div id='duration' class='gauge'></div>
@@ -43,22 +46,20 @@
 	<div id='finish' class='gauge'><button class='textButton'>finish</button></div>
 </div>
 <div id='locus'><img src='locus24px.svg'/></div>
-
-<div id="listScreen">
-	<div id='listHeader'>
-		<b>ROUTES</b>
-		<button id='closeButton' class='clearButton'><img src='closeButton24px.svg'/></button>
-	</div>
+<div id="listScreen" class='dialog'>
     <ul id='list'></ul>
-    <div id='routeDetail'>
-    	<input type='text' id='routeName' class='nameBox'>
-    	<div id='routeInfo'>
-    		<span id='routeLength'></span>&nbsp;&nbsp;ascent: <span id='routeAscent'></span>
-    	</div>
-    	<div id='routeButtons'>
-    		<button id='loadButton'> load </button>
-    		<button id='deleteButton'>delete</button>
-    	</div>
+</div>
+<div id='routeDetail' class='dialog'>
+	<input type='text' id='routeName' class='nameBox'><br>
+    <!--div id='routeInfo'-->
+   		<span id='routeLength'></span>&nbsp;&nbsp;ascent: <span id='routeAscent'></span>
+   	<!--/div-->
+   	<div id='routeProfile'>
+   		
+   	</div>
+    <div id='routeButtons'>
+    	<button id='loadButton' class='textButton'>&nbsp;load&nbsp;</button>
+    	<button id='deleteButton' class='textButton'>delete</button>
     </div>
 </div>
 <div id='saveDialog' class='dialog'>
@@ -71,13 +72,17 @@
 		<button id="saveButton" class='textButton'> save </button>
 	</div>
 </div>
-<div id='helpScreen'>
+<div id='findDialog' class='dialog'>
+	<div> Find: <input type="text" id="findText" class="nameBox"/></div>
+	<div id="foundList"></div>
+</div>
+<!--div id='helpScreen'>
 	<div id='helpHeader'>
 		<span onclick="showNotifications()">&nbsp;&nbsp;KEY</span>
 		<button id='closeHelpButton' class='clearButton'><img src='closeButton24px.svg'/></button>
 	</div>
 	<img id='key' src='key.png'/>
-</div>
+</div-->
 <script src="LocusScript.js" async></script>
 </body>
 </html>

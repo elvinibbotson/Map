@@ -14,6 +14,8 @@
 	var trackpoints=[]; // array of track objects - locations, altitudes, timestamps
 	var route;
 	var routeNames=[];
+	var place={}; // place name, location, etc
+	var places=[]; // places resulting from 'find...' query
 	var nodes=[]; // array of route node locations
 	var unit='km';
 	var zoom=10;
@@ -24,6 +26,7 @@
 	var deg = "&#176;";
 	var compass="N  NNENE ENEE  ESESE SSES  SSWSW WSWW  WNWNW NNWN  ";
 	var months="JanFebMarAprMayJunJulAugSepOctNovDec";
+	var orsKey='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
 	var notifications=[];
 	// EVENT HANDLERS
 	id('modeButton').addEventListener('click', function(){
@@ -69,23 +72,51 @@
 	});
 	id('finish').addEventListener('click',finishRoute);
 	id('routesButton').addEventListener('click',listRoutes);
-	id('closeButton').addEventListener('click',function(){
+	/* id('closeButton').addEventListener('click',function(){
 	    show('listScreen',false);
 	    trackpoints=[];
 	    nodes=[];
 	    show('actionButton',true);
-	});
+	});*/
 	id('routeName').addEventListener('change',renameRoute);
 	id('loadButton').addEventListener('click',loadRoute);
 	id('deleteButton').addEventListener('click',deleteRoute);
+	id('findText').addEventListener('change',function(){
+		console.log('find '+id('findText').value);
+		// var searchString='https://search.mapzen.com/v1/search?text='+id('findText').value+'&size=5';
+		// var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
+		var request= new XMLHttpRequest();
+		request.open('GET','https://api.openrouteservice.org/geocode/search?api_key='+orsKey+'&text='+id('findText').value+'&size=10');
+		request.setRequestHeader('Accept', 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
+		request.onreadystatechange=function() {
+			console.log('request state: '+this.readyState);
+			if(this.readyState===4) {
+				console.log('status: ',this.status);
+				console.log('headers: ',this.getAllResponseHeaders());
+				console.log('body: ',this.responseText);
+				json=JSON.parse(this.responseText);
+				console.log(json.features.length+' features...');
+				places=[];
+				for(var i=0;i<json.features.length;i++) {
+					place={};
+					place.name=json.features[i].properties.name;
+					place.region=json.features[i].properties.region;
+					place.country=json.features[i].properties.country;
+					place.location=json.features[i].geometry.coordinates;
+					console.log(place.name+', '+place.country+', '+place.location);
+					places.push(place);
+				}
+				if(places.length>0) listPlaces();
+			}
+		}
+		request.send();
+	})
 	id('unitButton').addEventListener('click',function(){
-		if(unit=='km') unit='mi';
-		else unit='km'; // toggle distance unit
-		id('unitButton').innerText=unit;
+		if(unit=='km.') unit='mi.';
+		else unit='km.'; // toggle distance unit
+		id('unitButton').innerHTML='&nbsp;'+unit;
 		window.localStorage.setItem('unit',unit);
 	});
-	id('helpButton').addEventListener('click',function(){show('helpScreen',true)});
-	id('closeHelpButton').addEventListener('click',function(){show('helpScreen',false)});
 	id("cancelButton").addEventListener("click", function(){
 	  show('saveDialog',false);
 	  routing=false;
@@ -110,7 +141,6 @@
 	show('routeButton',true);
 	show('routesButton',true);
 	show('unitButton',true);
-	show('helpButton',true);
 	mode=window.localStorage.getItem('mode');
 	console.log('mode: '+mode);
 	if(!mode) mode='walk';
@@ -132,7 +162,7 @@
 		notify(routeNames.length+' routes');
 	}
 	console.log('unit: '+unit);
-	id('unitButton').innerText=unit;
+	id('unitButton').innerHTML='&nbsp;'+unit;
 	map=L.map('map',{zoomControl: false}).setView([lat,lng],zoom); // default location in Derbyshire
 	setMode();
 	map.on('moveend',saveLoc);
@@ -272,7 +302,10 @@
 			show('moreControls',false);
 			show('more',false);
 		}
+		else if(id('listScreen').style.display=='block') show('listScreen',false);
+		else if(id('routeDetail').style.display=='block') show('routeDetail',false);
 		else {
+			id('findText').value='';
 			show('controls',true);
 			show('moreControls',true);
 			show('moreButton',true);
@@ -422,8 +455,40 @@
 		// notify("centre map at N"+loc.lat+" E"+loc.lng);
 		console.log('centreMap at '+loc.latlng);
 		map.setView(loc.latlng,zoom);
-		var i, x, y;
+		var i,x,y;
 		saveLoc();
+	}
+	// LIST PLACES
+	function listPlaces() {
+		console.log('list '+places.length+' places');
+		id('list').innerHTML='';
+		var listItem=document.createElement('li');
+		listItem.innerHTML='<b>PLACES</b>';
+		id('list').appendChild(listItem);
+		for(var i=0;i<places.length;i++) {
+			listItem = document.createElement('li');
+  			listItem.index=i;
+  			listItem.innerText=places[i].name+', '+places[i].region+', '+places[i].country;
+  			listItem.addEventListener('click',function(){listIndex=this.index; goToPlace();}); // select a route
+			id('list').appendChild(listItem);
+		}
+		show('listScreen',true);
+		show('controls',false);
+		show('moreControls',false);
+	}
+	// CENTRE MAP AT PLACE
+	function goToPlace() {
+		var place=places[listIndex];
+		console.log('go to '+place.location);
+		lat=place.location[1];
+		lng=place.location[0];
+		console.log('lat: '+lat+'; lng: '+lng);
+		loc.latlng=[lat,lng];
+		// loc.latlng=places[listIndex].location;
+		console.log('go to '+loc.latlng);
+		show('listScreen',false);
+		// map.setView(location,zoom);
+		centreMap();
 	}
 	// FINISH ROUTING
 	function finishRoute() {
@@ -434,14 +499,14 @@
 		show('dash',false);
 		show('finish',false);
 		show('actionButton',true);
-		var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
+		// var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
 		var request= new XMLHttpRequest();
 		if(mode=='walk') request.open('POST','https://api.openrouteservice.org/v2/directions/foot-walking/geojson');
 		else request.open('POST','https://api.openrouteservice.org/v2/directions/cycling-regular/geojson');
 		// request.open('POST','https://api.openrouteservice.org/v2/directions/cycling-electric/geojson');
 		request.setRequestHeader('Accept','application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
 		request.setRequestHeader('Content-type','application/json');
-		request.setRequestHeader('Authorization',KEY);
+		request.setRequestHeader('Authorization',orsKey);
 		request.onreadystatechange=function() {
 			if(this.readyState===4) {
 				console.log('status',this.status);
@@ -455,15 +520,28 @@
 				nodes=[];
 				var node;
 				var climb;
+				var climbing=false; // high/low points when switches true/false
 				ascent=0;
 				for(var i=0;i<coords.length;i++) {
 					node={};
 					coord=coords[i];
 					node.latlng=L.latLng(coord[1],coord[0]);
-					node.alt=coord[2];
+					node.alt=Math.round(coord[2]);
+					if((i<1)||(i==coords.length-1)) node.elev=true; // elevation at start and end nodes
+					else node.elev=false; // most nodes do not have elevations
 					nodes.push(node);
 					if(i>0) climb=(node.alt-nodes[nodes.length-2].alt);
-					if(climb>0) ascent+=climb;
+					if(climb>0) {
+						if(!climbing) {
+							nodes[i-1].elev=true; // elevation at low point
+							climbing=true;
+						}
+						ascent+=climb;
+					}
+					else if((climb<0)&&(climbing)) {
+						nodes[i-1].elev=true;
+						climbing=false;
+					}
 				}
 				console.log('route length: '+distance+'; '+nodes.length+'nodes; node[0]: '+nodes[0].latlng+'; alt: '+nodes[0].alt);
 				coords=[];
@@ -471,6 +549,16 @@
 				console.log('new route: '+coords);
 				track.remove(); // replace old route with new one
 				track=L.polyline(coords,{color:'red',weight:9,opacity:0.25}).addTo(map);
+				// add elevations
+				console.log(nodes.length+' nodes');
+				for(i=0;i<nodes.length;i++) {
+					if(nodes[i].elev){
+						console.log('add elevation to node '+i);
+						var elev=L.divIcon({html: nodes[i].alt, className: 'elevIcon'});
+						L.marker(nodes[i].latlng,{icon:elev}).addTo(map);
+					}
+				}
+				
 				notify("save route?");
 				id('saveName').value="";
 				dist=distance/1000; // km
@@ -533,8 +621,11 @@
 		console.log('list '+routeNames.length+' routes');
 		if(routeNames.length<1) return;
 		id('list').innerHTML='';
-		for(var i=0; i<routeNames.length; i++) {
-  			var listItem = document.createElement('li');
+		var listItem=document.createElement('li');
+		listItem.innerHTML='<b>ROUTES</b>';
+		id('list').appendChild(listItem);
+		for(var i=0;i<routeNames.length;i++) {
+  			listItem = document.createElement('li');
   			listItem.index=i;
   			listItem.innerText=routeNames[i];
   			listItem.addEventListener('click',function(){listIndex=this.index; showRouteDetail();}); // select a route
@@ -542,7 +633,6 @@
   		}
 		show('listScreen',true);
 		show('controls',false);
-		// show('listHeader',true);
 		show('moreControls',false);
 	}
 	// SHOW ROUTE DETAIL
@@ -557,6 +647,7 @@
 		id('routeName').value=routeNames[listIndex];
 		id('routeLength').innerText=distance+unit;
 		id('routeAscent').innerText=Math.round(route.ascent)+'m';
+		show('listScreen',false);
 		show('routeDetail',true);
 	}
 	// RENAME ROUTE
@@ -583,12 +674,17 @@
 		nodes=route.nodes;
 		dist=0;
 		notify("load route with "+nodes.length+" nodes; length: "+distance+"m");
-		show('listScreen',false);
+		show('routeDetail',false);
 		loc.latlng=nodes[0].latlng; // NEW
 		centreMap();
 		var points=[];
 		for(var i=0;i<nodes.length;i++) {
 			points[i]=nodes[i].latlng;
+			if(nodes[i].elev) { // draw elevations at high/low points
+				console.log('add elevation to node '+i);
+				var elev=L.divIcon({html: nodes[i].alt, className: 'elevIcon'});
+				L.marker(nodes[i].latlng,{icon:elev}).addTo(map);
+			}
 		}
 		if(track) track.remove(); // remove any earlier route
 		track=L.polyline(points,{color:'red',weight:9,opacity:0.25}).addTo(map);
