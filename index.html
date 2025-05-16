@@ -43,7 +43,10 @@
 	<div id='duration' class='gauge'></div>
 	<div id='distance' class='gauge'></div>
 	<div id='speed' class='gauge'></div>
-	<div id='finish' class='gauge'><button class='textButton'>finish</button></div>
+	<div id='finishButtons'>
+		<button id='finishButton' class='textButton'>finish</button></div>
+		<button id='cancelRouting' class='textButton'>cancel</button></div>
+	</div>
 </div>
 <div id='locus'><img src='locus24px.svg'/></div>
 <div id="listScreen" class='dialog'>
@@ -63,13 +66,13 @@
     </div>
 </div>
 <div id='saveDialog' class='dialog'>
-	<div> Save as: <input type="text" id="saveName" class='nameBox'/></div>
-	<div id=saveInfo>
-		<span id='saveDistance'></span> ascent: <span id='saveAscent'></span>
+	<div>save: <input type="text" id="saveName" class='nameBox'/><br>
+	<!--div id=saveInfo-->
+	<span id='saveDistance'></span> ascent: <span id='saveAscent'></span>
 	</div>
 	<div id='saveButtons'>
+		<button id="saveButton" class='textButton'>&nbsp;save&nbsp;</button>
 		<button id="cancelButton" class='textButton'>cancel</button>
-		<button id="saveButton" class='textButton'> save </button>
 	</div>
 </div>
 <div id='findDialog' class='dialog'>

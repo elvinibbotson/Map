@@ -67,17 +67,15 @@
 		show('dash',true);
 		id('duration').innerText='route';
 		show('speed',false);
-		show('finish',true);
+		show('finishButton',true);
 		if(track) track.remove(); // remove any earlier route
 	});
-	id('finish').addEventListener('click',finishRoute);
+	id('cancelRouting').addEventListener('click',function() {
+		routing=false;
+		show('dash',false);
+	})
+	id('finishButton').addEventListener('click',finishRoute);
 	id('routesButton').addEventListener('click',listRoutes);
-	/* id('closeButton').addEventListener('click',function(){
-	    show('listScreen',false);
-	    trackpoints=[];
-	    nodes=[];
-	    show('actionButton',true);
-	});*/
 	id('routeName').addEventListener('change',renameRoute);
 	id('loadButton').addEventListener('click',loadRoute);
 	id('deleteButton').addEventListener('click',deleteRoute);
@@ -498,7 +496,7 @@
 		show('duration',true);
 		show('speed',true);
 		show('dash',false);
-		show('finish',false);
+		show('finishButton',false);
 		show('actionButton',true);
 		// var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
 		var request= new XMLHttpRequest();
@@ -515,7 +513,6 @@
 				json=JSON.parse(this.responseText);
 				console.log(json.features.length+' features');
 				distance=json.features[0].properties.summary.distance;
-				// var ascent=json.features[0].properties.ascent;
 				var coords=json.features[0].geometry.coordinates;
 				var coord;
 				nodes=[];
@@ -531,16 +528,16 @@
 					if((i<1)||(i==coords.length-1)) node.elev=true; // elevation at start and end nodes
 					else node.elev=false; // most nodes do not have elevations
 					nodes.push(node);
-					if(i>0) climb=(node.alt-nodes[nodes.length-2].alt);
-					if(climb>0) {
-						if(!climbing) {
-							nodes[i-1].elev=true; // elevation at low point
-							climbing=true;
-						}
-						ascent+=climb;
+					if(i>0) {
+						climb=(node.alt-nodes[nodes.length-2].alt)
+						if(climb>0) ascent+=climb;
+					}
+					if((climb>0)&&(!climbing)) {
+						nodes[i-1].elev=true; // ...add elevations at low points...
+						climbing=true;
 					}
 					else if((climb<0)&&(climbing)) {
-						nodes[i-1].elev=true;
+						nodes[i-1].elev=true; // ...and high points
 						climbing=false;
 					}
 				}
@@ -703,7 +700,8 @@
 		window.localStorage.setItem("LocusRoutes",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
-		show('listScreen',false);
+		show('routeDetail',false);
+		listRoutes();
 	}
     // UTILITY FUNCTIONS
 	function decimal(n) {
