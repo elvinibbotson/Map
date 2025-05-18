@@ -68,6 +68,7 @@
 		id('duration').innerText='route';
 		show('speed',false);
 		show('finishButton',true);
+		show('cancelRouting',true);
 		if(track) track.remove(); // remove any earlier route
 	});
 	id('cancelRouting').addEventListener('click',function() {
@@ -355,7 +356,8 @@
 		duration=0;
 		ascent=0;
 		show('dash',true);
-		show('finish',false);
+		show('finishButton',false);
+		show('cancelRouting',false);
 		show('moreControls', false);
 		id('duration').innerText='0:00';
 		id('distance').innerText='0 '+unit;

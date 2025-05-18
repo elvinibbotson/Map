@@ -221,11 +221,15 @@ li {
 #speed {
 	right: 20px;
 }
-#finish {
-	right: 20px;
-	width: 20%;
+/*
+#cancelRouting {
+	
+}
+#finishButton {
+	right: 10px;
 	display: none;
 }
+*/
 #map {
 	top: 0;
 	left: 0;
