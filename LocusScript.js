@@ -47,11 +47,10 @@
 		console.log('zoom out to '+zoom);
 	});
 	id("actionButton").addEventListener("click",getFix);
-	// id("stopButton").addEventListener("click",cease);
 	id("saveButton").addEventListener("click",saveRoute);
 	id('moreButton').addEventListener('click',function(){
 		show('moreButton',false);
-		id('more').style.display='block';
+		id('moreControls').style.display='block';
 	});
 	id('routeButton').addEventListener('click',function(){
 		routing=true;
@@ -74,6 +73,8 @@
 	id('cancelRouting').addEventListener('click',function() {
 		routing=false;
 		show('dash',false);
+		show('actionButton',true);
+		show('moreButton',true);
 	})
 	id('finishButton').addEventListener('click',finishRoute);
 	id('routesButton').addEventListener('click',listRoutes);
@@ -82,8 +83,6 @@
 	id('deleteButton').addEventListener('click',deleteRoute);
 	id('findText').addEventListener('change',function(){
 		console.log('find '+id('findText').value);
-		// var searchString='https://search.mapzen.com/v1/search?text='+id('findText').value+'&size=5';
-		// var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
 		var request= new XMLHttpRequest();
 		request.open('GET','https://api.openrouteservice.org/geocode/search?api_key='+orsKey+'&text='+id('findText').value+'&size=10');
 		request.setRequestHeader('Accept', 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
@@ -116,7 +115,7 @@
 		id('unitButton').innerHTML='&nbsp;'+unit;
 		window.localStorage.setItem('unit',unit);
 	});
-	id("cancelButton").addEventListener("click", function(){
+	id("cancelSave").addEventListener("click", function(){
 	  show('saveDialog',false);
 	  routing=false;
 	  nodes=[];
@@ -134,9 +133,8 @@
 	show('plusButton',true);
 	show('minusButton',true);
 	show('actionButton',true);
-	show('moreControls',false);
 	show('moreButton',true);
-	show('more',false);
+	show('moreControls',false);
 	show('routeButton',true);
 	show('routesButton',true);
 	show('unitButton',true);
@@ -202,7 +200,6 @@
 				}
 			}
 			var txt='';
-			// var duration=Math.floor(loc.time-trackpoints[0].time)/60000; // minutes - OLD CODE
 			var elapsed=duration/60000; // minutes
 			txt=Math.floor(elapsed/60)+':'; // HH:
 			console.log('hours: '+txt);
@@ -216,9 +213,6 @@
 			if(unit=='mi') dist*=0.621371192; // miles
 			console.log('distance: '+dist)
 			txt=decimal(dist)+' '+unit;
-			// txt=Math.floor(dist*10)/10;
-			// if(unit=='km') txt+=' kph';
-			// else txt+=' mph';
 			id('distance').innerText=txt; // 1 decimal
 			var speed=e.speed*3.6; // kph
 			console.log('speed: '+speed);
@@ -244,12 +238,6 @@
     		maxZoom: 20,
     		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
 		}).addTo(map); // basic OSM
-		/* ALTERNATIVE CyclOSM...
-		L.tileLayer('https://a.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
-    		maxZoom: 24,
-    		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
-		}).addTo(map);
-		*/
 		id('modeButton').innerText=mode;
 	}
 	// SAVE LOCATION
@@ -261,7 +249,6 @@
 		window.localStorage.setItem('lat',lat);
 		window.localStorage.setItem('lng',lng);
 		console.log('location saved: '+lng+','+lat );
-		// NEW CODE TO  ALLOW VIEWING MAP WHILE TRACKING
 		if(tracking) {
 			viewing=true;
 			window.setTimeout(stopViewing,30000);
@@ -293,20 +280,19 @@
 			dist=distance/1000; // km
 			if(unit=='mi') dist*=0.621371192; // miles
 			id('distance').innerText=decimal(dist)+unit;
-			// id('distance').innerText=Math.round(dist*10)/10+unit;
 			console.log(nodes.length+' nodes in route');
 		}
 		else if(id('controls').style.display=='block') {
 			show('controls',false);
 			show('moreControls',false);
-			show('more',false);
+			// show('more',false);
 		}
 		else if(id('listScreen').style.display=='block') show('listScreen',false);
 		else if(id('routeDetail').style.display=='block') show('routeDetail',false);
 		else {
 			id('findText').value='';
 			show('controls',true);
-			show('moreControls',true);
+			// show('moreControls',true);
 			show('moreButton',true);
 		}
 	}
@@ -368,36 +354,10 @@
 		notify("start tracking");
 		if(trace) trace.remove();
 		map.locate({watch:true, setView: false, enableHighAccuracy: true});
-		// id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
 		id("actionButton").innerHTML='<img src="stopButton24px.svg"/>';
 		id("actionButton").removeEventListener("click",go);
-		// id("actionButton").addEventListener("click", stopStart);
 		id("actionButton").addEventListener("click", cease);
-		// show('measure',false);
 	}
-	/*
-	function stopStart() {
-		notify("stopStart - "+(tracking)?'pause':'resume'+' tracking');
-		if(tracking) pause();
-		else resume();
-	}
-	function pause() { // pause location tracking
-		notify("PAUSE");
-		addTP(); // add trackpoint on pause
-		tracking=false;
-		map.stopLocate(); // NEW CODE
-		show('stopButton',true);
-		id("actionButton").innerHTML='<img src="goButton24px.svg"/>';
-	}
-	function resume() { // restart tracking after pausing
-		notify("RESUME");
-		show('stopButton',false);
-		id("actionButton").innerHTML='<img src="pauseButton24px.svg"/>';
-		tracking=true;
-		map.locate({watch:true, setView: false, enableHighAccuracy: true});
-		notify('tracking resumed');
-	}
-	*/
 	function locationError(error) {
 		var message="";
 		switch (error.code) {
@@ -421,38 +381,36 @@
 		map.stopLocate();
 		show('dash',false);
 		if(trackpoints.length>5) { // offer to save track
-				name='';
-				var now=new Date();
-				var name=now.getFullYear()+months.substr(now.getMonth()*3,3);
-				var n=now.getDate();
-				if(n<10) name+='0';
-				name+=(n+'-'); // YYYYmonDD-
-				n =now.getHours();
-				if(n<10) name+="0";
-				name+=(n+":");
-				n=now.getMinutes();
-				if(n<10) name+="0";
-				name+=n; // YYmonDD-HH-mm
-				notify("track name: "+name);
-				id("saveName").value=name;
-				dist=distance/1000; // km
-				if(unit=='mi') dist*=0.621371;
-				dist=decimal(dist); // one decimal place
-				ascent=Math.round(ascent); // whole m
-				notify('save track length: '+dist+'; '+ascent+'m ascent');
-				id('saveDistance').innerText=dist+unit;
-				id('saveAscent').innerText=ascent+'m';
-				show('saveDialog',true);
-			}
+			name='';
+			var now=new Date();
+			var name=now.getFullYear()+months.substr(now.getMonth()*3,3);
+			var n=now.getDate();
+			if(n<10) name+='0';
+			name+=(n+'-'); // YYYYmonDD-
+			n=now.getHours();
+			if(n<10) name+="0";
+			name+=(n+":");
+			n=now.getMinutes();
+			if(n<10) name+="0";
+			name+=n; // YYmonDD-HH-mm
+			notify("track name: "+name);
+			id("saveName").value=name;
+			dist=distance/1000; // km
+			if(unit=='mi') dist*=0.621371;
+			dist=decimal(dist); // one decimal place
+			ascent=Math.round(ascent); // whole m
+			notify('save track length: '+dist+'; '+ascent+'m ascent');
+			id('saveDistance').innerText=dist+unit;
+			id('saveAscent').innerText=ascent+'m';
+			show('saveDialog',true);
+		}
+		else show('moreButton',true);
 		id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
-		// id("actionButton").removeEventListener("click", stopStart);
 		id("actionButton").removeEventListener("click",cease);
 		id("actionButton").addEventListener("click",getFix);
-		// show('stopButton',false);
 	}
 	// POSITION MAP
 	function centreMap() { // move map to current location
-		// notify("centre map at N"+loc.lat+" E"+loc.lng);
 		console.log('centreMap at '+loc.latlng);
 		map.setView(loc.latlng,zoom);
 		var i,x,y;
@@ -485,10 +443,8 @@
 		lng=place.location[0];
 		console.log('lat: '+lat+'; lng: '+lng);
 		loc.latlng=[lat,lng];
-		// loc.latlng=places[listIndex].location;
 		console.log('go to '+loc.latlng);
 		show('listScreen',false);
-		// map.setView(location,zoom);
 		centreMap();
 	}
 	// FINISH ROUTING
@@ -500,11 +456,9 @@
 		show('dash',false);
 		show('finishButton',false);
 		show('actionButton',true);
-		// var KEY='5b3ce3597851110001cf6248d5e4d2e21e83467881592bdc4faa6001';
 		var request= new XMLHttpRequest();
 		if(mode=='walk') request.open('POST','https://api.openrouteservice.org/v2/directions/foot-walking/geojson');
 		else request.open('POST','https://api.openrouteservice.org/v2/directions/cycling-regular/geojson');
-		// request.open('POST','https://api.openrouteservice.org/v2/directions/cycling-electric/geojson');
 		request.setRequestHeader('Accept','application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
 		request.setRequestHeader('Content-type','application/json');
 		request.setRequestHeader('Authorization',orsKey);
@@ -600,7 +554,6 @@
 				route.nodes[i].alt=trackpoints[i].alt;
 			}
 			notify('track ready to save - length: '+route.distance+', ascent: '+route.ascent+', '+route.nodes.length+' nodes');
-			// trace.remove(); // remove track from map
 		}
 		else if(nodes.length>0) route.nodes=nodes; // save new route
 		json=JSON.stringify(route);
@@ -643,7 +596,6 @@
 		distance=parseInt(route.distance)/1000; // km
 		if(unit=='mi') distance*=0.621371192;
 		distance=decimal(distance);
-		// distance=Math.floor(distance*10)/10;
 		id('routeName').value=routeNames[listIndex];
 		id('routeLength').innerText=distance+unit;
 		id('routeAscent').innerText=Math.round(route.ascent)+'m';
@@ -735,4 +687,3 @@
 			console.log('Service worker has been registered for scope:'+ reg.scope);
 		});
 	}
-// })();
