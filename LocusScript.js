@@ -117,6 +117,7 @@
 	});
 	id("cancelSave").addEventListener("click", function(){
 	  show('saveDialog',false);
+	  show('moreButton',true);
 	  routing=false;
 	  nodes=[];
 	});
