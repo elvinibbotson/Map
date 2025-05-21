@@ -170,6 +170,19 @@ li {
 	right: 20px;
 	bottom: 20px;
 }
+#goMode {
+	position: fixed;
+	right: 10px;
+	bottom: 10px;
+	padding: 10px;
+	margin: 10px;
+	border: solid white 2px;
+	border-radius: 10px;
+	color: white;
+	background-color: gray;
+	z-index: 15;
+	display: none;
+}
 #moreControls {
 	left: 0;
 	top: 0;
@@ -182,7 +195,6 @@ li {
     top: 20px;
 }
 #more {
-
 	padding: 10px;
 	border: 0px solid 0;
 	border-radius: 15px;
@@ -221,15 +233,6 @@ li {
 #speed {
 	right: 20px;
 }
-/*
-#cancelRouting {
-	
-}
-#finishButton {
-	right: 10px;
-	display: none;
-}
-*/
 #map {
 	top: 0;
 	left: 0;

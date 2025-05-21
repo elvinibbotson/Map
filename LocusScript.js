@@ -5,7 +5,8 @@
 	var json;
 	var routing=false; // creating new route
 	var ready=false;
-	var tracking=false; // tracking movement
+	var tracking=false; // tracking GPS
+	var following=false; // just following GPS
 	var viewing=false; // viewing mmap while tracking
 	var paused=false; // paused tracking
 	var listIndex=0;
@@ -47,6 +48,8 @@
 		console.log('zoom out to '+zoom);
 	});
 	id("actionButton").addEventListener("click",getFix);
+	id('followButton').addEventListener('click',follow);
+	id('trackButton').addEventListener('click',track);
 	id("saveButton").addEventListener("click",saveRoute);
 	id('moreButton').addEventListener('click',function(){
 		show('moreButton',false);
@@ -172,7 +175,7 @@
 	map.on('locationfound',function(e) {
 		loc.latlng=e.latlng;
 		if(!viewing) centreMap(); // map follows location unless viewing
-		console.log('centred at '+loc.latlng+'; tracking is '+tracking);
+		console.log('centred at '+loc.latlng+'; tracking is '+tracking+' following is '+following);
 		loc.alt=Math.round(e.altitude);
 		loc.time=e.timestamp;
 		console.log('location is '+loc.latlng+' altitude: '+loc.alt+' time: '+loc.time);
@@ -319,7 +322,7 @@
 		map.locate({watch: false, setView: false, enableHighAccuracy: true});
 		id("actionButton").innerHTML='<img src="goButton24px.svg"/>';
 		id("actionButton").removeEventListener("click",getFix);
-		id("actionButton").addEventListener("click",go);
+		id("actionButton").addEventListener("click",goMode);
 		ready=true;
 		window.setTimeout(timeUp,10000); // revert to fix button after 10 secs
 	}
@@ -327,12 +330,27 @@
 		if(tracking) return;
 		console.log("times up - back to fix button");
 		id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
-		id("actionButton").removeEventListener("click", go);
+		id("actionButton").removeEventListener("click", goMode);
 		id("actionButton").addEventListener("click", getFix);
 		ready=false;
 	}
+	// TRACK/FOLLOW OPTION
+	function goMode() {
+		show('goMode',true);
+	}
 	// TRACKING FUNCTIONS
-	function go() { // start tracking location
+	function follow() { // start following GPS
+		ready=false;
+		following=true;
+		viewing=false;
+		loc={};
+		map.locate({watch:true, setView: false, enableHighAccuracy: true});
+		id("actionButton").innerHTML='<img src="stopButton24px.svg"/>';
+		id("actionButton").removeEventListener("click",goMode);
+		id("actionButton").addEventListener("click",cease);
+		show('goMode',false);
+	}
+	function track() { // start tracking location
 		ready=false;
 		tracking=true;
 		viewing=false;
@@ -356,8 +374,9 @@
 		if(trace) trace.remove();
 		map.locate({watch:true, setView: false, enableHighAccuracy: true});
 		id("actionButton").innerHTML='<img src="stopButton24px.svg"/>';
-		id("actionButton").removeEventListener("click",go);
+		id("actionButton").removeEventListener("click",goMode);
 		id("actionButton").addEventListener("click", cease);
+		show('goMode',false);
 	}
 	function locationError(error) {
 		var message="";
@@ -381,6 +400,7 @@
 		notify("stop tracking with "+trackpoints.length+" trackpoints");
 		map.stopLocate();
 		show('dash',false);
+		following=tracking=false;
 		if(trackpoints.length>5) { // offer to save track
 			name='';
 			var now=new Date();
