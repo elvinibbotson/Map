@@ -118,7 +118,7 @@
 		id('unitButton').innerHTML='&nbsp;'+unit;
 		window.localStorage.setItem('unit',unit);
 	});
-	id('notifyButton').addEventListener('click',showNotifications);
+	// id('notifyButton').addEventListener('click',showNotifications);
 	id("cancelSave").addEventListener("click", function(){
 	  show('saveDialog',false);
 	  show('moreButton',true);
@@ -146,7 +146,7 @@
 	mode=window.localStorage.getItem('mode');
 	console.log('mode: '+mode);
 	if(!mode) mode='walk';
-	show('notifyButton',true);
+	// show('notifyButton',true);
 	lat=window.localStorage.getItem('lat');
 	lng=window.localStorage.getItem('lng');
 	console.log('saved location: '+lng+','+lat);
