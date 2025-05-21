@@ -118,6 +118,7 @@
 		id('unitButton').innerHTML='&nbsp;'+unit;
 		window.localStorage.setItem('unit',unit);
 	});
+	id('notifyButton').addEventListener('click',showNotifications);
 	id("cancelSave").addEventListener("click", function(){
 	  show('saveDialog',false);
 	  show('moreButton',true);
@@ -145,6 +146,7 @@
 	mode=window.localStorage.getItem('mode');
 	console.log('mode: '+mode);
 	if(!mode) mode='walk';
+	show('notifyButton',true);
 	lat=window.localStorage.getItem('lat');
 	lng=window.localStorage.getItem('lng');
 	console.log('saved location: '+lng+','+lat);
@@ -175,7 +177,7 @@
 	map.on('locationfound',function(e) {
 		loc.latlng=e.latlng;
 		if(!viewing) centreMap(); // map follows location unless viewing
-		console.log('centred at '+loc.latlng+'; tracking is '+tracking+' following is '+following);
+		notify('centred at '+loc.latlng+'; tracking is '+tracking+' following is '+following);
 		loc.alt=Math.round(e.altitude);
 		loc.time=e.timestamp;
 		console.log('location is '+loc.latlng+' altitude: '+loc.alt+' time: '+loc.time);
@@ -327,8 +329,8 @@
 		window.setTimeout(timeUp,10000); // revert to fix button after 10 secs
 	}
 	function timeUp() {
-		if(tracking) return;
-		console.log("times up - back to fix button");
+		if(tracking||following) return;
+		console.log("time's up - back to fix button");
 		id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
 		id("actionButton").removeEventListener("click", goMode);
 		id("actionButton").addEventListener("click", getFix);
@@ -340,6 +342,7 @@
 	}
 	// TRACKING FUNCTIONS
 	function follow() { // start following GPS
+		notify('start following GPS');
 		ready=false;
 		following=true;
 		viewing=false;
@@ -351,6 +354,7 @@
 		show('goMode',false);
 	}
 	function track() { // start tracking location
+		notify('start tracking GPS');
 		ready=false;
 		tracking=true;
 		viewing=false;
@@ -397,7 +401,8 @@
 	}
 	// STOP TRACKING
 	function cease(event) {
-		notify("stop tracking with "+trackpoints.length+" trackpoints");
+		if(following) notify('stop following GPS');
+		else notify("stop tracking with "+trackpoints.length+" trackpoints");
 		map.stopLocate();
 		show('dash',false);
 		following=tracking=false;
