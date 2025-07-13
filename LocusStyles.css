@@ -220,6 +220,7 @@ li {
 }
 #dash {
 	height: 40px;
+	width: 80%;
 }
 #duration {
 	left: 20px;
@@ -230,6 +231,11 @@ li {
 #speed {
 	right: 20px;
 }
+/*
+#finishButtons {
+	bottom: 10px;
+}
+*/
 #map {
 	top: 0;
 	left: 0;

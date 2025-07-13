@@ -66,16 +66,19 @@
 		notify("routing");
 		show('actionButton',false);
 		show('moreControls',false);
+		/*
 		show('dash',true);
 		id('duration').innerText='route';
 		show('speed',false);
 		show('finishButton',true);
 		show('cancelRouting',true);
+		*/
+		show('routing',true);
 		if(track) track.remove(); // remove any earlier route
 	});
 	id('cancelRouting').addEventListener('click',function() {
 		routing=false;
-		show('dash',false);
+		show('routing',false);
 		show('actionButton',true);
 		show('moreButton',true);
 	})
@@ -159,6 +162,10 @@
 	console.log('saved zoom: '+zoom);
 	if(zoom===null) zoom=10;
 	unit=window.localStorage.getItem('unit');
+	if(unit==null) {
+		unit='km';
+		window.localStorage.setItem('unit',unit);
+	}
 	json=JSON.parse(window.localStorage.getItem("LocusRoutes"));
 	if(json!==null) {
 		routeNames=json.names;
@@ -269,7 +276,8 @@
 	// TAP MAP
 	function mapTap(e) {
 		console.log('tap on map at '+e.latlng);
-		if(routing) {
+		if(id('goMode').style.display=='block') show('goModes',false);
+		else if(routing) {
 			var node={};
 			node.latlng=e.latlng;
 			node.alt=0;
@@ -285,7 +293,7 @@
 			else if(nodes.length>2) track.addLatLng(node.latlng);
 			dist=distance/1000; // km
 			if(unit=='mi') dist*=0.621371192; // miles
-			id('distance').innerText=decimal(dist)+unit;
+			id('routeDistance').innerText=decimal(dist)+unit;
 			console.log(nodes.length+' nodes in route');
 		}
 		else if(id('controls').style.display=='block') {
@@ -365,8 +373,8 @@
 		duration=0;
 		ascent=0;
 		show('dash',true);
-		show('finishButton',false);
-		show('cancelRouting',false);
+		// show('finishButton',false);
+		// show('cancelRouting',false);
 		show('moreControls', false);
 		id('duration').innerText='0:00';
 		id('distance').innerText='0 '+unit;
@@ -477,10 +485,10 @@
 	function finishRoute() {
 		notify("stop routing with "+nodes.length+" nodes");
 		routing=false;
-		show('duration',true);
-		show('speed',true);
-		show('dash',false);
-		show('finishButton',false);
+		// show('duration',true);
+		// show('speed',true);
+		show('routing',false);
+		// show('finishButton',false);
 		show('actionButton',true);
 		var request= new XMLHttpRequest();
 		if(mode=='walk') request.open('POST','https://api.openrouteservice.org/v2/directions/foot-walking/geojson');
@@ -664,7 +672,12 @@
 				L.marker(nodes[i].latlng,{icon:elev}).addTo(map);
 			}
 		}
-		if(track) track.remove(); // remove any earlier route
+		/*
+		if(track) {
+			console.log('remove earlier track');
+			track.remove(); // remove any earlier route
+		// }
+		*/
 		track=L.polyline(points,{color:'red',weight:9,opacity:0.25}).addTo(map);
 	}
 	// DELETE ROUTE
