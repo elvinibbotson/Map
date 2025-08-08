@@ -322,7 +322,6 @@
 	function getFix() { // get fix on current location
 		console.log('get a fix');
 		map.locate({watch: false, setView: false, enableHighAccuracy: true});
-		// id("actionButton").innerHTML='<img src="goButton24px.svg"/>';
 		id('actionButton').style.background='url("go.svg") center center no-repeat';
 		id("actionButton").removeEventListener("click",getFix);
 		id("actionButton").addEventListener("click",goMode);
@@ -339,6 +338,7 @@
 	}
 	// TRACK/FOLLOW OPTION
 	function goMode() {
+		show('actionButton',false);
 		show('goMode',true);
 	}
 	// TRACKING FUNCTIONS
@@ -349,7 +349,8 @@
 		viewing=false;
 		loc={};
 		map.locate({watch:true, setView: false, enableHighAccuracy: true});
-		id("actionButton").innerHTML='<img src="stopButton24px.svg"/>';
+		id('actionButton').style.background='url("stop.svg") center center no-repeat';
+		show('actionButton',true);
 		id("actionButton").removeEventListener("click",goMode);
 		id("actionButton").addEventListener("click",cease);
 		show('goMode',false);
@@ -366,8 +367,6 @@
 		duration=0;
 		ascent=0;
 		show('dash',true);
-		// show('finishButton',false);
-		// show('cancelRouting',false);
 		show('moreControls', false);
 		id('duration').innerText='0:00';
 		id('distance').innerText='0 '+unit;
@@ -378,7 +377,8 @@
 		notify("start tracking");
 		if(trace) trace.remove();
 		map.locate({watch:true, setView: false, enableHighAccuracy: true});
-		id("actionButton").innerHTML='<img src="stopButton24px.svg"/>';
+		id('actionButton').style.background='url("stop.svg") center center no-repeat';
+		show('actionButton',true);
 		id("actionButton").removeEventListener("click",goMode);
 		id("actionButton").addEventListener("click", cease);
 		show('goMode',false);
@@ -432,7 +432,7 @@
 			show('saveDialog',true);
 		}
 		else show('moreButton',true);
-		id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
+		id('actionButton').style.background='url("fix.svg") center center no-repeat';
 		id("actionButton").removeEventListener("click",cease);
 		id("actionButton").addEventListener("click",getFix);
 	}
