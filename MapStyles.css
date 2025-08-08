@@ -116,6 +116,7 @@ li {
 	position: fixed;
 	left: 0;
 	top: 0;
+	width: 100%;
 	padding: 10px;
 	color: white;
 	background-color: #000;
