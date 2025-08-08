@@ -1,9 +1,9 @@
 {
-  "short_name": "Locus",
+  "short_name": "Map",
   "version": "2",
   "icons": [
 	{
-		"src": "Locus.png",
+		"src": "Map.png",
 		"sizes": "512x512",
 		"type": "image/png",
 		"purpose": "any maskable"

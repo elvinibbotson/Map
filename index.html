@@ -4,8 +4,8 @@
 	<meta charset="utf-8">
   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  	<title>Locus</title>
-  	<link rel="stylesheet" type="text/css" href="LocusStyles.css">
+  	<title>Map</title>
+  	<link rel="stylesheet" type="text/css" href="MapStyles.css">
   	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     	integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     	crossorigin=""/>
@@ -13,33 +13,31 @@
   	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     	integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     	crossorigin=""></script>
-  	<meta name="application-name" content="Locus">
+  	<meta name="application-name" content="Map">
 </head>
 <body>
 <main class="main">
 	<div id="map"></div>
 </main>
 <div id='controls'>
-	<button id='plusButton' class='round-button'><img src='plusButton24px.svg'/></button>
-	<button id='minusButton' class='round-button'><img src='minusButton24px.svg'/></button>
-	<button id='actionButton' class='round-button'><img src='fixButton24px.svg'/></button>
-	<button id="moreButton" class="round-button"><img src='moreButton24px.svg'/></button>
+	<button id='plusButton' class='round-button'></button>
+	<button id='minusButton' class='round-button'></button>
+	<button id='actionButton' class='round-button'></button>
+	<button id="moreButton" class="round-button"></button>
 </div>
 <div id='goMode'>
 	<button id='followButton' class='textButton'>follow</button>
 	<button id='trackButton' class='textButton'>track&nbsp;</button>
 </div>
 <div id='moreControls' class='dialog'>
-	<!--div id='more' class='dialog'-->
 	<div id='findGroup'>
 		find: <input type="text" id="findText"/>
 	</div>
 	<div id='buttonsGroup'>
-		<button id='routeButton' class='clear-button'><img src='routeButton24px.svg'/></button>
-		<button id='routesButton' class='clear-button'><img src='routesButton24px.svg'/></button>
+		<button id='routeButton' class='clear-button'><img src='route24px.svg'/></button>
+		<button id='routesButton' class='clear-button'><img src='routes24px.svg'/></button>
 		<button id='unitButton' class='textButton'>km</button>
 		<button id='modeButton' class='textButton'>mode</button>
-		<!--button id='notifyButton' class='textButton'>?</button-->
 	</div>
 </div>
 <div id='routing' class='dialog'>
@@ -51,10 +49,6 @@
 	<div id='duration' class='gauge'></div>
 	<div id='distance' class='gauge'></div>
 	<div id='speed' class='gauge'></div>
-	<!--div id='finishButtons'>
-		<button id='finishButton' class='textButton'>finish</button>
-		<button id='cancelRouting' class='textButton'>cancel</button>
-	</div-->
 </div>
 <div id='locus'><img src='locus24px.svg'/></div>
 <div id="listScreen" class='dialog'>
@@ -62,9 +56,7 @@
 </div>
 <div id='routeDetail' class='dialog'>
 	<input type='text' id='routeName' class='nameBox'><br>
-    <!--div id='routeInfo'-->
-   		<span id='routeLength'></span>&nbsp;&nbsp;ascent: <span id='routeAscent'></span>
-   	<!--/div-->
+   	<span id='routeLength'></span>&nbsp;&nbsp;ascent: <span id='routeAscent'></span>
    	<div id='routeProfile'>
    		
    	</div>
@@ -87,13 +79,6 @@
 	<div> Find: <input type="text" id="findText" class="nameBox"/></div>
 	<div id="foundList"></div>
 </div>
-<!--div id='helpScreen'>
-	<div id='helpHeader'>
-		<span onclick="showNotifications()">&nbsp;&nbsp;KEY</span>
-		<button id='closeHelpButton' class='clearButton'><img src='closeButton24px.svg'/></button>
-	</div>
-	<img id='key' src='key.png'/>
-</div-->
-<script src="LocusScript.js" async></script>
+<script src="MapScript.js" async></script>
 </body>
 </html>
