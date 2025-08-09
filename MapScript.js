@@ -331,7 +331,7 @@
 	function timeUp() {
 		if(tracking||following) return;
 		console.log("time's up - back to fix button");
-		id("actionButton").innerHTML='<img src="fixButton24px.svg"/>';
+		id("actionButton").style.background='url("fix.svg") center center no-repeat';
 		id("actionButton").removeEventListener("click", goMode);
 		id("actionButton").addEventListener("click", getFix);
 		ready=false;
@@ -382,6 +382,7 @@
 		id("actionButton").removeEventListener("click",goMode);
 		id("actionButton").addEventListener("click", cease);
 		show('goMode',false);
+		show('moreButton',false);
 	}
 	function locationError(error) {
 		var message="";

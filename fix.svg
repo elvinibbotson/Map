@@ -1,5 +1,8 @@
 <svg viewBox="0 0 50 50" width="50" height="50" xmlns="http://www.w3.org/2000/svg">
     <circle cx="25" cy="25" r="25"/>
-    <circle cx="25" cy="25" r="12" fill="white"/>
+    <line x1="5" y1="25" x2="16" y2="25" style="stroke:#FFFFFF; stroke-width:7"/>
+    <line x1="34" y1="25" x2="45" y2="25" style="stroke:#FFFFFF; stroke-width:7"/>
+    <line x1="25" y1="5" x2="25" y2="16" style="stroke:#FFFFFF; stroke-width:7"/>
+    <line x1="25" y1="34" x2="25" y2="45" style="stroke:#FFFFFF; stroke-width:7"/>
 </svg>
 	
