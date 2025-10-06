@@ -113,6 +113,10 @@
 		else unit='km.'; // toggle distance unit
 		id('unitButton').innerHTML='&nbsp;'+unit;
 		window.localStorage.setItem('unit',unit);
+		if(distance>0) {
+			dist=distance/((unit=='km.')?1000:1609); // km/mi
+			id('routeDistance').innerText=decimal(dist)+unit;
+		}
 	});
 	id("cancelSave").addEventListener("click", function(){
 	  show('saveDialog',false);
@@ -154,7 +158,7 @@
 	console.log('saved zoom: '+zoom);
 	if(zoom===null) zoom=10;
 	unit=window.localStorage.getItem('unit');
-	if(unit==null) {
+	if(unit==null || !unit) {
 		unit='km';
 		window.localStorage.setItem('unit',unit);
 	}
@@ -281,10 +285,10 @@
 			dist=Math.round(map.distance(e.latlng,lastLoc.latlng));
 			lastLoc.latlng=e.latlng;
 			distance+=dist;
+			console.log('distance: '+distance+'m; unit: '+unit);
 			if(nodes.length==2) track=L.polyline([nodes[0].latlng,nodes[1].latlng],{color:'red',weight:9,opacity:0.25}).addTo(map);
 			else if(nodes.length>2) track.addLatLng(node.latlng);
-			dist=distance/1000; // km
-			if(unit=='mi') dist*=0.621371192; // miles
+			dist=distance/((unit=='km.')?1000:1609); // km/mi
 			id('routeDistance').innerText=decimal(dist)+unit;
 			console.log(nodes.length+' nodes in route');
 		}
