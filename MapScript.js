@@ -80,6 +80,7 @@
 	id('routeName').addEventListener('change',renameRoute);
 	id('loadButton').addEventListener('click',loadRoute);
 	id('deleteButton').addEventListener('click',deleteRoute);
+	id('exportButton').addEventListener('click',exportRoute);
 	id('findText').addEventListener('change',function(){
 		console.log('find '+id('findText').value);
 		var request= new XMLHttpRequest();
@@ -162,7 +163,7 @@
 		unit='km';
 		window.localStorage.setItem('unit',unit);
 	}
-	json=JSON.parse(window.localStorage.getItem("LocusRoutes"));
+	json=JSON.parse(window.localStorage.getItem("mapRoutes"));
 	if(json!==null) {
 		routeNames=json.names;
 		notify(routeNames.length+' routes');
@@ -424,7 +425,7 @@
 			name+=(n+":");
 			n=now.getMinutes();
 			if(n<10) name+="0";
-			name+=n; // YYmonDD-HH-mm
+			name+=n; // YYmonDD-HH:mm
 			notify("track name: "+name);
 			id("saveName").value=name;
 			dist=distance/1000; // km
@@ -596,7 +597,7 @@
 		routes.names=routeNames;
 		notify("save routenames: "+routes.names);
 		var json=JSON.stringify(routes);
-		window.localStorage.setItem("LocusRoutes",json);
+		window.localStorage.setItem("mapRoutes",json);
 		notify('route names saved');
 		distance=0;
 		show('saveDialog',false);
@@ -647,7 +648,7 @@
 		routes.names=routeNames;
 		notify("save routenames: "+routes.names);
 		json=JSON.stringify(routes);
-		window.localStorage.setItem("LocusRoutes",json);
+		window.localStorage.setItem("mapRoutes",json);
 	}
 	// LOAD ROUTE
 	function loadRoute() {
@@ -688,11 +689,32 @@
 		var routes={};
 		routes.names=routeNames;
 		var json=JSON.stringify(routes);
-		window.localStorage.setItem("LocusRoutes",json);
+		window.localStorage.setItem("mapRoutes",json);
 		window.localStorage.removeItem(name);
 		notify(name+" deleted");
 		show('routeDetail',false);
 		listRoutes();
+	}
+	// EXPORT ROUTE
+	function exportRoute() {
+		var fileName=routeNames[listIndex];
+		notify('export route '+listIndex+": "+fileName);
+		var json=window.localStorage.getItem(fileName);
+		var route=JSON.parse(json);
+		var nodes=route.nodes;
+		for(var i=0;i<nodes.length;i++) {
+			nodes[i]={lat:nodes[i].latlng.lat,lon:nodes[i].latlng.lng,alt:nodes[i].alt};
+		}
+		json=JSON.stringify({'nodes':nodes});
+		var blob=new Blob([json],{type:"data:application/json"});
+  		var a=document.createElement('a');
+		a.style.display='none';
+    	var url=window.URL.createObjectURL(blob);
+		console.log("data ready to save: "+blob.size+" bytes");
+   		a.href=url;
+   		a.download=fileName+'.json';
+    	document.body.appendChild(a);
+    	a.click();
 	}
     // UTILITY FUNCTIONS
 	function decimal(n) {
