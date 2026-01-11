@@ -5,12 +5,11 @@
 	{
 		"src": "Map.png",
 		"sizes": "512x512",
-		"type": "image/png",
-		"purpose": "any maskable"
+		"type": "image/png"
 	}
   ],
   "start_url": "index.html",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "portrait",
   "background_color": "black",
   "theme_color": "black"
