@@ -18,7 +18,7 @@
 	var place={}; // place name, location, etc
 	var places=[]; // places resulting from 'find...' query
 	var nodes=[]; // array of route node locations
-	var unit='km';
+	var unit='km.';
 	var zoom=10;
 	var loc={};
 	var lastLoc={};
@@ -74,6 +74,7 @@
 		show('routing',false);
 		show('actionButton',true);
 		show('moreButton',true);
+		track.remove();
 	})
 	id('finishButton').addEventListener('click',finishRoute);
 	id('routesButton').addEventListener('click',listRoutes);
@@ -142,6 +143,7 @@
 	show('moreControls',false);
 	show('routeButton',true);
 	show('routesButton',true);
+	// show('poiButton',true);
 	show('unitButton',true);
 	mode=window.localStorage.getItem('mode');
 	console.log('mode: '+mode);
@@ -160,7 +162,7 @@
 	if(zoom===null) zoom=10;
 	unit=window.localStorage.getItem('unit');
 	if(unit==null || !unit) {
-		unit='km';
+		unit='km.';
 		window.localStorage.setItem('unit',unit);
 	}
 	json=JSON.parse(window.localStorage.getItem("mapRoutes"));
@@ -721,6 +723,7 @@
 	    return Math.floor(n * 10 + 0.5) / 10;
 	}
 	function show(element,visible) {
+		console.log('show? '+visible+': '+element);
 	    id(element).style.display=(visible)?'block':'none';
 	}
 	function notify(note) {
