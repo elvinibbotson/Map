@@ -6,11 +6,18 @@
 		"src": "Map.png",
 		"sizes": "512x512",
 		"type": "image/png",
-		"purpose": "maskable"
+		"purpose": "any"
 	}
   ],
+  "screenshots": [
+  	{
+		"src": "screenshot.png",
+		"sizes": "360x640",
+		"type": "image/png"
+  	}
+  ],
   "start_url": "index.html",
-  "display": "fullscreen",
+  "display": "standalone",
   "orientation": "portrait",
   "background_color": "black",
   "theme_color": "black"
