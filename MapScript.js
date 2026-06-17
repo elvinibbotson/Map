@@ -724,7 +724,7 @@
 	}
     // UTILITY FUNCTIONS
     function addScale() {
-    	var options={'position':'topright','metric':(unit=='km'),'imperial':(unit=='mi')};
+    	var options={'position':'topright','maxWidth':(sw*0.75),'metric':(unit=='km'),'imperial':(unit=='mi')};
 		scale=L.control.scale(options);
 		scale.addTo(map); // scale bar
     }

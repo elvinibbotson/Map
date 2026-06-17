@@ -3,7 +3,6 @@ html, body {
   margin: 0;
   height: 100%;
   width: 100%;
-  /* font-family: 'Helvetica', 'Verdana', sans-serif;*/
   font-family: 'Courier', monospace;
   font-weight: 400;
   font-display: optional;
@@ -206,7 +205,7 @@ li {
 }
 #buttonsGroup {
 	top: 50px;
-	right: 50px;
+	margin: 10px;
 }
 
 #routeButton {
