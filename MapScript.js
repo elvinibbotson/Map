@@ -1,6 +1,7 @@
 	"use strict";
 	var mode=null;
-	var map; // CyclOSM map
+	var map; // Leaflet map
+	var scale; // scale bar
 	var x,y; 
 	var json;
 	var routing=false; // creating new route
@@ -18,7 +19,7 @@
 	var place={}; // place name, location, etc
 	var places=[]; // places resulting from 'find...' query
 	var nodes=[]; // array of route node locations
-	var unit='km.';
+	var unit='km';
 	var zoom=10;
 	var loc={};
 	var lastLoc={};
@@ -74,7 +75,6 @@
 		show('routing',false);
 		show('actionButton',true);
 		show('moreButton',true);
-		track.remove();
 	})
 	id('finishButton').addEventListener('click',finishRoute);
 	id('routesButton').addEventListener('click',listRoutes);
@@ -111,8 +111,10 @@
 		request.send();
 	})
 	id('unitButton').addEventListener('click',function(){
-		if(unit=='km.') unit='mi.';
-		else unit='km.'; // toggle distance unit
+		scale.remove();
+		if(unit=='km') unit='mi';
+		else unit='km'; // toggle distance unit
+		addScale();
 		id('unitButton').innerHTML='&nbsp;'+unit;
 		window.localStorage.setItem('unit',unit);
 		if(distance>0) {
@@ -143,7 +145,7 @@
 	show('moreControls',false);
 	show('routeButton',true);
 	show('routesButton',true);
-	// show('poiButton',true);
+	show('modeButton',true);
 	show('unitButton',true);
 	mode=window.localStorage.getItem('mode');
 	console.log('mode: '+mode);
@@ -162,8 +164,9 @@
 	if(zoom===null) zoom=10;
 	unit=window.localStorage.getItem('unit');
 	if(unit==null || !unit) {
-		unit='km.';
+		unit='km';
 		window.localStorage.setItem('unit',unit);
+		console.log('unit: '+unit);
 	}
 	json=JSON.parse(window.localStorage.getItem("mapRoutes"));
 	if(json!==null) {
@@ -173,6 +176,7 @@
 	console.log('unit: '+unit);
 	id('unitButton').innerHTML='&nbsp;'+unit;
 	map=L.map('map',{zoomControl: false}).setView([lat,lng],zoom); // default location in Derbyshire
+	addScale();
 	setMode();
 	map.on('moveend',saveLoc);
 	map.on('zoom',function(){
@@ -719,11 +723,16 @@
     	a.click();
 	}
     // UTILITY FUNCTIONS
+    function addScale() {
+    	var options={'position':'topright','metric':(unit=='km'),'imperial':(unit=='mi')};
+		scale=L.control.scale(options);
+		scale.addTo(map); // scale bar
+    }
 	function decimal(n) {
 	    return Math.floor(n * 10 + 0.5) / 10;
 	}
 	function show(element,visible) {
-		console.log('show? '+visible+': '+element);
+		console.log('show '+element+' - '+visible);
 	    id(element).style.display=(visible)?'block':'none';
 	}
 	function notify(note) {
