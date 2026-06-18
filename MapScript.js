@@ -249,12 +249,13 @@
 		if(mode=='walk') L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     		maxZoom: 19,
     		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-		}).addTo(map); // CyclOSM
+		}).addTo(map);
 		else L.tileLayer('https://dev.c.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
     		maxZoom: 20,
     		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CyclOSM'
-		}).addTo(map); // basic OSM
+		}).addTo(map);
 		id('modeButton').innerText=mode;
+		window.localStorage.setItem('mode',mode);
 	}
 	// SAVE LOCATION
 	function saveLoc() {
